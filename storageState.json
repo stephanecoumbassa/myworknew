@@ -1,0 +1,65 @@
+{
+  "cookies": [
+    {
+      "name": "current_user",
+      "value": "%7B%22token%22%3A%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Njg0MjIzNzQsImV4cCI6MTY5OTk1ODM3NCwicm9sZXMiOlsiMSJdLCJ1c2VybmFtZSI6InN0ZWZ5dTEyM0B5YWhvby5mciJ9.g5z830PcUoXK0DpdY0jzk72IbJodNK9oeIrDv0WJLDR7-QvOR6xg1_JSJkKEKUkYtuiDZPQ9vOLEFW4SdboNLw%22%2C%22token2%22%3A%22eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjcsInJvbGVzIjpbIjEiXSwidXNlcm5hbWUiOiJzdGVmeXUxMjNAeWFob28uZnIiLCJleHAiOjE2OTk5NTgzNzR9.xg8Bewd5PrhVQ8gc5YTlApotCT0uH4gLw11mDmGNtlSyJf9sPmuTmTCUcTqGysp1IPFM8hrzZA4MoIwJU6JjHQ%22%2C%22res%22%3A%7B%22id%22%3A7%2C%22email%22%3A%22stefyu123%40yahoo.fr%22%2C%22indicatif%22%3A225%2C%22uuid%22%3A%22be8165c72d3726f%22%2C%22telephone%22%3A%2277546221%22%2C%22lastname%22%3A%22stefyu%22%2C%22name%22%3A%22stef%22%2C%22shop_id%22%3A1%2C%22roles%22%3A%5B%221%22%5D%7D%2C%22msg%22%3A%22Connexion%20r%C3%A9ussie%22%2C%22status%22%3A1%7D",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "token",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Njg0MjIzNzQsImV4cCI6MTY5OTk1ODM3NCwicm9sZXMiOlsiMSJdLCJ1c2VybmFtZSI6InN0ZWZ5dTEyM0B5YWhvby5mciJ9.g5z830PcUoXK0DpdY0jzk72IbJodNK9oeIrDv0WJLDR7-QvOR6xg1_JSJkKEKUkYtuiDZPQ9vOLEFW4SdboNLw",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "token2",
+      "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjcsInJvbGVzIjpbIjEiXSwidXNlcm5hbWUiOiJzdGVmeXUxMjNAeWFob28uZnIiLCJleHAiOjE2OTk5NTgzNzR9.xg8Bewd5PrhVQ8gc5YTlApotCT0uH4gLw11mDmGNtlSyJf9sPmuTmTCUcTqGysp1IPFM8hrzZA4MoIwJU6JjHQ",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": [
+    {
+      "origin": "http://localhost:9000",
+      "localStorage": [
+        {
+          "name": "current_user2",
+          "value": "[object Object]"
+        },
+        {
+          "name": "token3",
+          "value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Njg0MjIzNzQsImV4cCI6MTY5OTk1ODM3NCwicm9sZXMiOlsiMSJdLCJ1c2VybmFtZSI6InN0ZWZ5dTEyM0B5YWhvby5mciJ9.g5z830PcUoXK0DpdY0jzk72IbJodNK9oeIrDv0WJLDR7-QvOR6xg1_JSJkKEKUkYtuiDZPQ9vOLEFW4SdboNLw"
+        },
+        {
+          "name": "token2",
+          "value": "__q_strn|eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJ1aWQiOjcsInJvbGVzIjpbIjEiXSwidXNlcm5hbWUiOiJzdGVmeXUxMjNAeWFob28uZnIiLCJleHAiOjE2OTk5NTgzNzR9.xg8Bewd5PrhVQ8gc5YTlApotCT0uH4gLw11mDmGNtlSyJf9sPmuTmTCUcTqGysp1IPFM8hrzZA4MoIwJU6JjHQ"
+        },
+        {
+          "name": "token",
+          "value": "__q_strn|eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2Njg0MjIzNzQsImV4cCI6MTY5OTk1ODM3NCwicm9sZXMiOlsiMSJdLCJ1c2VybmFtZSI6InN0ZWZ5dTEyM0B5YWhvby5mciJ9.g5z830PcUoXK0DpdY0jzk72IbJodNK9oeIrDv0WJLDR7-QvOR6xg1_JSJkKEKUkYtuiDZPQ9vOLEFW4SdboNLw"
+        },
+        {
+          "name": "current_user",
+          "value": "__q_objt|{\"id\":7,\"email\":\"stefyu123@yahoo.fr\",\"indicatif\":225,\"uuid\":\"be8165c72d3726f\",\"telephone\":\"77546221\",\"lastname\":\"stefyu\",\"name\":\"stef\",\"shop_id\":1,\"roles\":[\"1\"]}"
+        },
+        {
+          "name": "shop",
+          "value": "__q_objt|{\"id\":1,\"name\":\"Affairez Store\",\"slogan\":\"slogan\",\"telephone\":77546221,\"email\":\"stefyu123@yahoo.fr\",\"site\":\"http://localhost:8080/parametres\",\"facebook\":\"http://localhost:8080/parametres\",\"youtube\":\"http://localhost:8080/parametres\",\"logo\":\"5faaaba93f3f2_logo_1.jpg\",\"slider1\":\"5e5cecd796c26_slider_1.jpg\",\"slider2\":\"5e5cecca7cbbb_slider_1.jpg\",\"slider3\":\"5e5cece513049_slider_1.jpg\",\"adresse\":\"Abidjan, Cocody, Blockhauss\",\"longitude\":null,\"city\":1,\"latitude\":null,\"tva\":0.18,\"theme\":1,\"color\":\"#fc9700\",\"cc\":\"dffgdffgdf\",\"rc\":\"dgdffgdf\",\"capital\":23232265,\"dfe\":null,\"devise\":\"\",\"sigle\":null,\"status\":1,\"start\":\"2020-09-01\",\"end\":\"2020-09-18\",\"footer_site\":\"\",\"footer_facture\":\"Factures\",\"footer_livraison\":\"\",\"footer_paiement\":\"\",\"footer_faq\":\"\",\"home_livraison\":\"Livraison Disponible\",\"home_payer\":\"Payer à la livraison\",\"home_jour\":\"30 jours (retour)\",\"home_ouverture\":\"Ouvert les jours\",\"home_newletter\":\"Souscrire à notre newsletter et recevez des offres de à 50% reduction\",\"isjivo\":null,\"showprice\":1}"
+        }
+      ]
+    }
+  ]
+}

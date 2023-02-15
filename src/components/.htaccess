@@ -1,0 +1,5 @@
+RewriteEngine on
+RewriteBase /cms
+
+RewriteCond %{REQUEST_URI} !^/cms/public/
+RewriteRule ^(.*)$ /cms/public/index.php [L]
