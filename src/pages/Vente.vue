@@ -76,7 +76,7 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">
         <q-card class="my-card">
           <q-card-section>
-            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />
+            <areachart c :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />
           </q-card-section>
         </q-card>
       </div>

@@ -89,6 +89,9 @@ var basemixin = {
     }
   },
   methods: {
+    currentUser() {
+      return this.$q.localStorage.getItem('current_user')
+    },
     navigate(url) {
       this.$router.push(url)
     },

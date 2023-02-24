@@ -40,14 +40,14 @@ export default {
       name: null,
       tab: 'connexion',
       email: null,
-      myemail: null,
+      myemail: 'contact@fmmi.ci',
       indicatif: null,
       telephone: null,
       mytelephone: null,
       lastname: null,
       shop_id: null,
-      password: null,
-      mypassword: null,
+      password: '12345',
+      mypassword: '12345',
       user_type: null,
       fullWidth: false,
       medium: false,
@@ -101,6 +101,7 @@ export default {
             this.$q.localStorage.set('token2', response.token2);
             localStorage.setItem('token3', response.token);
             this.$q.localStorage.set('current_user', response.res);
+            this.$q.localStorage.set('userid', response.res.id);
             localStorage.setItem('current_user2', response.res);
             this.$q.notify({ color: 'green', position: 'top', message: response.msg, icon: 'report_problem' });
 

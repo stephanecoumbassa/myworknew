@@ -64,7 +64,7 @@
       <div class="col-md-12 col-12 col-xs-12 q-pa-lg" style="min-width: 400px">
         <q-card class="my-card">
           <q-card-section>
-            <areachart color="#A66172" :series="series_appro_sum" title="Montants Achetes en FCFA" titletooltip="achat" />
+            <areachart type="bar" color="#A66172" :series="series_appro_sum" title="Montants Achetes en FCFA" titletooltip="achat" />
           </q-card-section>
         </q-card>
       </div>
@@ -191,14 +191,20 @@ export default {
     appro_stats_global() {
       $httpService.getWithParams('/my/get/shop_stats')
         .then((response) => {
-          this.appro_count = JSON.parse(response.appro_count.replace(/null/g, '0'));
-          const val = Object.values(this.appro_count);
-          this.series = [{ name: 'Nbre Dons.', data: val }];
+          // this.appro_count = JSON.parse(response.appro_count.replace(/null/g, '0'));
+          // const val = Object.values(this.appro_count);
+          // this.series = [{ name: 'Nbre Dons.', data: val }];
 
           // this.appro_sum = JSON.parse(response.appro_sum.replace(/null/g, '0'));
-          this.appro_sum = response.appro_sum;
+          this.appro_sum = response.appro_credit_sum.appro;
+          let credit = response.appro_credit_sum.credit;
           const val2 = Object.values(this.appro_sum);
-          this.series_appro_sum = [{ name: 'Francs CFA.', data: val2 }];
+          const creditval = Object.values(credit);
+          console.log(val2)
+          this.series_appro_sum = [
+            { name: 'Total', data: val2 },
+            { name: 'Versé', data: creditval },
+          ];
         });
     },
     products_get () {

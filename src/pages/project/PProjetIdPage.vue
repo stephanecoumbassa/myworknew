@@ -64,7 +64,7 @@
                   <q-tab name="taches" label="Taches" />
                   <q-tab name="fichiers" label="Fichiers" />
                   <q-tab name="activites" label="Activités" />
-                  <q-tab name="parametre" label="Paramètres" />
+                  <q-tab name="parametres" label="Paramètres" />
                 </q-tabs>
                 <q-separator />
               </q-card>
@@ -155,14 +155,43 @@
             </div>
           </q-tab-panel>
 
-          <q-tab-panel name="alarms">
-            <div class="text-h6">Alarms</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <q-tab-panel name="taches" class="no-padding no-margin">
+            <q-card class="q-pa-lg q-mt-lg">
+              <task-list :employes="employes" :tasks="p_tasks" :update="myupdate"/>
+            </q-card>
           </q-tab-panel>
 
-          <q-tab-panel name="movies">
-            <div class="text-h6">Movies</div>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          <q-tab-panel name="fichiers">
+            <br>
+            <div class="row">
+              <div class="col-12 q-mb-md">
+                <q-card class="q-pa-lg">
+                  <upload-form-data uploaded="uploaded()" />
+                </q-card>
+              </div>
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel name="activites">
+            <br>
+            <div class="row">
+              <div class="col-12 q-mb-md">
+                <q-card class="q-pa-lg">
+                  <h1>Testing</h1>
+                </q-card>
+              </div>
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel name="parametres">
+            <br>
+            <div class="row">
+              <div class="col-12 q-mb-md">
+                <q-card class="q-pa-lg">
+                  <h1>Testing</h1>
+                </q-card>
+              </div>
+            </div>
           </q-tab-panel>
 
         </q-tab-panels>
@@ -179,8 +208,11 @@ import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import apimixin from "src/services/apimixin";
 import ListItem from "components/listItem.vue";
+import TaskList from "components/taskList.vue";
+import {employeGetService, p_task_get} from "src/services/api/rh.api";
+import UploadFormData from "components/uploadFormData.vue";
 export default {
-  components: {ListItem},
+  components: {UploadFormData, TaskList, ListItem},
   data () {
     return {
       tab: "mails",
@@ -196,6 +228,8 @@ export default {
       image: null,
       p_projet: {},
       p_projets: [],
+      p_tasks: [],
+      employes: [],
       columns: [
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
@@ -225,6 +259,8 @@ export default {
     const date = new Date()
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
+    this.getTaskList()
+    this.employesGet()
   },
   methods: {
     update_get (props) {
@@ -277,6 +313,26 @@ export default {
           this.showAlert(response.msg, 'secondary')
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
+    },
+    getTaskList () {
+      p_task_get().then((response) => {
+        this.p_tasks = response
+      });
+    },
+    employesGet () {
+      employeGetService().then((response) => {
+        console.log(response)
+        this.employes = response
+      });
+    },
+    myupdate(a, b) {
+      // console.log('Hello update')
+      // console.log(a)
+      // console.log(b)
+      // return a
+    },
+    uploaded(data) {
+      console.log(data)
     }
   }
 }

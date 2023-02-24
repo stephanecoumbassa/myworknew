@@ -33,6 +33,7 @@
         </q-table>
       </div>
     </div>
+
     <q-dialog v-model="medium2">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
@@ -49,7 +50,6 @@
                 <q-input dense type='date' v-model='p_task.debut' label='debut' />
                 <q-input dense type='date' v-model='p_task.fin' label='fin' />
                 <q-input dense v-model='p_task.tuuid' label='tuuid' />
-
               </div>
             </div>
             <div class="row">
@@ -70,6 +70,7 @@
 
 <script>
 import $httpService from '../../boot/httpService';
+import {p_task_get} from 'src/services/api/rh.api';
 import basemixin from '../basemixin';
 export default {
   data () {
@@ -94,7 +95,6 @@ export default {
         { name: 'debut', align: 'left', label: 'debut', field: 'debut', sortable: true },
         { name: 'fin', align: 'left', label: 'fin', field: 'fin', sortable: true },
         { name: 'tuuid', align: 'left', label: 'tuuid', field: 'tuuid', sortable: true },
-
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
       filter: '',
@@ -120,10 +120,9 @@ export default {
       this.p_task[_name] = this.$refs[_name].files[0]
     },
     p_task_get () {
-      $httpService.getApi('/api/get/p_task')
-        .then((response) => {
-          this.p_tasks = response
-        })
+      p_task_get().then((response) => {
+        this.p_tasks = response
+      });
     },
     onSubmit () {
       if (this.p_task.id) {

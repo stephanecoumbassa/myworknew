@@ -1,18 +1,18 @@
 import axios from 'axios'
 import {LocalStorage} from "quasar";
 
-const baseurl = 'https://meewa.co/api'
+const baseurl = 'https://fmmi.ci/apistock'
 // const baseurl = 'http://localhost:8181'
 // const headers = { headers: { 'Authorization': 'Bearer ' + LocalStorage.getItem('token') } }
 
-export function getApi (url, params = {}) {
+export async function getApi (url, params = {}) {
   const headers = { headers: { 'Authorization': 'bearer ' + LocalStorage.getItem('token') } }
   let token = LocalStorage.getItem('token')
   const http = axios.create({
     baseURL: baseurl,
     headers: { 'Authorization': 'Bearer ' + token, 'Shopid': 1 }
   })
-  return http.get(baseurl + url, { params })
+  return await http.get(baseurl + url, { params })
     .then((response) => {
       return response.data
     })
@@ -103,5 +103,5 @@ export default {
   postGlobal,
   putApi,
   deleteApi,
-  postApiLogin
+  // postApiLogin
 }

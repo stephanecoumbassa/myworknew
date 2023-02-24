@@ -1,0 +1,7 @@
+{
+  "appId": "org.fmmi.ci",
+  "appName": "qstock",
+  "bundledWebRuntime": false,
+  "npmClient": "yarn",
+  "webDir": "www"
+}

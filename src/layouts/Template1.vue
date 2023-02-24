@@ -187,10 +187,10 @@ export default {
     this.role = LocalStorage.getItem('current_user').roles[0];
     this.shopid = LocalStorage.getItem('current_user').shop_id;
     this.$q.loadingBar.setDefaults({ color: 'orange-4', size: '7px', position: 'top' });
-    this.command_count();
-    setInterval(() => {
-      this.command_count();
-    }, 180000);
+    // this.command_count();
+    // setInterval(() => {
+    //   this.command_count();
+    // }, 180000);
   },
   mixins: [basemixin],
   methods: {

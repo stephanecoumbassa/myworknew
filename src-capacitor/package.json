@@ -1,0 +1,11 @@
+{
+  "name": "qstock",
+  "version": "0.0.1",
+  "description": "qstock",
+  "author": "stephanecoumbassa <36853946+stephanecoumbassa@users.noreply.github.com>",
+  "private": true,
+  "dependencies": {
+    "@capacitor/cli": "^2.0.0",
+    "@capacitor/core": "^2.0.0"
+  }
+}

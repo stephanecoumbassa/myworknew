@@ -15,10 +15,13 @@ export default {
     },
     uploadFile() {
       let input = this.$refs.fileInput
+      console.log(input)
       let file = input.files[0]
 
       let formData = new FormData()
       formData.append('file', file)
+
+      console.log(formData)
 
       this.$emit('uploaded', formData)
     }

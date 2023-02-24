@@ -44,7 +44,6 @@
                 <q-input dense type='number' v-model='p_assignation.p_stask_id' label='p_stask_id' />
                 <q-input dense type='number' v-model='p_assignation.p_executant_id' label='p_executant_id' />
                 <q-input dense type='number' v-model='p_assignation.p_assigneur_id' label='p_assigneur_id' />
-<!--                <task-select @selected="taskSelected"></task-select>-->
               </div>
             </div>
             <div class="row">
