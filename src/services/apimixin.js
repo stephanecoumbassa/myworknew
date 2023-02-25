@@ -4,7 +4,8 @@ import axios from "axios";
 const headers = {
   headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
 };
-const baseurl = 'https://fmmi.ci/apistock';
+// const baseurl = 'https://fmmi.ci/apistock';
+const baseurl = 'https://127.0.0.1:8000';
 
 const apimixin = {
   data () {

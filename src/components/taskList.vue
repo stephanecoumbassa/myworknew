@@ -93,10 +93,18 @@
       <q-tr :props="props">
         <q-td key='libelle' :props='props'> {{props.row.libelle}} </q-td>
         <q-td key='description' :props='props'> {{props.row.description}} </q-td>
+        <q-td key='employe' :props='props'> {{props.row.employe}} </q-td>
         <q-td key='status' :props='props'>
           <q-badge class="q-pa-sm" :color="getStatus(props.row.status)" >
             {{props.row.status}}
           </q-badge>
+        </q-td>
+        <q-td key='progress' :props='props'>
+          <q-linear-progress size="25px" :value="props.row.progress/100" color="green-3">
+            <div class="absolute-full flex flex-center">
+              <q-badge color="white" text-color="green-3" :label="props.row.progress +'%'" />
+            </div>
+          </q-linear-progress>
         </q-td>
 <!--        <q-td key='p_projet_id' :props='props'> {{props.row.p_projet_id}} </q-td>-->
         <q-td key='debut' :props='props'> {{props.row.debut}} </q-td>
@@ -147,7 +155,9 @@ export default {
       columns: [
         { name: 'libelle', align: 'left', label: 'libelle', field: 'libelle', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
+        { name: 'employe', align: 'left', label: 'employe', field: 'employe', sortable: true },
         { name: 'status', align: 'left', label: 'status', field: 'status', sortable: true },
+        { name: 'progress', align: 'left', label: 'Progress', field: 'progress', sortable: true },
         // { name: 'p_projet_id', align: 'left', label: 'p_projet_id', field: 'p_projet_id', sortable: true },
         { name: 'debut', align: 'left', label: 'debut', field: 'debut', sortable: true },
         { name: 'fin', align: 'left', label: 'fin', field: 'fin', sortable: true },

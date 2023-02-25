@@ -20,7 +20,6 @@
               <q-td key='depart' :props='props'> {{props.row.depart}} </q-td>
               <q-td key='heurepause' :props='props'> {{props.row.heurepause}} </q-td>
               <q-td key='p_employe_id' :props='props'> {{props.row.p_employe_id}} </q-td>
-
               <q-td key="actions" :props="props">
                 <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
                 <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_arrivee_delete(props.row.id)" icon="delete"></q-btn>

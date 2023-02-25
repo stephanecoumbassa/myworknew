@@ -76,7 +76,8 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">
         <q-card class="my-card">
           <q-card-section>
-            <areachart c :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />
+            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />
+            <mixedchart />
           </q-card-section>
         </q-card>
       </div>
@@ -120,6 +121,7 @@ import AreachartComponent from '../components/areachart.vue';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
 import Columnchart from "components/columnchart.vue";
+import Mixedchart from "components/mixedchart.vue";
 
 export default {
   name: 'VenteName',
@@ -162,6 +164,7 @@ export default {
   },
   mixins: [basemixin],
   components: {
+    Mixedchart,
     Columnchart,
     areachart: AreachartComponent
   },

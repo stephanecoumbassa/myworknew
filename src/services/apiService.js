@@ -1,8 +1,9 @@
 import axios from 'axios'
 import {LocalStorage} from "quasar";
 
-const baseurl = 'https://fmmi.ci/apistock'
-// const baseurl = 'http://localhost:8181'
+// const baseurl = 'https://fmmi.ci/apistock';
+const baseurl = 'https://127.0.0.1:8000';
+
 // const headers = { headers: { 'Authorization': 'Bearer ' + LocalStorage.getItem('token') } }
 
 export async function getApi (url, params = {}) {

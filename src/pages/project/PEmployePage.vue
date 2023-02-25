@@ -16,24 +16,27 @@
           </template>
           <template v-slot:body="props">
             <q-tr :props="props">
+              <q-td key='qrcode' :props='props'>
+                <vue-qr :text="props.row.id" :qid="props.row.id" />
+              </q-td>
               <q-td key='nom' :props='props'> {{props.row.nom}} </q-td>
               <q-td key='prenom' :props='props'> {{props.row.prenom}} </q-td>
               <q-td key='telephone' :props='props'> {{props.row.telephone}} </q-td>
               <q-td key='email' :props='props'> {{props.row.email}} </q-td>
               <q-td key='cni' :props='props'> {{props.row.cni}} </q-td>
-              <q-td key='photo' :props='props'> <img v-if='props.row.photo' width='80' height='80' :src="uploadurl+'/p_employe/'+props.row.photo" :alt='props.row.photo' /> </q-td>
-              <q-td key='whatsapp' :props='props'> {{props.row.whatsapp}} </q-td>
-              <q-td key='adresse' :props='props'> {{props.row.adresse}} </q-td>
+<!--              <q-td key='photo' :props='props'> <img v-if='props.row.photo' width='80' height='80' :src="uploadurl+'/p_employe/'+props.row.photo" :alt='props.row.photo' /> </q-td>-->
+<!--              <q-td key='whatsapp' :props='props'> {{props.row.whatsapp}} </q-td>-->
+<!--              <q-td key='adresse' :props='props'> {{props.row.adresse}} </q-td>-->
               <q-td key='datenaissance' :props='props'> {{props.row.datenaissance}} </q-td>
               <q-td key='genre' :props='props'> {{props.row.genre}} </q-td>
-              <q-td key='banquerib' :props='props'> {{props.row.banquerib}} </q-td>
-              <q-td key='banquename' :props='props'> {{props.row.banquename}} </q-td>
+<!--              <q-td key='banquerib' :props='props'> {{props.row.banquerib}} </q-td>-->
+<!--              <q-td key='banquename' :props='props'> {{props.row.banquename}} </q-td>-->
               <q-td key='fonction' :props='props'> {{props.row.fonction}} </q-td>
-              <q-td key='datearrivee' :props='props'> {{props.row.datearrivee}} </q-td>
-              <q-td key='datefin' :props='props'> {{props.row.datefin}} </q-td>
-              <q-td key='experience' :props='props'> {{props.row.experience}} </q-td>
-              <q-td key='education' :props='props'> {{props.row.education}} </q-td>
-              <q-td key='euuid' :props='props'> {{props.row.euuid}} </q-td>
+<!--              <q-td key='datearrivee' :props='props'> {{props.row.datearrivee}} </q-td>-->
+<!--              <q-td key='datefin' :props='props'> {{props.row.datefin}} </q-td>-->
+<!--              <q-td key='experience' :props='props'> {{props.row.experience}} </q-td>-->
+<!--              <q-td key='education' :props='props'> {{props.row.education}} </q-td>-->
+<!--              <q-td key='euuid' :props='props'> {{props.row.euuid}} </q-td>-->
 
               <q-td key="actions" :props="props">
                 <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
@@ -44,15 +47,17 @@
         </q-table>
       </div>
     </div>
+
     <q-dialog v-model="medium2">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
-          <div class="text-h6">Ajouter un P_employe</div>
+          <div class="text-h6">Ajouter un Employe</div>
         </q-card-section>
         <q-card-section>
           <q-form  @submit="onSubmit" class="q-gutter-md">
             <div class="row">
               <div class="col-12">
+                <vue-qr v-if="p_employe.id" :size="100" :text="p_employe.id" :qid="p_employe.id" />
                 <q-input dense v-model='p_employe.nom' label='nom' />
                 <q-input dense v-model='p_employe.prenom' label='prenom' />
                 <q-input dense v-model='p_employe.telephone' label='telephone' />
@@ -71,7 +76,6 @@
                 <q-input dense type='textarea' v-model='p_employe.experience' label='experience' />
                 <q-input dense type='textarea' v-model='p_employe.education' label='education' />
                 <q-input dense v-model='p_employe.euuid' label='euuid' />
-
               </div>
             </div>
             <div class="row">
@@ -93,6 +97,8 @@
 <script>
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
+import vueQr from 'vue-qr/src/packages/vue-qr.vue'
+
 export default {
   data () {
     return {
@@ -109,24 +115,25 @@ export default {
       p_employe: {},
       p_employes: [],
       columns: [
+        { name: 'qrcode', align: 'left', label: 'qrcode', field: 'qrcode', sortable: true },
         { name: 'nom', align: 'left', label: 'nom', field: 'nom', sortable: true },
         { name: 'prenom', align: 'left', label: 'prenom', field: 'prenom', sortable: true },
         { name: 'telephone', align: 'left', label: 'telephone', field: 'telephone', sortable: true },
         { name: 'email', align: 'left', label: 'email', field: 'email', sortable: true },
         { name: 'cni', align: 'left', label: 'cni', field: 'cni', sortable: true },
         { name: 'photo', align: 'left', label: 'photo', field: 'photo', sortable: true },
-        { name: 'whatsapp', align: 'left', label: 'whatsapp', field: 'whatsapp', sortable: true },
-        { name: 'adresse', align: 'left', label: 'adresse', field: 'adresse', sortable: true },
+        // { name: 'whatsapp', align: 'left', label: 'whatsapp', field: 'whatsapp', sortable: true },
+        // { name: 'adresse', align: 'left', label: 'adresse', field: 'adresse', sortable: true },
         { name: 'datenaissance', align: 'left', label: 'datenaissance', field: 'datenaissance', sortable: true },
         { name: 'genre', align: 'left', label: 'genre', field: 'genre', sortable: true },
-        { name: 'banquerib', align: 'left', label: 'banquerib', field: 'banquerib', sortable: true },
-        { name: 'banquename', align: 'left', label: 'banquename', field: 'banquename', sortable: true },
+        // { name: 'banquerib', align: 'left', label: 'banquerib', field: 'banquerib', sortable: true },
+        // { name: 'banquename', align: 'left', label: 'banquename', field: 'banquename', sortable: true },
         { name: 'fonction', align: 'left', label: 'fonction', field: 'fonction', sortable: true },
-        { name: 'datearrivee', align: 'left', label: 'datearrivee', field: 'datearrivee', sortable: true },
-        { name: 'datefin', align: 'left', label: 'datefin', field: 'datefin', sortable: true },
-        { name: 'experience', align: 'left', label: 'experience', field: 'experience', sortable: true },
-        { name: 'education', align: 'left', label: 'education', field: 'education', sortable: true },
-        { name: 'euuid', align: 'left', label: 'euuid', field: 'euuid', sortable: true },
+        // { name: 'datearrivee', align: 'left', label: 'datearrivee', field: 'datearrivee', sortable: true },
+        // { name: 'datefin', align: 'left', label: 'datefin', field: 'datefin', sortable: true },
+        // { name: 'experience', align: 'left', label: 'experience', field: 'experience', sortable: true },
+        // { name: 'education', align: 'left', label: 'education', field: 'education', sortable: true },
+        // { name: 'euuid', align: 'left', label: 'euuid', field: 'euuid', sortable: true },
 
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
@@ -135,6 +142,9 @@ export default {
     }
   },
   mixins: [basemixin],
+  components: {
+    vueQr
+  },
   created () {
     this.p_employe_get()
     const date = new Date()

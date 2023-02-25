@@ -63,7 +63,7 @@
                   <q-tab name="mails" label="Résumé" />
                   <q-tab name="taches" label="Taches" />
                   <q-tab name="fichiers" label="Fichiers" />
-                  <q-tab name="activites" label="Activités" />
+                  <q-tab name="activites" label="Matières Utilisées" />
                   <q-tab name="parametres" label="Paramètres" />
                 </q-tabs>
                 <q-separator />
@@ -75,7 +75,9 @@
         <q-tab-panels v-model="tab" animated style="background-color: transparent">
 
           <q-tab-panel name="mails" class="no-margin no-padding">
+
             <br>
+
             <div class="row">
 
               <div class="col-6 q-mb-md">
@@ -153,6 +155,7 @@
               </div>
 
             </div>
+
           </q-tab-panel>
 
           <q-tab-panel name="taches" class="no-padding no-margin">
@@ -161,23 +164,62 @@
             </q-card>
           </q-tab-panel>
 
-          <q-tab-panel name="fichiers">
+          <q-tab-panel name="fichiers" class="no-padding no-margin">
             <br>
             <div class="row">
-              <div class="col-12 q-mb-md">
+              <div class="col-12">
                 <q-card class="q-pa-lg">
                   <upload-form-data uploaded="uploaded()" />
+                  <br>
+                  <br>
+                  <di class="row">
+                    <div class="col-3 q-pa-md" v-for="img in [{},{},{},{},{},{},{},{},{},{},{}]">
+                      <q-img
+                        src="https://cdn.quasar.dev/img/image-src.png"
+                        spinner-color="white"
+                        style="height: 140px; max-width: 150px"
+                      />
+                    </div>
+                  </di>
                 </q-card>
               </div>
             </div>
           </q-tab-panel>
 
-          <q-tab-panel name="activites">
+          <q-tab-panel name="activites" class="no-padding no-margin">
             <br>
             <div class="row">
               <div class="col-12 q-mb-md">
                 <q-card class="q-pa-lg">
-                  <h1>Testing</h1>
+                  <h6>Matières utilisées</h6>
+
+                  <div class="row" v-for="use in used">
+                    <div class="col-4 q-pa-sm">
+                      <q-select
+                        v-model="use.product_id"
+                        option-label="name"
+                        option-value="id"
+                        map-options emit-value :options="products" label="produits" />
+                    </div>
+                    <div class="col-2 q-pa-sm">
+                      <q-input :model-value="100" type="number" label="quantité restante" />
+                    </div>
+                    <div class="col-2 q-pa-sm">
+                      <q-input type="number" label="quantité utilisé" v-model="use.qte" />
+                    </div>
+                    <div class="col-2 q-pa-sm">
+                      <br>
+                      <q-btn icon="edit" size="sm" />
+                      <q-btn icon="delete" size="sm" />
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-4 q-pa-sm">
+                      <q-btn label="+" color="secondary" @click="used.push({})" />
+                    </div>
+                  </div>
+
                 </q-card>
               </div>
             </div>
@@ -188,7 +230,7 @@
             <div class="row">
               <div class="col-12 q-mb-md">
                 <q-card class="q-pa-lg">
-                  <h1>Testing</h1>
+                  <h6>Paramètres</h6>
                 </q-card>
               </div>
             </div>
@@ -230,6 +272,9 @@ export default {
       p_projets: [],
       p_tasks: [],
       employes: [],
+      products: [],
+      used: [],
+      product: null,
       columns: [
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
@@ -261,6 +306,7 @@ export default {
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
     this.getTaskList()
     this.employesGet()
+    this.productsGet()
   },
   methods: {
     update_get (props) {
@@ -272,6 +318,12 @@ export default {
     },
     handleFile (_name) {
       this.p_projet[_name] = this.$refs[_name].files[0]
+    },
+    productsGet () {
+      $httpService.getApi('/my/get/products')
+        .then((response) => {
+          this.products = response
+        })
     },
     p_projet_get () {
       $httpService.getApi('/api/get/p_projet')

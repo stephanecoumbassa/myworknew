@@ -14,7 +14,7 @@
           <br>
           <q-input aria-autocomplete autocomplete type="text" label="Email" v-model="myemail" />
           <q-input type="password" label="Mot de passe" v-model="mypassword" /><br><br>
-          <q-btn size="full" block full class="bg-secondary text-white full-width" v-on:click="connexion()">Se Connecter</q-btn>
+          <q-btn size="full" block full class="bg-secondary text-white full-width" v-on:click="connexion()">Se Connecter 1</q-btn>
           <br>
           <br>
           <br>

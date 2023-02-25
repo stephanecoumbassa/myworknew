@@ -7,7 +7,7 @@
         <span class="text-h6">Projets</span>
       </div>
       <div class="col q-pa-lg float-right text-right">
-        <q-btn color="primary" size="sm">Créer</q-btn>
+        <q-btn color="primary" size="sm" @click="medium2=true">Créer</q-btn>
       </div>
     </div>
 
@@ -148,7 +148,7 @@
     <q-dialog v-model="medium2">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
-          <div class="text-h6">Ajouter un P_projet</div>
+          <div class="text-h6">Ajouter un projet</div>
         </q-card-section>
         <q-card-section>
           <q-form  @submit="onSubmit" class="q-gutter-md">

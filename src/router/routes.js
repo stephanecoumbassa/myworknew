@@ -45,7 +45,9 @@ const routes = [
       {path: '/commandes-clients', component: () => import('pages/CommandeList.vue'), meta: required},
       {path: '/parametres', component: () => import('pages/Parametres.vue'), meta: required},
       {path: '/rh/employe', component: () => import('pages/rh/Employe.vue'), meta: required},
-      {path: '/facture/f1', component: () => import('pages/facture/F1.vue'), meta: required}
+      {path: '/facture/f1', component: () => import('pages/facture/F1.vue'), meta: required},
+      {path: '/budget-revenu', component: () => import('pages/BudgetrevenuPage.vue'), meta: required},
+      {path: '/budget-depense', component: () => import('pages/BudgetdepensePage.vue'), meta: required}
     ]
   },
   {
@@ -93,9 +95,6 @@ const routes = [
       }
     ]
   },
-
-  // Always leave this as last one,
-  // but you can also remove it
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue')

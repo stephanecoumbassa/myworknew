@@ -1,0 +1,25 @@
+#lexik_jwt_authentication:
+#    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+#    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+#    pass_phrase: '%env(JWT_PASSPHRASE)%'
+
+lexik_jwt_authentication:
+    #    secret_key: 'ilBXYdGYhzttt4uOB2E5WMmPGW4lQVTNdjRLw/YoA9FTL5br3etv3CjvC9mLbUDJ'
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%'
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
+    pass_phrase: '%env(JWT_PASSPHRASE)%'
+    token_ttl: 31536000 #365J
+
+    encoder:
+        #        # token encoder/decoder service - default implementation based on the lcobucci/jwt library
+        #        service:            lexik_jwt_authentication.encoder.lcobucci
+        #
+        #        # encryption algorithm used by the encoder service
+        signature_algorithm: HS512
+
+    # extractors:
+    token_extractors:
+        authorization_header:      # look for a token as Authorization Header
+            enabled: true
+            prefix:  Bearer
+            name:    Authorization
