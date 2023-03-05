@@ -129,17 +129,17 @@
                           option-value="id" stack-label input-debounce="0" option-label="name"
                           @input="categorie_get(product.parent_categorie_id)" :rules="[ val => val || 'champs obligattoire']" />
 
-                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"
-                          option-value="id" stack-label input-debounce="0" option-label="name" />
-                <br>
-                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"
-                          option-value="id" stack-label input-debounce="0" option-label="nom" />
-                <br>
+<!--                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"-->
+<!--                          option-value="id" stack-label input-debounce="0" option-label="name" />-->
+<!--                <br>-->
+<!--                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"-->
+<!--                          option-value="id" stack-label input-debounce="0" option-label="nom" />-->
+<!--                <br>-->
                 <q-input autocomplete type="number" v-model="product.price" label="Prix de vente *" :dense="true" />
-                <br>
-                <q-input type="number"  v-model="product.tva" label="TVA *" />
-                <br>
-                <q-input autocomplete type="number"  v-model="product.promo" label="Prix de promotionel" :dense="true" />
+<!--                <br>-->
+<!--                <q-input type="number"  v-model="product.tva" label="TVA *" />-->
+<!--                <br>-->
+<!--                <q-input autocomplete type="number"  v-model="product.promo" label="Prix de promotionel" :dense="true" />-->
 
                 <div class="q-gutter-sm">
                   <br>
@@ -148,12 +148,12 @@
                   <q-radio v-model="product.webstatus" :val="1" label="Oui" />
                 </div>
 
-                <div class="q-gutter-sm">
-                  <br>
-                  <label>Ce produit est-il customizable </label>
-                  <q-radio v-model="product.customize" :val="0" label="Non" />
-                  <q-radio v-model="product.customize" :val="1" label="Oui" />
-                </div>
+<!--                <div class="q-gutter-sm">-->
+<!--                  <br>-->
+<!--                  <label>Ce produit est-il customizable </label>-->
+<!--                  <q-radio v-model="product.customize" :val="0" label="Non" />-->
+<!--                  <q-radio v-model="product.customize" :val="1" label="Oui" />-->
+<!--                </div>-->
 
                 <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />
                 <q-input type="number"  v-model="product.alert_threshold" label="Alert *" />

@@ -97,7 +97,7 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
   },
-  mixins: [basemixin],
+  mixins: [basemixin, apimixin],
   created () {
     this.budgetdepense_get()
     const date = new Date()
@@ -130,7 +130,9 @@ export default {
     },
     budgetdepense_post () {
       this.showLoading()
-      $httpService.postApi('/api/post/budgetdepense', this.budgetdepense)
+      this.budgetdepense.annee = this.budgetdepense.mois.split('-')[0]
+      this.budgetdepense.mois = this.budgetdepense.mois.split('-')[1]
+      this.postApi('/api/post/budgetdepense', this.budgetdepense)
         .then((response) => {
           this.budgetdepense = {}
           this.budgetdepense_get()
@@ -140,7 +142,7 @@ export default {
     },
     budgetdepense_update () {
       this.showLoading()
-      $httpService.putApi('/api/put/budgetdepense', this.budgetdepense)
+      this.putApi('/api/put/budgetdepense', this.budgetdepense)
         .then((response) => {
           this.budgetdepense_get()
           this.showAlert(response.msg, 'secondary')
@@ -149,7 +151,7 @@ export default {
     },
     budgetdepense_delete (_id) {
       this.showLoading()
-      $httpService.deleteApi('/api/delete/budgetdepense/' + _id)
+      this.deleteApi('/api/delete/budgetdepense/' + _id)
         .then((response) => {
           this.budgetdepense_get()
           this.showAlert(response.msg, 'secondary')

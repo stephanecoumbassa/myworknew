@@ -1,8 +1,10 @@
 import axios from 'axios'
 import {LocalStorage} from "quasar";
+import { BASEURL } from "../constante";
 
 // const baseurl = 'https://fmmi.ci/apistock';
-const baseurl = 'https://127.0.0.1:8000';
+// const baseurl = 'https://127.0.0.1:8000';
+const baseurl = BASEURL;
 
 // const headers = { headers: { 'Authorization': 'Bearer ' + LocalStorage.getItem('token') } }
 

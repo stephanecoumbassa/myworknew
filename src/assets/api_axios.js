@@ -1,10 +1,11 @@
 import axios from 'axios';
 import { LocalStorage } from 'quasar';
+import { BASEURL } from "../constante";
 
 // export let baseurl = 'https://affairez.com/apistock';
 // export let baseurl = 'https://babiprints.com/apistock';
-// export let baseurl = 'https://fmmi.ci/apistock';
-export let baseurl = 'https://127.0.0.1:8000';
+export let baseurl = BASEURL;
+// export let baseurl = 'https://127.0.0.1:8000';
 export const baseurl2 = 'http://localhost:8000';
 // export let baseurl = 'https://batison.com/apistock';
 const headers = {

@@ -30,6 +30,7 @@ const routes = [
       {path: '/produits/inventaire', component: () => import('pages/ProduitInventaire.vue'), meta: required},
       {path: '/produits-location', component: () => import('pages/ProduitLocation.vue'), meta: required},
       {path: '/produits/pack', component: () => import('pages/ProduitPack.vue'), meta: required},
+      {path: '/produits/stock', component: () => import('pages/ProduitStock.vue'), meta: required},
       {path: '/produits/marques', component: () => import('pages/Marque.vue'), meta: required},
       {path: '/produits/pertes', component: () => import('pages/Perte.vue'), meta: required},
       {path: '/depenses', component: () => import('pages/Depense.vue'), meta: required},

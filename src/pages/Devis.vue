@@ -6,7 +6,7 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de devis"
+            <facture name="Facture de devis" type=""
                      :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>

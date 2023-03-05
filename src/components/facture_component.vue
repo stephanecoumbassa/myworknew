@@ -4,9 +4,9 @@
   <div>
 
     <vue3-html2pdf
-      :show-layout="false"
-      :float-layout="true"
-      :enable-download="true"
+      :show-layout="true"
+      :float-layout="false"
+      :enable-download="false"
       :preview-modal="true"
       :paginate-elements-by-height="1400"
       filename="facture"
@@ -15,187 +15,115 @@
       pdf-format="a4"
       pdf-orientation="portrait"
       pdf-content-width="800px"
-      @hasStartedGeneration="hasStartedGeneration()"
+      @beforeDownload="beforeDownload($event)"
       ref="html2Pdf">
 
-      <section ref="pdf-content">
-
-        <slot name="pdf-content">
-          <div id="a4" size="A4">
-
-            <header>
-              <p class="title">
+      <!--      <section ref="pdf-content">-->
+      <template  v-slot:pdf-content>
+        <div id="a4" size="A4">
+          <h1 v-if="typeselected==='PROFORMA'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
+                    letter-spacing: 30px;transform: rotate(318deg);font-weight: bolder;z-index: 9;">PROFORMA</h1>
+          <h1 v-if="typeselected==='DEVIS'" style="position: absolute;top: 20%;left: 10%;color: #ff000045;
+                    letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
+                        font-size: 150px; ;z-index: 9">DEVIS</h1>
+          <h1 v-if="typeselected==='FACTURE'" style="position: absolute;top: 25%;left: 0%;color: #ff000045;
+                  letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
+                      font-size: 120px;z-index: 9">FACTURE</h1>
+          <h1 v-if="typeselected==='BL'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
+                       transform: rotate(318deg);font-weight: bolder;font-size: 90px;z-index: 9;">BON DE LIVRAISON</h1>
+          <header>
+            <div class="row no-padding no-margin print-hide title">
+              <div class="col-3">
+                <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>
+              </div>
+              <div class="col-3"></div>
+              <div class="col-3" v-if="!printStatus">
                 <span>
-<!--                  <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 40px; height: 40px; object-fit: cover"/>-->
-<!--                  <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 40px; height: 40px; object-fit: cover"/>-->
-                  <img src="~assets/fmmi-logo.jpeg" style="width: 40px; height: 40px; object-fit: cover"/>
+                  <q-select dense v-model="typeselected" :options="['BL', 'FACTURE', 'DEVIS', 'PROFORMA']" />
                 </span>
-                {{name}}
-                <span class="float-right print-hide"></span>
-              </p>
-            </header>
-            <div class="container" style="position: relative; top: 100px; contenteditable: true;
-      padding-right: 1cm; padding-left: 1cm;">
+              </div>
+              <div class="col-3 text-right" v-if="!printStatus">
+                <button v-on:click="generateReport()">PDF</button>
+                &nbsp;
+                <button v-on:click="mail()">Mail</button>
+              </div>
+            </div>
+          </header>
+          <div class="container" style="position: relative; top: 100px; contenteditable: true;
+            padding-right: 1cm; padding-left: 1cm;">
 
-              <div class="facture" contenteditable="true">
-                <div class="logo">
-                  <!-- <img src="img/izuddin-helmi-adnan-onh-FdFUyeM-unsplash.jpg" alt="logo du fournisseur" width="100px" height="100px">-->
-                </div>
-                <div class="fact-header">
-                  <div class="col">
-                    <div class="card">
-                      <div class="card-header"> {{myentreprise.name}} </div>
-                      <div class="card-body">
-                        <p>DATE: {{date}}</p>
-                        <p>Tel: {{myentreprise.telephone}}</p>
-                        <p>Email: {{myentreprise.email}}</p>
-                        <p>CC N°</p>
-                        <p>RCCM</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="info-right">
-                    <div class="title h4">Facture #: {{facturenum}}</div>
-                    <div class="title h4" v-if="client.fullname">{{client.fullname}}</div>
-                    <div class="title h4">{{client.telephone_code}} {{client.telephone}}</div>
-                    <div class="title h4">{{client.email}}</div>
-                    <p>Date de creation <span>{{date}}</span></p>
-                    <div class="resum-total">
-                      <p>A payer (CFA) <span> {{numerique(total)}}</span></p>
+            <div class="facture">
+              <div class="logo">
+              </div>
+              <div class="fact-header">
+                <div class="col">
+                  <div class="card">
+                    <div class="card-header"> {{myentreprise.name}} </div>
+                    <div class="card-body">
+                      <p>Tel: {{myentreprise.telephone}}</p>
+                      <p>Email: {{myentreprise.email}}</p>
+                      <p>CC N°:</p>
+                      <p>RCCM:</p>
+                      <p>BL: <input class="no-border" /> </p>
+                      <p>BC: <input class="no-border" /> </p>
                     </div>
                   </div>
                 </div>
-                <div class="container-fluid" style="margin-top: -50px">
-                  <table class="table table-bordered" style="width: 100%; border: 1px solid">
-                    <thead>
-                    <tr>
-                      <th align="left">Libellé</th>
-                      <th align="left">Quantité</th>
-                      <th align="left">PU</th>
-                      <th align="left">Montant</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(product, index) in products" :key="index">
-                      <th align="left"> {{product.name}}</th>
-                      <td align="left">{{numerique(product.quantity)}}</td>
-                      <td align="left">{{numerique(product.price)}}</td>
-                      <td align="left">{{numerique(product.total)}}</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                  <br>
-                  <div class="total-Ht">
-                    <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(total)}} </div>
-                    <div class="reduc">Reduction</div> <div class="montant"> {{numerique(remise)}}</div>
-                    <div class="tva">Tva</div> <div class="montant">0</div>
-                    <div class="avance"> Avance</div> <div class="montant">0</div>
-                    <div class="total-ttc">Total TTC</div> <div class="montant fin">{{numerique(total)}} <span>CFA</span></div>
+                <div class="info-right">
+                  <div class="title h4">Facture #: <input class="no-border" v-model="facturenumero" /></div>
+                  <div class="title h4">{{client?.fullname}}</div>
+                  <div class="title h4">{{client?.telephone_code}} {{client?.telephone}}</div>
+                  <div class="title h4">{{client?.email}}</div>
+                  <p>Date de creation <span>{{date}}</span></p>
+                  <div class="resum-total">
+                    <p>A payer (CFA) <span> {{numerique(total)}}</span></p>
                   </div>
-                  <p class="nb">NB: <span class="nb-text">lorem Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error, sint?</span></p>
                 </div>
               </div>
-
+              <div class="container-fluid" style="margin-top: -50px">
+                <table class="table table-bordered" style="width: 100%; border: 1px solid">
+                  <thead>
+                  <tr>
+                    <th align="left">Libellé</th>
+                    <th align="left">Quantité</th>
+                    <th align="left">PU</th>
+                    <th align="left">TVA</th>
+                    <th align="right">Montant</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr v-for="(product, index) in products" :key="index">
+                    <th align="left"> {{product.name}}</th>
+                    <td align="left">{{numerique(product.quantity)}}</td>
+                    <td align="left">{{numerique(product.price)}}</td>
+                    <td align="left">{{numerique(product.tva)}}%</td>
+                    <td align="right">{{numerique(product.total)}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+                <br>
+                <div class="total-Ht">
+                  <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(total)}} </div>
+                  <div class="reduc">Reduction</div> <div class="montant"> {{numerique(remise)}}</div>
+                  <!--              <div class="tva">Tva</div> <div class="montant">0</div>-->
+                  <div class="avance"> Avance</div> <div class="montant">0</div>
+                  <div class="total-ttc text-r">Total TTC</div> <div class="montant fin text-right">{{numerique(total)}} <span>CFA</span></div>
+                </div>
+                <p class="nb">NB: <span class="nb-text">lorem Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error, sint?</span></p>
+              </div>
             </div>
-            <footer contenteditable="true">
-              Copyright - Affairez <br>
-              Copyright - Affairez <br>
-            </footer>
 
           </div>
+          <footer contenteditable="true" class="text-center">
+            SARL au capital de 5 000 000 Fcfa- Yopougon quartier maroc- 10 bp 1022 abj 10 <br>
+            RCCM : CI-ABJ-2019-B-19674 Tél : 07360841/02626152/05051912
+          </footer>
 
-        </slot>
-
-      </section>
+        </div>
+      </template>
+      <!--      </section>-->
     </vue3-html2pdf>
 
-    <div id="a4" size="A4">
-
-      <header>
-        <p class="title">
-          <span>
-<!--            <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 40px; height: 40px; object-fit: cover"/>-->
-<!--            <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 40px; height: 40px; object-fit: cover"/>-->
-            <img src="~assets/fmmi-logo.jpeg" style="width: 50px; height: 50px; object-fit: cover"/>
-          </span>
-          <span class="float-right print-hide">
-          <button v-on:click="imprimer()">Imprimer</button>&nbsp;&nbsp;
-            <!--          <button v-on:click="download()">Telecharger</button>&nbsp;&nbsp;-->
-          <button v-on:click="generateReport()">PDF</button>
-        </span>
-        </p>
-      </header>
-      <div class="container" style="position: relative; top: 100px; contenteditable: true;
-      padding-right: 1cm; padding-left: 1cm;">
-
-<!--        <div class="facture" contenteditable="true">-->
-        <div class="facture">
-          <div class="logo">
-          </div>
-          <div class="fact-header">
-            <div class="col">
-              <div class="card">
-                <div class="card-header"> {{myentreprise.name}} </div>
-                <div class="card-body">
-                  <p>Tel: {{myentreprise.telephone}}</p>
-                  <p>Email: {{myentreprise.email}}</p>
-                  <p>CC N°:</p>
-                  <p>RCCM:</p>
-                  <p>BL: <input class="no-border" /> </p>
-                  <p>BC: <input class="no-border" /> </p>
-                </div>
-              </div>
-            </div>
-            <div class="info-right">
-              <div class="title h4">Facture #: {{facturenum}}</div>
-              <div class="title h4">{{client?.fullname}}</div>
-              <div class="title h4">{{client?.telephone_code}} {{client?.telephone}}</div>
-              <div class="title h4">{{client?.email}}</div>
-              <p>Date de creation <span>{{date}}</span></p>
-              <div class="resum-total">
-                <p>A payer (CFA) <span> {{numerique(total)}}</span></p>
-              </div>
-            </div>
-          </div>
-          <div class="container-fluid" style="margin-top: -50px">
-            <table class="table table-bordered" style="width: 100%; border: 1px solid">
-              <thead>
-              <tr>
-                <th align="left">Libellé</th>
-                <th align="left">Quantité</th>
-                <th align="left">PU</th>
-                <th align="left">TVA</th>
-                <th align="left">Montant</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="(product, index) in products" :key="index">
-                <th align="left"> {{product.name}}</th>
-                <td align="left">{{numerique(product.quantity)}}</td>
-                <td align="left">{{numerique(product.price)}}</td>
-                <td align="left">{{numerique(product.tva)}}%</td>
-                <td align="left">{{numerique(product.total)}}</td>
-              </tr>
-              </tbody>
-            </table>
-            <br>
-            <div class="total-Ht">
-              <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(total)}} </div>
-              <div class="reduc">Reduction</div> <div class="montant"> {{numerique(remise)}}</div>
-              <!--              <div class="tva">Tva</div> <div class="montant">0</div>-->
-              <div class="avance"> Avance</div> <div class="montant">0</div>
-              <div class="total-ttc">Total TTC</div> <div class="montant fin">{{numerique(total)}} <span>CFA</span></div>
-            </div>
-            <p class="nb">NB: <span class="nb-text">lorem Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error, sint?</span></p>
-          </div>
-        </div>
-
-      </div>
-      <footer contenteditable="true">
-        Copyright - Affairez
-      </footer>
-
-    </div>
 
   </div>
 
@@ -215,7 +143,10 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      date: ''
+      date: '',
+      typeselected: 'FACTURE',
+      printStatus: false,
+      facturenumero: ''
       // series: [{
       //     name: 'Nbre Dons.', data: [14, 45, 12, 47, 44, 32, 74, 12, 12]
       // }],
@@ -229,7 +160,8 @@ export default {
     color: { type: String, default: '#26a69a' },
     name: { type: String, default: 'Facture' },
     facturename: { type: String },
-    facturenum: { type: String }
+    facturenum: { type: String },
+    type: { type: String, default: null},
   },
   computed: {
     total() {
@@ -243,41 +175,18 @@ export default {
   created () {
     let date = new Date();
     this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), 4);
-    // if (this.products[0]['dateposted']) this.date = this.dateformat(this.products[0]['dateposted'], 4);
+
+    setTimeout(() => {
+      if(this.type) { this.typeselected = this.type }
+      if(this.facturenum) { this.facturenumero = this.facturenum }
+    }, 3000)
   },
   watch: {
-    // myentreprise: {
-    //     immediate: true,
-    //     handler (val) { this.myentreprise = val; }
-    // },
-    // fournisseur: {
-    //     immediate: true,
-    //     handler (val) { this.fournisseur = val; }
-    // },
-    // client: {
-    //     immediate: true,
-    //     handler (val) { this.client = val; }
-    // },
-    // facturenum: {
-    //     immediate: true,
-    //     handler (val) { this.facturenum = val; }
-    // },
-    // products: {
-    //     immediate: true,
-    //     handler (val) {
-    //         this.products = val;
-    //         if (this.products.length > 0) this.date = this.dateformat(this.products[0]['dateposted'], 4);
-    //     }
-    // },
-    // name: {
-    //     immediate: true,
-    //     handler (val) { this.name = val; }
-    // }
   },
   methods: {
-    imprimer() {
-      window.print();
-    },
+    // imprimer() {
+    //   window.print();
+    // },
     // download() {
     //     if (confirm('Voulez vous telecharger')) {
     //         htmlToImage.toJpeg(document.getElementById('a4'), { quality: 0.95 })
@@ -290,7 +199,24 @@ export default {
     //             });
     //     }
     // },
+    async beforeDownload ({ html2pdf, options, pdfContent }) {
+      console.log(html2pdf, options, pdfContent)
+      // await html2pdf().set(options).from(pdfContent).toPdf().get('pdf').then((pdf) => {
+      //   const totalPages = pdf.internal.getNumberOfPages()
+      //   for (let i = 1; i <= totalPages; i++) {
+      //     pdf.setPage(i)
+      //     pdf.setFontSize(10)
+      //     pdf.setTextColor(150)
+      //     pdf.text('Page ' + i + ' of ' + totalPages, (pdf.internal.pageSize.getWidth() * 0.88), (pdf.internal.pageSize.getHeight() - 0.3))
+      //   }
+      // }).save()
+    },
     generateReport () {
+      this.printStatus = true;
+      this.$refs.html2Pdf.generatePdf();
+      setTimeout(() => {this.printStatus = false;}, 1000)
+    },
+    mail () {
       this.$refs.html2Pdf.generatePdf();
     }
   }
@@ -334,7 +260,8 @@ header .title{
   color: #fff;
   padding: 3%;
   width: 200px;
-  height: 40px;
+  height: 35px;
+  font-weight: bolder;
 }
 
 /* table */
@@ -353,8 +280,9 @@ table{
 }
 
 .total-Ht .montant{
-  text-align: center;
+  text-align: right;
   margin-top: 5%;
+  padding-right: 1px;
 }
 /* montant ttc */
 .total-Ht .fin{
@@ -415,9 +343,10 @@ header{
   left: 0;
   right: 0;
   background-color: #ffffff;
-  border-bottom: 1px solid #67666a;
-  padding-right: 1.5cm;
-  padding-left: 1.5cm;
+  border-top: 0.5px solid #cfcfd3;
+  /*border-bottom: 1px solid #67666a;*/
+  padding-right: 1cm;
+  padding-left: 1cm;
 }
 
 footer {
@@ -425,7 +354,7 @@ footer {
   left: 0;
   right: 0;
   background-color: #ffffff;
-  border-top: 1px solid #67666a;
+  border-top: 0.5px solid #cfcfd3;
   padding-right: 1.5cm;
   padding-left: 1.5cm;
 }

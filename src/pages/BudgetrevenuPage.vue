@@ -9,7 +9,7 @@
         <q-table title="budgetrevenus" :rows="budgetrevenus" :columns="columns" :filter="filter"
                  :pagination="pagination" row-key="name">
           <template v-slot:top="props">
-            <div class="col-7 q-table__title">Liste des budgetrevenu</div>
+            <div class="col-7 q-table__title">Budget prévisionnel par mois</div>
             <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
             <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                    @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
@@ -63,8 +63,7 @@
 </template>
 
 <script>
-// import $httpService from '../services/httpService'
-// import basemixin from '../services/basemixin'
+
 import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
 import apimixin from "src/services/apimixin";
@@ -88,7 +87,6 @@ export default {
         { name: 'mois', align: 'left', label: 'mois', field: 'mois', sortable: true },
         { name: 'annee', align: 'left', label: 'annee', field: 'annee', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
-
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
       filter: '',
@@ -128,7 +126,9 @@ export default {
     },
     budgetrevenu_post () {
       this.showLoading()
-      $httpService.postApi('/api/post/budgetrevenu', this.budgetrevenu)
+      this.budgetrevenu.annee = this.budgetrevenu.mois.split('-')[0]
+      this.budgetrevenu.mois = this.budgetrevenu.mois.split('-')[1]
+      this.postApi('/api/post/budgetrevenu', this.budgetrevenu)
         .then((response) => {
           this.budgetrevenu = {}
           this.budgetrevenu_get()
@@ -138,7 +138,7 @@ export default {
     },
     budgetrevenu_update () {
       this.showLoading()
-      $httpService.putApi('/api/put/budgetrevenu', this.budgetrevenu)
+      this.putApi('/api/put/budgetrevenu', this.budgetrevenu)
         .then((response) => {
           this.budgetrevenu_get()
           this.showAlert(response.msg, 'secondary')
@@ -147,7 +147,7 @@ export default {
     },
     budgetrevenu_delete (_id) {
       this.showLoading()
-      $httpService.deleteApi('/api/delete/budgetrevenu/' + _id)
+      this.deleteApi('/api/delete/budgetrevenu/' + _id)
         .then((response) => {
           this.budgetrevenu_get()
           this.showAlert(response.msg, 'secondary')

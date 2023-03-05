@@ -11,34 +11,38 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" v-if="p_projet.id">
       <div class="col-12 q-pa-lg">
 
         <q-card class="q-pa-lg q-mb-xs">
           <div class="row">
-            <div class="col-2">
+            <div class="col-3">
               <q-card class="q-pa-lg bg-grey-3 text-center">
-                <h4>IDH</h4>
+                <br>
+                <h5><b>{{p_projet.titre}}</b></h5>
+                <br>
               </q-card>
             </div>
-            <div class="col-8 q-pa-lg">
+            <div class="col-7 q-pa-lg">
               <span class="text-h5">
                 237
-                <q-badge outline color="green" label="En cours" />
+                <q-badge outline color="green" label="Taches" />
               </span>
-              <p class="text-h6 text-grey">Projets courants</p>
+<!--              <p class="text-h6 text-grey">Projets courants</p>-->
+              <p class="text-h6 text-grey">{{p_projet.description}}</p>
               <br>
               <div class="row">
-                <div class="col-2 q-pa-sm q-mr-sm" style="border: 1px #e3e3e3 dashed">
-                  <span class="text-weight-bold">20 Déc 2023</span><br>
-                  <span>Echéance</span>
+                <div class="col-3 q-pa-sm q-mr-sm" style="border: 1px #e3e3e3 dashed">
+<!--                  <span class="text-weight-bold">20 Déc 2023</span><br>-->
+                  <span class="text-weight-bold">{{p_projet.datedebut}}</span><br>
+                  <span>Début</span>
                 </div>
-                <div class="col-2 q-pa-sm q-ml-sm" style="border: 1px #e3e3e3 dashed">
-                  <span class="text-weight-bold">10.000.000 </span><br>
-                  <span>Budget</span>
+                <div class="col-3 q-pa-sm q-ml-sm" style="border: 1px #e3e3e3 dashed">
+                  <span class="text-weight-bold">{{p_projet.datefin}}</span><br>
+                  <span>Fin</span>
                 </div>
-                <div class="col-2 q-pa-sm q-ml-sm" style="border: 1px #e3e3e3 dashed">
-                  <span class="text-weight-bold">10.000.000 </span><br>
+                <div class="col-3 q-pa-sm q-ml-sm" style="border: 1px #e3e3e3 dashed">
+                  <span class="text-weight-bold">{{numerique(p_projet.cout)}}</span><br>
                   <span>Budget</span>
                 </div>
               </div>
@@ -75,11 +79,8 @@
         <q-tab-panels v-model="tab" animated style="background-color: transparent">
 
           <q-tab-panel name="mails" class="no-margin no-padding">
-
             <br>
-
             <div class="row">
-
               <div class="col-6 q-mb-md">
                 <q-card class="q-mr-md q-pa-lg">
                   <span class="text-h5">
@@ -191,7 +192,9 @@
             <div class="row">
               <div class="col-12 q-mb-md">
                 <q-card class="q-pa-lg">
-                  <h6>Matières utilisées</h6>
+                  <br>
+                  <div class="text-h6">Matières utilisées</div>
+                  <br>
 
                   <div class="row" v-for="use in used">
                     <div class="col-4 q-pa-sm">
@@ -201,16 +204,20 @@
                         option-value="id"
                         map-options emit-value :options="products" label="produits" />
                     </div>
+<!--                    <div class="col-2 q-pa-sm">-->
+<!--                      <q-input :model-value="100" type="number" label="quantité restante" />-->
+<!--                    </div>-->
                     <div class="col-2 q-pa-sm">
-                      <q-input :model-value="100" type="number" label="quantité restante" />
+                      <q-input  type="number" label="quantité utilisé" v-model="use.quantite" />
                     </div>
-                    <div class="col-2 q-pa-sm">
-                      <q-input type="number" label="quantité utilisé" v-model="use.qte" />
-                    </div>
-                    <div class="col-2 q-pa-sm">
+                    <div class="col-3 q-pa-sm">
                       <br>
-                      <q-btn icon="edit" size="sm" />
-                      <q-btn icon="delete" size="sm" />
+                      <q-btn icon="add" size="sm" outline color="green"
+                             v-if="!use.id" @click="p_projet_stock_post(use)" title="ajouter" />
+                      &nbsp;
+                      <q-btn icon="edit" size="sm" v-if="use.id" outline title="modifier" />
+                      &nbsp;
+                      <q-btn icon="delete" size="sm" v-if="use.id" color="red" outline title="supprimer" />
                     </div>
                   </div>
 
@@ -300,7 +307,9 @@ export default {
   },
   mixins: [basemixin, apimixin],
   created () {
+    // console.log(this.$route.params, this.$route)
     this.p_projet_get()
+    this.p_projet_stock_get()
     const date = new Date()
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
@@ -326,24 +335,26 @@ export default {
         })
     },
     p_projet_get () {
-      $httpService.getApi('/api/get/p_projet')
+      $httpService.getApi('/api/get/p_projet/'+this.$route.params.id)
         .then((response) => {
-          this.p_projets = response
+          this.p_projet = response
         })
     },
-    onSubmit () {
-      if (this.p_projet.id) {
-        this.p_projet_update()
-      } else {
-        this.p_projet_post()
-      }
-    },
-    p_projet_post () {
-      this.showLoading()
-      $httpService.postWithParams('/api/post/p_projet', this.p_projet)
+
+    p_projet_stock_get () {
+      $httpService.getApi('/my/get/projet_stock/'+this.$route.params.id)
         .then((response) => {
-          this.p_projet = {}
-          this.p_projet_get()
+          this.used = response
+        })
+    },
+    p_projet_stock_post (item) {
+      item.annee = 2023
+      item.project_id = this.$route.params.id
+      item.p_project_id = this.$route.params.id
+      this.showLoading()
+      $httpService.postWithParams('/my/post/projet_stock', item)
+        .then((response) => {
+          this.p_projet_stock_get()
           this.showAlert(response.msg, 'secondary')
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
@@ -351,15 +362,6 @@ export default {
     p_projet_update () {
       this.showLoading()
       $httpService.putWithParams('/api/put/p_projet', this.p_projet)
-        .then((response) => {
-          this.p_projet_get()
-          this.showAlert(response.msg, 'secondary')
-          this.hideLoading()
-        }).catch(() => { this.hideLoading() })
-    },
-    p_projet_delete (_id) {
-      this.showLoading()
-      $httpService.deleteWithParams('/api/delete/p_projet/' + _id)
         .then((response) => {
           this.p_projet_get()
           this.showAlert(response.msg, 'secondary')

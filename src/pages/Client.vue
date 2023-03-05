@@ -344,7 +344,7 @@ export default {
       return false;
     },
     sales_stats_get(clientid) {
-      let params = { 'first': this.first, 'last': this.last, 'clientid': clientid };
+      let params = { 'first': '2023-02-31', 'last': '2023-02-28', 'clientid': clientid };
       $httpService.getWithParams('/my/get/sales_client_stats', params)
         .then((response) => {
           this.sales_stats = response;

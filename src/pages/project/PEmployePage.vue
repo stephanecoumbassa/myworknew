@@ -17,7 +17,7 @@
           <template v-slot:body="props">
             <q-tr :props="props">
               <q-td key='qrcode' :props='props'>
-                <vue-qr :text="props.row.id" :qid="props.row.id" />
+                <vue-qr :size="128" :text="props.row.euuid" :qid="props.row.euuid" />
               </q-td>
               <q-td key='nom' :props='props'> {{props.row.nom}} </q-td>
               <q-td key='prenom' :props='props'> {{props.row.prenom}} </q-td>
@@ -40,6 +40,9 @@
 
               <q-td key="actions" :props="props">
                 <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
+                <q-btn class="q-mr-xs" size="xs" color="primary" outline icon="event_available"
+                       @click="modalArrivee = true; p_arrivee_get(props.row.id)"></q-btn>
+                <q-btn class="q-mr-xs" size="xs" color="red" outline icon="event_busy"></q-btn>
                 <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_employe_delete(props.row.id)" icon="delete"></q-btn>
               </q-td>
             </q-tr>
@@ -57,7 +60,7 @@
           <q-form  @submit="onSubmit" class="q-gutter-md">
             <div class="row">
               <div class="col-12">
-                <vue-qr v-if="p_employe.id" :size="100" :text="p_employe.id" :qid="p_employe.id" />
+                <vue-qr v-if="p_employe.id" :size="75" :text="p_employe.euuid" :qid="p_employe.euuid" />
                 <q-input dense v-model='p_employe.nom' label='nom' />
                 <q-input dense v-model='p_employe.prenom' label='prenom' />
                 <q-input dense v-model='p_employe.telephone' label='telephone' />
@@ -91,6 +94,33 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="modalArrivee" full-width position="top">
+      <div class="row justify-center">
+        <div class="col-12 q-mt-md">
+          <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />
+          <br><br>
+          <q-table title="p_arrivees" :rows="p_arrivees" :columns="columnsArrivees" :filter="filter" :pagination="pagination" row-key="name">
+            <template v-slot:top="props">
+              <div class="col-7 q-table__title">Liste des arrivées</div>
+              <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            </template>
+            <template v-slot:body="props">
+              <q-tr :props="props">
+                <q-td key='venue' :props='props'> {{props.row.venue}} </q-td>
+                <q-td key='depart' :props='props'> {{props.row.depart}} </q-td>
+                <q-td key='heurepause' :props='props'> {{props.row.heurepause}} </q-td>
+                <q-td key='p_employe_id' :props='props'> {{props.row.p_employe_id}} </q-td>
+<!--                <q-td key="actions" :props="props">-->
+<!--                  <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>-->
+<!--                  <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_arrivee_delete(props.row.id)" icon="delete"></q-btn>-->
+<!--                </q-td>-->
+              </q-tr>
+            </template>
+          </q-table>
+        </div>
+      </div>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -109,11 +139,21 @@ export default {
       last: null,
       medium: false,
       medium2: false,
+      modalArrivee: false,
       maximizedToggle: true,
       name: null,
       image: null,
       p_employe: {},
       p_employes: [],
+      p_arrivees: [],
+      columnsArrivees: [
+        { name: 'venue', align: 'left', label: 'venue', field: 'venue', sortable: true },
+        { name: 'depart', align: 'left', label: 'depart', field: 'depart', sortable: true },
+        { name: 'heurepause', align: 'left', label: 'heurepause', field: 'heurepause', sortable: true },
+        { name: 'p_employe_id', align: 'left', label: 'p_employe_id', field: 'p_employe_id', sortable: true },
+
+        { name: 'actions', align: 'left', label: 'Actions' }
+      ],
       columns: [
         { name: 'qrcode', align: 'left', label: 'qrcode', field: 'qrcode', sortable: true },
         { name: 'nom', align: 'left', label: 'nom', field: 'nom', sortable: true },
@@ -161,6 +201,12 @@ export default {
     },
     handleFile (_name) {
       this.p_employe[_name] = this.$refs[_name].files[0]
+    },
+    p_arrivee_get (__id) {
+      $httpService.getApi('/api/get/p_arrivee/'+__id)
+        .then((response) => {
+          this.p_arrivees = response
+        })
     },
     p_employe_get () {
       $httpService.getApi('/api/get/p_employe')
