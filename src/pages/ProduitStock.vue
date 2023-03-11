@@ -7,7 +7,7 @@
         <q-card class="text-center justify-center content-center">
           <q-item clickable>
             <q-card-section>
-              <div class="text-center text-h5">Rubrique: Produits - Stocks</div>
+              <div class="text-center text-h5">Rubrique: Produits - Stock Inital par année</div>
               <br>
               <span>
                 <q-input type="number" v-model="date" placeholder="N°Inventaire" :dense="true"

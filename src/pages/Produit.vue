@@ -14,6 +14,18 @@
       </div>
 
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
+        <router-link class="item item-link" to="/produits/stock">
+          <q-card class="my-card" clickable>
+            <q-item clickable>
+              <q-card-section>
+                <div class="text-h6">Stock Initial</div>
+              </q-card-section>
+            </q-item>
+          </q-card>
+        </router-link>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
         <router-link class="item item-link" to="/produits/pertes">
           <q-card class="my-card" clickable>
             <q-item clickable>
@@ -25,17 +37,17 @@
         </router-link>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
-        <router-link class="item item-link" to="/produits/marques">
-          <q-card class="my-card" clickable>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h6">Marques</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
-      </div>
+<!--      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">-->
+<!--        <router-link class="item item-link" to="/produits/marques">-->
+<!--          <q-card class="my-card" clickable>-->
+<!--            <q-item clickable>-->
+<!--              <q-card-section>-->
+<!--                <div class="text-h6">Marques</div>-->
+<!--              </q-card-section>-->
+<!--            </q-item>-->
+<!--          </q-card>-->
+<!--        </router-link>-->
+<!--      </div>-->
 
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
         <router-link class="item item-link" to="/produits/inventaire">
@@ -69,7 +81,6 @@
                v-on:click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
         <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
         <br><br>
-        <q-icon name="dashboard_customize" />
 
         <q-table dense title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
           <template v-slot:top>
@@ -92,9 +103,10 @@
               <q-td key="marque" :props="props"> {{props.row.marque}} </q-td>
               <q-td key="amount" :props="props"> {{numerique(props.row.reste)}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " label="stat" />
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " label="vente" />
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" label="achat" />
+                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="prix_status = true; product_id = props.row.id; s_product_prix_get(props.row.id)" label="gest. prix" />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " label="stat" />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " label="vente" />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" label="achat" />
                 <q-btn class="q-mr-xs" size="xs" color="teal" v-on:click="update_get(props.row)" icon="edit" />
                 <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" v-on:click="photo_get(props.row)" icon="photo" />
                 <q-btn size="xs" color="red-9" title="Désactivé" v-on:click="product_disable(props.row)" icon="toggle_off" />
@@ -107,6 +119,34 @@
       </div>
     </div>
     <br>
+
+    <q-dialog v-model="prix_status">
+      <q-card style="width: 900px; max-width: 90vw;">
+        <q-card-section>
+          <div class="text-h6">gestion de prix par client</div>
+        </q-card-section>
+        <q-card-section>
+<!--          {{clients}}-->
+          <div class="row q-col-gutter-lg q-mt-xs" v-for="price in prices_list" :key="price.id">
+            <div class="col-3">
+              <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
+                        v-model="price.client_id" :options="clients" label="Clients" option-value="id" :option-label="'fullname'"
+                        input-debounce="300" />
+            </div>
+            <div class="col-3">
+              <q-input dense label="prix" v-model="price.prix_vente" />
+            </div>
+            <div class="col-3">
+              <q-btn label="Valider" outline @click="s_product_prix_post(price)"/>
+            </div>
+          </div>
+          <div class="row q-mt-lg">
+            <q-btn label="+" outline @click="prices_list.push({})" />
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+
 
     <q-dialog v-model="medium2">
       <q-card style="width: 900px; max-width: 90vw;">
@@ -283,6 +323,8 @@ import * as _ from 'lodash';
 import HelloComponent from '../components/hello.vue';
 import basemixin from './basemixin';
 import AreachartComponent from '../components/areachart.vue';
+import {ClientApi} from "src/services/api/client.api";
+import {SProductPrixApi} from "src/services/api/SProductPrixApi";
 export default {
   name: 'ProduitName',
   data () {
@@ -294,10 +336,12 @@ export default {
       last: null,
       medium: false,
       medium2: false,
+      prix_status: false,
       stat_status: false,
       vente_status: false,
       appro_status: false,
       entreprise: {},
+      prices_list: [],
       sales_stats: [],
       appro_stats: [],
       nbre_achetes: 0,
@@ -324,6 +368,7 @@ export default {
       domains2: [],
       users: [],
       products: [],
+      clients: [],
       product: { description: '', stock: 0, buy_price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1, customize: 0 },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
@@ -366,7 +411,7 @@ export default {
     this.categories_all();
     this.marques_get();
     this.shop_get();
-    // this.domain_get();
+    ClientApi.get().then((res) => { this.clients = res; console.log(res)})
     var date = new Date();
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
@@ -523,7 +568,19 @@ export default {
           const val3 = Object.values(this.vente_sum);
           this.series_vente_sum = [{ name: 'Francs CFA.', data: val3 }];
         });
-    }
+    },
+    s_product_prix_get (__id) {
+      SProductPrixApi.getId(__id).then((res) => { this.prices_list = res })
+    },
+    s_product_prix_post (params) {
+      params.product_id = this.product_id
+      this.showLoading()
+      SProductPrixApi.post(params)
+        .then((res) => {
+          this.hideLoading()
+          console.log(res)
+        })
+    },
   }
 }
 </script>

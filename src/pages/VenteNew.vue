@@ -94,6 +94,8 @@
                       <div>{{entreprise.name}}</div>
                       <div>{{entreprise.telephone}}</div>
                       <div>{{entreprise.email}}</div>
+                      <div>BL: <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" /> </div>
+                      <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>
                     </div>
                     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 content-center text-center print-only">
                       <!--                                            <q-input stack-label v-model="dateposted" type="date" label="Date"></q-input>-->
@@ -106,10 +108,13 @@
                         <q-input stack-label v-model="dateposted" type="datetime-local" label="Date" :dense="true"></q-input>
                         <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
                                   v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                                  input-debounce="0" :option-label="'fullname'" @input="assign_client(client)" :rules="[val => !!val || 'Ce champs est requis']" />
+                                  input-debounce="0" :option-label="'fullname'"
+                                  @update:model-value="assign_client(client)"
+                                  :rules="[val => !!val || 'Ce champs est requis']" />
                       </div>
                       <div class="row float-right q-mt-sm hidden-sm hidden-xs mobile-hide">
-                        <div class="col-12">Facture #: {{facture_number}}</div>
+<!--                        <div class="col-12">Facture #: {{facture_number}}</div>-->
+                        <div class="col-12">Facture #: <input v-model="facture_number" style="border: 0; border-bottom: 1px dashed grey" /></div>
                         <div class="col-12">Creation: {{date}}</div>
                         <div class="col-12">Entreprise Corporation</div>
                         <div class="col-12" v-if="myclient.id">{{myclient.fullname}}</div>
@@ -168,7 +173,7 @@
                   <!--                <div class="row q-pa-lg" v-if="validate_status">-->
                   <div class="row q-pa-lg q-mt-4" v-if="status_download" style="margin-top: 30px">
                     <q-btn class="print-hide" round color="positive" size="sm" icon="add" v-on:click="specialities_add" />&nbsp;&nbsp;
-                    <q-btn class="print-hide" label="Valider" size="sm" icon="save" type="submit" color="secondary" />&nbsp;&nbsp;
+                    <q-btn class="print-hide" color="secondary" label="Valider" size="sm" icon="save" type="submit"  />&nbsp;&nbsp;
                     <q-btn icon="receipt" color="grey-10" outline label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" />
                   </div>
                 </q-card-section>
@@ -231,7 +236,10 @@ export default {
       versements: [],
       date: '',
       dateposted: '',
+      bc: '',
+      bl: '',
       first: '',
+      clientId: 1,
       client: 1,
       client2: {},
       myclient: {},
@@ -329,11 +337,14 @@ export default {
       this.products[index].p.tva = 0;
     },
     assign_client (client) {
+      this.clientId = client.id;
       this.myclient.id = client.id;
       this.myclient.fullname = client.fullname;
       this.myclient.email = client.email;
       this.myclient.telephone = client.telephone;
       this.myclient.telephone_code = client.telephone_code;
+      this.products_get();
+      console.log(client);
     },
     qr_get(dataUrl) {
       this.image = dataUrl;
@@ -361,10 +372,12 @@ export default {
         credit: this.credit,
         avance: this.avance,
         total: this.total,
+        bl: this.bl,
+        bc: this.bc,
         dateposted: this.dateposted
       };
       if (confirm('Voulez vous ajouter')) {
-        this.postWithParams('/my/post/sales', params)
+        this.postApi('/my/post/sales', params)
           .then((response) => {
             var status = response['statut'];
             if (status == !0) {
@@ -387,18 +400,30 @@ export default {
     },
     sales_put() {
       if (confirm('Voulez vous modifier')) {
-        this.putWithParams('/my/put/sales', this.product).then((response) => {
+        this.putApi('/my/put/sales', this.product).then((response) => {
           this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
           this.sales_get();
         })
       }
     },
     products_get () {
-      this.getApi('/my/get/products')
-        .then((response) => {
-          this.appro_list = response;
-          this.appro_list2 = response;
-        })
+      this.getApi('/my/get/products').then((res) => {
+        var products = res;
+        this.getApi('/my/client/s_product_prix/'+this.clientId)
+          .then((response) => {
+            var products2 = response;
+            _.forEach(products, (arr1Item) => {
+              const arr2Item = _.find(products2, { 'product_id': arr1Item.id });
+              if (arr2Item) {
+                arr1Item.priceItem = arr2Item.prix_vente
+                arr1Item.price = arr2Item.prix_vente
+                arr1Item.sales_price = arr2Item.prix_vente
+              }
+            });
+            this.appro_list = products;
+            this.appro_list2 = products;
+          })
+      })
     },
     factures_number_get () {
       this.getApi('/my/get/facture_number')

@@ -287,6 +287,15 @@ export default {
         $httpService.postWithParams('/my/post/commands', params)
           .then((response) => {
             this.commands_get();
+            // factureid
+            let params2 = response.data;
+            params2.factureid = response.factureid
+            $httpService.postWithParams('/my/put/commands_credit', params2)
+              .then((res) => {
+                // console.log(res)
+                window.location.reload()
+              })
+
             this.$q.notify({ color: 'secondary', position: 'top-right', message: response.msg });
             this.validate_status = false;
             this.facture_number = response['factureid'];

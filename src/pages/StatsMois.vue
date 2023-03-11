@@ -227,33 +227,33 @@ export default {
       $httpService.getWithParams('/my/get/shop_stats')
         .then((response) => {
           this.credit = response.restant;
-          this.jour_stat = JSON.parse(response.vente_jour);
+          this.jour_stat = response.vente_jour;
 
-          this.users_count = response.users_count.replace(/null/g, '0');
-          this.clients_count = response.clients_count.replace(/null/g, '0');
-          this.fournisseurs_count = response.fournisseurs_count.replace(/null/g, '0');
+          this.users_count = response.users_count;
+          this.clients_count = response.clients_count;
+          this.fournisseurs_count = response.fournisseurs_count;
 
-          this.appro_count = JSON.parse(response.appro_count.replace(/null/g, '0'));
+          this.appro_count = response.appro_count;
           const val = Object.values(this.appro_count);
           this.series = [{ name: 'Nbre Dons.', data: val }];
 
-          this.appro_sum = JSON.parse(response.appro_sum.replace(/null/g, '0'));
+          this.appro_sum = response.appro_sum;
           const val2 = Object.values(this.appro_sum);
           this.series_appro_sum = [{ name: 'Francs CFA.', data: val2 }];
 
-          this.vente_sum = JSON.parse(response.vente_sum.replace(/null/g, '0'));
+          this.vente_sum = response.vente_sum;
           const val3 = Object.values(this.vente_sum);
           this.series_vente_sum = [{ name: 'Francs CFA.', data: val3 }];
 
-          this.vente_count = JSON.parse(response.vente_count.replace(/null/g, '0'));
+          this.vente_count = response.vente_count;
           const val4 = Object.values(this.vente_count);
           this.series_vente_count = [{ name: 'Francs CFA.', data: val4 }];
 
-          this.service_sum = JSON.parse(response.service_sum.replace(/null/g, '0'));
+          this.service_sum = response.service_sum;
           const val5 = Object.values(this.service_sum);
           this.service_sum_data = [{ name: 'Francs CFA.', data: val5 }];
 
-          this.depense_sum = JSON.parse(response.depense_sum.replace(/null/g, '0'));
+          this.depense_sum = response.depense_sum;
           const val6 = Object.values(this.depense_sum);
           this.depense_sum_data = [{ name: 'Francs CFA.', data: val6 }];
         });

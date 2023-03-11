@@ -76,8 +76,8 @@
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">
         <q-card class="my-card">
           <q-card-section>
-            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />
-            <mixedchart />
+<!--            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />-->
+            <mixedchart :series="series_vente_sum" />
           </q-card-section>
         </q-card>
       </div>
@@ -237,8 +237,9 @@ export default {
           const val3 = Object.values(vente_sum);
           const valcredit = Object.values(credit_sum);
           this.series_vente_sum = [
-            { name: 'Vendu', data: val3 },
-            { name: 'Encaissé', data: valcredit },
+            { name: 'Vendu', type: 'column', data: val3 },
+            { name: 'Encaissé', type: 'column', data: valcredit },
+            {name: 'Budget', type: 'line', data: [1200000, 1300000, 1400000, 1500000, 44, 45, 50, 58] }
           ];
         });
     },

@@ -21,15 +21,15 @@
       <!--      <section ref="pdf-content">-->
       <template  v-slot:pdf-content>
         <div id="a4" size="A4">
-          <h1 v-if="typeselected==='PROFORMA'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
+          <h1 v-if="typeselected==='proforma'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
                     letter-spacing: 30px;transform: rotate(318deg);font-weight: bolder;z-index: 9;">PROFORMA</h1>
-          <h1 v-if="typeselected==='DEVIS'" style="position: absolute;top: 20%;left: 10%;color: #ff000045;
+          <h1 v-if="typeselected==='devis'" style="position: absolute;top: 20%;left: 10%;color: #ff000045;
                     letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
                         font-size: 150px; ;z-index: 9">DEVIS</h1>
-          <h1 v-if="typeselected==='FACTURE'" style="position: absolute;top: 25%;left: 0%;color: #ff000045;
+          <h1 v-if="typeselected==='facture'" style="position: absolute;top: 25%;left: 0%;color: #ff000045;
                   letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
                       font-size: 120px;z-index: 9">FACTURE</h1>
-          <h1 v-if="typeselected==='BL'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
+          <h1 v-if="typeselected==='bl'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
                        transform: rotate(318deg);font-weight: bolder;font-size: 90px;z-index: 9;">BON DE LIVRAISON</h1>
           <header>
             <div class="row no-padding no-margin print-hide title">
@@ -179,6 +179,8 @@ export default {
     setTimeout(() => {
       if(this.type) { this.typeselected = this.type }
       if(this.facturenum) { this.facturenumero = this.facturenum }
+      console.log(this.type)
+      console.log(this.typeselected)
     }, 3000)
   },
   watch: {

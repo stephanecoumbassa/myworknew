@@ -6,7 +6,7 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de devis" type=""
+            <facture name="Facture de devis" type="devis"
                      :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
@@ -16,12 +16,14 @@
             <q-card-section contenteditable="true">
               <div class="row">
                 <div class="col-6 alignleft">
-<!--                  <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 100px; height: 100px; object-fit: cover"/>-->
-<!--                  <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 100px; height: 100px; object-fit: cover"/>-->
+                  <!--                  <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 100px; height: 100px; object-fit: cover"/>-->
+                  <!--                  <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 100px; height: 100px; object-fit: cover"/>-->
                   <img src="~assets/fmmi-logo.jpeg" style="width: 100px; height: 100px; object-fit: cover"/>
                   <!--  <div>{{entreprise.name}}</div>-->
                   <div>{{entreprise.telephone}}</div>
                   <div>{{entreprise.email}}</div>
+                  <div>BL: <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" /> </div>
+                  <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>
                 </div>
                 <div class="col-6 text-right float-right">
                   <div>Facture #: {{facture_number}}</div>
@@ -70,7 +72,8 @@
 
                 <div class="row q-mt-xs" style="min-height: 20px">
                   <h6 class="col-3 no-padding"> </h6>
-                  <h6 class="offset-5 text-right col-4 no-padding">{{numerique(Math.round(total)) }} FCFA </h6>
+                  <h6 class="offset-5 text-right col-4 no-padding">{{ total}} FCFA </h6>
+                  <!--                  <h6 class="offset-5 text-right col-4 no-padding">{{numerique(Math.round(total)) }} FCFA </h6>-->
                 </div>
 
                 <div class="row" v-if="validate_status">
@@ -90,25 +93,62 @@
           </q-card>
         </q-dialog>
 
+        <q-dialog v-model="fileStatus">
+          <q-card style="width: 500px; max-width: 100%;" id="fichiers" :flat="true">
+            <q-card-section>
+              <form method="post" enctype="multipart/form-data">
+<!--                <q-input type="file" id="doc" name="doc" @change="changePhoto" />-->
+                <q-input dense v-model="fileTitre" label="titre" />
+                <br>
+                <input type="file" ref="doc" id="doc" name="doc" @change="changePhoto" />
+                <br>
+                <br>
+                <q-btn  color="secondary" class="full-width" size="sm" label="Envoyer" @click="sendFile()" />
+              </form>
+            </q-card-section>
+            <q-card-section>
+              <q-list bordered padding class="rounded-borders">
+                <q-item clickable v-ripple v-for="(myfile, key) in files" :key="key">
+                  <q-item-section avatar top>
+                    <q-avatar color="primary" text-color="white">{{myfile.extension}}</q-avatar>
+                  </q-item-section>
+
+                  <q-item-section>
+                    <q-item-label lines="1">{{myfile.titre}}</q-item-label>
+                    <q-item-label caption>{{myfile.date}}</q-item-label>
+                  </q-item-section>
+
+                  <q-item-section side>
+                    <a target="_blank" :href="'https://fmmi.ci/apistock/public/assets/uploads/devis/'+myfile.file">
+                      <q-icon name="visibility" color="primary" />
+                    </a>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-card-section>
+          </q-card>
+        </q-dialog>
+
         <q-btn class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
-               @click="fullWidth = true; validate_status = true; add_status = true" /><br>
+               @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
 
         <div class="row">
           <div class="col-12 q-pa-lg">
             <q-input class="row" autocomplete type="search" v-model="search"
                      v-on:keyup="facture_filter_get(search)" label="Rechercher" />
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md"
+          <div class="col-lg-3 col-md-4 col-sm-6 col-12 q-pa-md"
                v-for="(item, index) in sales_list" :key="index">
             <q-card class="q-pa-lg">
-              Devis N°
-              {{item.id_vente}}<br><br>
-              <span class="float-right" v-if="item.name">
-                                {{item.name}} {{item.last_name}}<br>
-                <!--                {{dateformat(item.date_posted, 2)}}-->
-                           </span>
-              <br>
+              <q-card-section>
+                Devis N° {{item.id_vente}}<br>
+                <div v-if="item.name">
+                  {{item.name}} {{item.last_name}}<br>
+                  {{dateformat(item.date_posted, 2)}}
+                </div>
+              </q-card-section>
               <q-card-actions>
+                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>
                 <q-btn flat icon="edit" @click="fullWidth = true; add_status = false; devis_get_by(item.id_vente)"></q-btn>
                 <q-btn flat icon="receipt" @click="facture_status2 = true; devis_get_by(item.id_vente)"></q-btn>
               </q-card-actions>
@@ -129,6 +169,8 @@ import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
 import FactureComponent from '../components/facture_component.vue';
+import axios from "axios";
+import {postApi} from "src/services/apiService";
 export default {
   name: 'DevisPage',
   data () {
@@ -139,6 +181,7 @@ export default {
       name: null,
       search: null,
       grid: false,
+      fileStatus: false,
       validate_status: true,
       add_status: true,
       fullWidth: false,
@@ -156,10 +199,16 @@ export default {
       sell: null,
       buy: null,
       categories: [],
+      formData: {},
+      fileTitre: '',
+      files: [],
       date: '',
+      devisId: 1,
       client: 1,
       client2: { id: null },
       image: '',
+      bc: '',
+      bl: '',
       users: [],
       clients: [],
       // products: [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }],
@@ -181,6 +230,7 @@ export default {
   },
   mixins: [basemixin],
   created () {
+    this.formData = new FormData();
     var date = new Date();
     this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
@@ -192,11 +242,7 @@ export default {
   },
   computed: {
     total() {
-      return this.products.reduce((product, item) => product +
-        (item.prix_unitaire * item.quantite_vendu +
-          ((item.tva * item.prix_unitaire * item.quantite_vendu)/100)
-          - item.remise_totale), 0);
-      // return this.products.reduce((product, item) => product + (item.prix_unitaire * item.quantite_vendu + (item.tva * item.prix_unitaire * item.quantite_vendu) - item.remise_totale), 0);
+      return this.products2.reduce((product, item) => product + (item.p.sales_price * item.quantity + (item.p.tva * item.p.sales_price * item.quantity /100)), 0);
     }
   },
   methods: {
@@ -254,6 +300,7 @@ export default {
       this.medium2 = true;
       this.product = item;
     },
+
     convertir_post() {
       let params = { agent: this.agent,
         products: this.products,
@@ -280,8 +327,9 @@ export default {
           })
       }
     },
+
     sales_post() {
-      let params = { agent: this.agent, products: this.products2, clientid: this.client2.id, credit: this.credit, avance: this.avance, total: this.total };
+      let params = { agent: this.agent, products: this.products2, clientid: this.client2.id, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc };
       if (confirm('Voulez vous ajouter')) {
         $httpService.postWithParams('/my/post/devis', params)
           .then((response) => {
@@ -290,11 +338,13 @@ export default {
               this.$q.notify({
                 color: 'green', position: 'top', message: response.msg, icon: 'report_problem', timeout: 10000
               });
+              window.location.reload()
               this.devis_get_by(this.facture_number);
               // this.facture_number = response['factureid'];
               this.validate_status = false;
               this.sales_get();
             } else {
+              window.location.reload()
               this.$q.notify({
                 color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
               });
@@ -302,28 +352,7 @@ export default {
           })
       }
     },
-    devis_post2() {
-      let params = { agent: this.agent, products: this.products2, id_vente: this.facture_number, clientid: this.client2.id, credit: this.credit, avance: this.avance, total: this.total };
-      if (confirm('Voulez vous ajouter')) {
-        $httpService.postWithParams('/my/post/devis', params)
-          .then((response) => {
-            var status = response['status'];
-            if (status == 1) {
-              this.$q.notify({
-                color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-              });
-              this.devis_get_by(this.facture_number);
-              // this.facture_number = response['factureid'];
-              this.validate_status = false;
-              this.products2 = [];
-            } else {
-              this.$q.notify({
-                color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
-              });
-            }
-          })
-      }
-    },
+
     sales_put() {
       if (confirm('Voulez vous modifier')) {
         $httpService.putWithParams('/my/put/sales', this.product).then((response) => {
@@ -332,6 +361,7 @@ export default {
         })
       }
     },
+
     products_get () {
       $httpService.getWithParams('/my/get/products')
         .then((response) => {
@@ -339,6 +369,7 @@ export default {
           this.products_list2 = response;
         })
     },
+
     sales_get () {
       $httpService.getWithParams('/my/get/devis')
         .then((response) => {
@@ -346,6 +377,7 @@ export default {
           this.sales_list = response;
         })
     },
+
     devis_get_by (idvente) {
       $httpService.getWithParams('/my/get/devis/' + idvente)
         .then((response) => {
@@ -361,6 +393,7 @@ export default {
           }
         })
     },
+
     sales_stats_get() {
       let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
       $httpService.getWithParams('/my/get/sales_stats', params)
@@ -370,6 +403,8 @@ export default {
           this.montant_vendus = _.sumBy(this.sales_list, 'montant_vendu');
         })
     },
+
+
     specialities_add () {
       this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
     },
@@ -391,6 +426,34 @@ export default {
         this.products[index].p.quantity = parseInt(val);
       })
     },
+
+    changePhoto($event) {
+      const file = $event.target.files[0];
+      this.formData.append('doc', file);
+    },
+
+    sendFile() {
+      this.formData.append('devis_id', this.devisId);
+      this.formData.append('titre', this.fileTitre);
+      // postApi('/my/post/devis_file', this.formData).then((response) => {
+      //   console.log(response.data);
+      // })
+      axios.post('https://fmmi.ci/apistock/api/post/devis_file', this.formData)
+        .then((response) => {
+          this.showAlert(response.data)
+          this.files_get(this.devisId);
+          this.fileTitre = '';
+          this.formData = {};
+        })
+    },
+
+    files_get (_devisId) {
+      $httpService.getWithParams('/api/get/devis_file/'+_devisId)
+        .then((response) => {
+          this.files = response;
+        })
+    },
+
     startDownload() {
       confirm('Voulez-vous generer');
       return false;
