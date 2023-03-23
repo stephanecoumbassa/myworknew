@@ -14,10 +14,10 @@ var basemixin = {
       last: null,
       loading: false,
       state: storeGlobal.state,
-      baseurl: 'https://affairez.com',
-      apiurl: 'https://affairez.com/apistock',
-      uploadurl: 'https://affairez.com/apistock/public/shop',
-      upload_url: 'https://affairez.com/apistock/public/shop',
+      baseurl: 'https://fmmi.ci',
+      apiurl: 'https://fmmi.ci/apistock',
+      uploadShop: 'https://fmmi.ci/apistock/public/shop',
+      uploadurl: 'https://fmmi.ci/apistock/public/assets',
       ecommerceurl: 'https://affairez.com/vuecommerce',
       fonts: {
         arial: 'Arial',
@@ -224,6 +224,36 @@ var basemixin = {
         msg = { color: 'green', position: 'top', message: response.msg, icon: 'report_problem' }
         : msg = { color: 'warning', position: 'top', message: response.msg, icon: 'report_problem' };
       this.$q.notify(msg);
+    },
+    json2csv(json, __name = "file") {
+      // var json = [{id: 1, name: 'test'}, {id: 2, name: 'test2'}]
+      var fields = Object.keys(json[0]);
+      var replacer = function (key, value) {
+        return value === null ? "" : value;
+      };
+      var csv = json.map(function (row) {
+        return fields
+          .map(function (fieldName) {
+            return JSON.stringify(row[fieldName], replacer);
+          })
+          .join(",");
+      });
+      csv.unshift(fields.join(",")); // add header column
+      csv = csv.join("\r\n");
+      const download = (filename, text) => {
+        var element = document.createElement("a");
+        element.setAttribute(
+          "href",
+          "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+        );
+        element.setAttribute("download", filename);
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      };
+      download(__name + ".csv", csv);
+      return csv;
     },
   },
 };

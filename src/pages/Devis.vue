@@ -6,7 +6,7 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de devis" type="devis"
+            <facture name="Facture de devis" type="proforma"
                      :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
@@ -258,8 +258,9 @@ export default {
     },
     facture_filter_get() {
       const val1 = this.sales_init.filter((x) => {
-        return x.id_vente.toString().includes(this.search) || x.name.toString().includes(this.search) ||
-          x.last_name.toString().includes(this.search);
+        return x.id_vente.toLowerCase().includes(this.search.toLowerCase())
+          || x.fullname.toLowerCase().includes(this.search.toLowerCase())
+          // || x.last_name.toLowerCase().toString().includes(this.search.toLowerCase());
       });
       this.sales_list = val1;
     },

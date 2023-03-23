@@ -14,7 +14,7 @@
     <div class="row">
       <div class="col q-pa-lg">
         <q-card class="q-pa-md">
-          <span class="text-h4">237</span>
+          <span class="text-h5">237</span>
           <p class="text-h6 text-grey">Projets courants</p>
           <div class="row">
             <div class="col-6">
@@ -45,7 +45,7 @@
       </div>
       <div class="col q-pa-lg">
         <q-card class="q-pa-md">
-          <span class="text-h4">3,290.00 CFA</span>
+          <span class="text-h5">3,290.00 CFA</span>
           <p class="text-h6 text-grey">Projets finance</p>
           <q-list dense>
             <q-item dense>
@@ -81,7 +81,7 @@
       </div>
       <div class="col q-pa-lg">
         <q-card class="q-pa-md">
-          <span class="text-h4">49</span>
+          <span class="text-h5">49</span>
           <p class="text-h6 text-grey">Clients</p>
           <div class="row" style="height: 145px;">
             <q-avatar
@@ -99,12 +99,61 @@
     </div>
 
     <div class="row">
-      <div class="col-9 q-pa-lg">
+      <div class="col-12 q-pa-lg">
         <span class="text-h6">Projets</span>
+        <span class="text-right float-right">
+          <q-icon size="md" name="list" @click="isGrid=false" />
+          <q-icon size="md" name="grid_view" @click="isGrid=true"  />
+        </span>
       </div>
     </div>
 
-    <div class="row">
+    <div class="row justify-center" v-if="!isGrid">
+      <div class="col-12 q-pa-lg">
+<!--        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />-->
+<!--        <br><br>-->
+        <q-table title="p_projets" :rows="p_projets" :columns="columns" :filter="filter"
+                 :pagination="pagination" row-key="name">
+          <template v-slot:top="props">
+            <div class="col-7 q-table__title">Liste des p_projet</div>
+            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+          </template>
+          <template v-slot:body="props">
+            <q-tr :props="props">
+              <q-td key='client' :props='props'> {{props.row.client}} </q-td>
+              <q-td key='titre' :props='props'> {{props.row.titre}} </q-td>
+              <q-td key='description' :props='props'> {{props.row.description}} </q-td>
+              <q-td key='status' :props='props'> {{props.row.status}} </q-td>
+              <q-td key='qte' :props='props'> {{props.row.qte}} </q-td>
+              <q-td key='prix_unitaire' :props='props'> {{props.row.prix_unitaire}} </q-td>
+              <q-td key='montant_ht' :props='props'> {{props.row.montant_ht}} </q-td>
+<!--              <q-td key='objectif' :props='props'> {{props.row.objectif}} </q-td>-->
+              <q-td key='progress' :props='props'> {{props.row.progress}} </q-td>
+              <q-td key='datedebut' :props='props'> {{props.row.datedebut}} </q-td>
+              <q-td key='datefin' :props='props'> {{props.row.datefin}} </q-td>
+              <q-td key='createdby' :props='props'> {{props.row.createdby}} </q-td>
+              <q-td key='priorite' :props='props'> {{props.row.priorite}} </q-td>
+              <q-td key='cout' :props='props'> {{props.row.cout}} </q-td>
+              <q-td key='clientid' :props='props'> {{props.row.clientid}} </q-td>
+              <q-td key='porteur' :props='props'> {{props.row.porteur}} </q-td>
+              <q-td key='execucants' :props='props'> {{props.row.execucants}} </q-td>
+              <q-td key='puuid' :props='props'> {{props.row.puuid}} </q-td>
+              <q-td key='photo' :props='props'> <img v-if='props.row.photo' width='80' height='80' :src="uploadurl+'/p_projet/'+props.row.photo" :alt='props.row.photo' /> </q-td>
+
+              <q-td key="actions" :props="props">
+                <q-btn class="q-mr-xs" outline size="xs" color="dark" icon="visibility" @click="navigate('/projet/'+props.row.id)" />
+                <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit" />
+                <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_projet_delete(props.row.id)" icon="delete" />
+              </q-td>
+            </q-tr>
+          </template>
+        </q-table>
+      </div>
+    </div>
+
+    <div class="row" v-if="isGrid">
       <div class="col-12 col-md-4 q-pa-lg" v-for="project in p_projets" key="project.id">
         <q-card class="q-pa-lg" clickable @click="navigate('/projet/'+project.id)">
           <div class="row">
@@ -203,23 +252,28 @@ export default {
       maximizedToggle: true,
       name: null,
       image: null,
+      isGrid: false,
       p_projet: {},
       p_projets: [],
       columns: [
+        { name: 'client', align: 'left', label: 'Client', field: 'client', sortable: true },
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
         { name: 'status', align: 'left', label: 'status', field: 'status', sortable: true },
-        { name: 'objectif', align: 'left', label: 'objectif', field: 'objectif', sortable: true },
+        { name: 'qte', align: 'left', label: 'Qté', field: 'qte', sortable: true },
+        { name: 'prix_unitaire', align: 'left', label: 'P unit.', field: 'prix_unitaire', sortable: true },
+        { name: 'montant_ht', align: 'left', label: 'HT', field: 'montant_ht', sortable: true },
+        // { name: 'objectif', align: 'left', label: 'objectif', field: 'objectif', sortable: true },
         { name: 'progress', align: 'left', label: 'progress', field: 'progress', sortable: true },
         { name: 'datedebut', align: 'left', label: 'datedebut', field: 'datedebut', sortable: true },
         { name: 'datefin', align: 'left', label: 'datefin', field: 'datefin', sortable: true },
         { name: 'createdby', align: 'left', label: 'createdby', field: 'createdby', sortable: true },
         { name: 'priorite', align: 'left', label: 'priorite', field: 'priorite', sortable: true },
-        { name: 'cout', align: 'left', label: 'cout', field: 'cout', sortable: true },
-        { name: 'clientid', align: 'left', label: 'clientid', field: 'clientid', sortable: true },
-        { name: 'porteur', align: 'left', label: 'porteur', field: 'porteur', sortable: true },
-        { name: 'execucants', align: 'left', label: 'execucants', field: 'execucants', sortable: true },
-        { name: 'puuid', align: 'left', label: 'puuid', field: 'puuid', sortable: true },
+        // { name: 'cout', align: 'left', label: 'cout', field: 'cout', sortable: true },
+        // { name: 'clientid', align: 'left', label: 'clientid', field: 'clientid', sortable: true },
+        // { name: 'porteur', align: 'left', label: 'porteur', field: 'porteur', sortable: true },
+        // { name: 'execucants', align: 'left', label: 'execucants', field: 'execucants', sortable: true },
+        // { name: 'puuid', align: 'left', label: 'puuid', field: 'puuid', sortable: true },
         { name: 'photo', align: 'left', label: 'photo', field: 'photo', sortable: true },
 
         { name: 'actions', align: 'left', label: 'Actions' }

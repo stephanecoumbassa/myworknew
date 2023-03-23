@@ -75,6 +75,7 @@
 
     </div>
 
+
     <div class="row justify-center q-pa-sm">
       <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md q-pa-sm">
         <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
@@ -94,7 +95,8 @@
                 <q-icon name="dashboard_customize" v-if="props.row.customize" />
               </q-td>
               <q-td key="photo" :props="props">
-                <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>
+<!--                <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>-->
+                <img v-if="props.row.photo" :src="uploadurl+'/uploads/products/'+props.row.photo" style="width: 70px; height: 70px; object-fit: cover"/>
               </q-td>
               <q-td key="name" :props="props"> {{props.row.name}} </q-td>
               <q-td key="domainname" :props="props"> {{props.row.domainname}} </q-td>
@@ -151,22 +153,26 @@
     <q-dialog v-model="medium2">
       <q-card style="width: 900px; max-width: 90vw;">
         <q-card-section>
-          <div class="text-h6">Ajouter un produit</div>
+          <div class="text-h6" v-if="!product.id">Ajouter un produit</div>
+          <div class="text-h6" v-if="product.id">Modifier un produit</div>
         </q-card-section>
 
         <q-card-section>
           <q-form  @submit="onSubmit" class="q-gutter-md">
             <div class="row">
               <div class="col-md-7 col-sm-12">
-                <q-input autocomplete v-model="product.name" id="name" label="Nom du produit *" :dense="true"
+                <q-input autocomplete v-model="product.name" id="name" label="Nom du produit *" :dense="true" outlined
                          lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
 
+                <q-select v-model="product.type" :options="['matiere', 'produit', 'outil']" id="type" label="type" map-options emit-value :dense="true"
+                          stack-label input-debounce="0" :rules="[ val => val || 'champs obligattoire']" outlined />
+
                 <q-select v-model="product.domainid" :options="domains" id="domainid" label="Domains" map-options emit-value :dense="true"
-                          option-value="id" stack-label input-debounce="0" option-label="name"
+                          option-value="id" stack-label input-debounce="0" option-label="name" outlined
                           @input="parent_get(product.domainid)" :rules="[ val => val || 'champs obligattoire']" />
 
                 <q-select v-model="product.parent_categorie_id" :options="parents" id="parent_categorie_id" label="Parents" map-options emit-value :dense="true"
-                          option-value="id" stack-label input-debounce="0" option-label="name"
+                          option-value="id" stack-label input-debounce="0" option-label="name" outlined
                           @input="categorie_get(product.parent_categorie_id)" :rules="[ val => val || 'champs obligattoire']" />
 
 <!--                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"-->
@@ -175,18 +181,18 @@
 <!--                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"-->
 <!--                          option-value="id" stack-label input-debounce="0" option-label="nom" />-->
 <!--                <br>-->
-                <q-input autocomplete type="number" v-model="product.price" label="Prix de vente *" :dense="true" />
+                <q-input autocomplete type="number" v-model="product.price" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
 <!--                <br>-->
 <!--                <q-input type="number"  v-model="product.tva" label="TVA *" />-->
 <!--                <br>-->
 <!--                <q-input autocomplete type="number"  v-model="product.promo" label="Prix de promotionel" :dense="true" />-->
 
-                <div class="q-gutter-sm">
-                  <br>
-                  <label>Voulez vous vendre sur internet</label>
-                  <q-radio v-model="product.webstatus" :val="0" label="Non" />
-                  <q-radio v-model="product.webstatus" :val="1" label="Oui" />
-                </div>
+<!--                <div class="q-gutter-sm">-->
+<!--                  <br>-->
+<!--                  <label>Voulez vous vendre sur internet</label>-->
+<!--                  <q-radio v-model="product.webstatus" :val="0" label="Non" />-->
+<!--                  <q-radio v-model="product.webstatus" :val="1" label="Oui" />-->
+<!--                </div>-->
 
 <!--                <div class="q-gutter-sm">-->
 <!--                  <br>-->
@@ -195,26 +201,40 @@
 <!--                  <q-radio v-model="product.customize" :val="1" label="Oui" />-->
 <!--                </div>-->
 
-                <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />
-                <q-input type="number"  v-model="product.alert_threshold" label="Alert *" />
+<!--                <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />-->
+                <q-input type="number"  v-model="product.alert_threshold" label="Alert *" outlined dense hint="" />
                 <!--<q-input autocomplete type="textarea"  v-model="product.serial" label="Numero de serie" />-->
-                <q-input type="text"  v-model="product.reference" label="Reference Produit" />
+                <q-input type="text"  v-model="product.reference" label="Reference Produit" outlined dense hint="" />
 
-                <q-input v-if="!product.id" type="number" v-model="product.buy_price" label="Prix achat *" />
-                <q-input v-if="!product.id" type="number" v-model="product.stock" label="Stock Initial *" />
+<!--                <q-input v-if="!product.id" type="number" v-model="product.buy_price" label="Prix achat *" />-->
+<!--                <q-input v-if="!product.id" type="number" v-model="product.stock" label="Stock Initial *" />-->
 
-                <q-input type="text" v-model="product.youtube" label="Url Video Youtube *" />
+                <q-input type="text" v-model="product.youtube" label="Url Video Youtube *" outlined dense hint="" />
 
                 <div class="row">
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.largeur" label="Largeur en m" :dense="true" />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.longueur" label="Longueur en m" :dense="true" />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.hauteur" label="Hauteur en m" :dense="true" />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.poids" label="Poids en KG" :dense="true" />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.largeur" label="Largeur en m" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.longueur" label="Longueur en m" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.hauteur" label="Hauteur en m" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.poids" label="Poids en KG" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.diametre" label="Diamètre" :dense="true" outlined />
                 </div>
 
               </div>
               <div class="col-md-5 col-sm-12 content-center text-center">
-                <vue-qr :size="200" :text="JSON.stringify(product)" :callback="test" qid="testid" />
+                <vue-qr :size="200" :text="JSON.stringify(product.id)" :callback="test" qid="testid" />
+                <br>
+                {{product.photo}}
+                <q-uploader
+                  v-model="product.photo"
+                  class="text-center"
+                  :url="apiurl+'/my/photo/products/'+product.id"
+                  color="grey"
+                  :headers="[{name: 'Authorization', value: 'Bearer '+token}]"
+                  :form-fields="[{name: 'id', value: product.id}]"
+                  flat
+                  bordered
+                  style="max-width: 200px; margin: 0 auto"
+                />
               </div>
             </div>
             <q-editor v-model="product.description" min-height="5rem" :toolbar="toolbar" />
@@ -325,11 +345,13 @@ import basemixin from './basemixin';
 import AreachartComponent from '../components/areachart.vue';
 import {ClientApi} from "src/services/api/client.api";
 import {SProductPrixApi} from "src/services/api/SProductPrixApi";
+import {LocalStorage} from "quasar";
 export default {
   name: 'ProduitName',
   data () {
     return {
       product_id: 1,
+      token: LocalStorage.getItem('token'),
       loading1: false,
       red: '#6d1412',
       first: null,

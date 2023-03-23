@@ -9,7 +9,7 @@ export let baseurl = BASEURL;
 export const baseurl2 = 'http://localhost:8000';
 // export let baseurl = 'https://batison.com/apistock';
 const headers = {
-	headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
+	headers: { Authorization: 'Bearer ' + LocalStorage.getItem('token') }
 };
 
 export function getWithParams(url, params = null) {

@@ -39,7 +39,7 @@
               <div class="col-3"></div>
               <div class="col-3" v-if="!printStatus">
                 <span>
-                  <q-select dense v-model="typeselected" :options="['BL', 'FACTURE', 'DEVIS', 'PROFORMA']" />
+                  <q-select dense v-model="typeselected" :options="['bl', 'facture', 'devis', 'proforma']" />
                 </span>
               </div>
               <div class="col-3 text-right" v-if="!printStatus">
@@ -104,12 +104,14 @@
                 <br>
                 <div class="total-Ht">
                   <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(total)}} </div>
-                  <div class="reduc">Reduction</div> <div class="montant"> {{numerique(remise)}}</div>
+                  <div class="reduc">TVA</div> <div class="montant"> 18%</div>
                   <!--              <div class="tva">Tva</div> <div class="montant">0</div>-->
-                  <div class="avance"> Avance</div> <div class="montant">0</div>
+                  <div class="reduc" v-if="remise">Remise</div> <div v-if="remise" class="montant"> {{numerique(remise)}}</div>
+                  <div class="avance" v-if="acompte"> Acompte</div> <div v-if="acompte" class="montant">0</div>
                   <div class="total-ttc text-r">Total TTC</div> <div class="montant fin text-right">{{numerique(total)}} <span>CFA</span></div>
                 </div>
-                <p class="nb">NB: <span class="nb-text">lorem Lorem ipsum dolor sit amet consectetur, adipisicing elit. Error, sint?</span></p>
+                <p class="nb">Condition de paiement: <span class="nb-text">30 % à la commande, paiement à reception de facture</span></p>
+                <p class="nb">Mode de paiement: <span class="nb-text">Par virement ou chèque</span></p>
               </div>
             </div>
 
@@ -169,6 +171,9 @@ export default {
       return this.products.reduce((product, item) => product + (item.total * 1), 0);
     },
     remise() {
+      return this.products.reduce((product, item) => product + (item.remise_totale * 1), 0);
+    },
+    acompte() {
       return this.products.reduce((product, item) => product + (item.remise_totale * 1), 0);
     }
   },

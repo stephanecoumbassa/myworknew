@@ -145,6 +145,11 @@
                              :model-value="(product.p.sales_price * product.quantity) + (product.p.sales_price * product.quantity * product.p.tva)/100" />
                     <div class="col-1"><br>
                       <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-if="status_download" v-on:click="delete_product(index)" />
+                      &nbsp;
+                      <q-btn round color="dark" size="xs" icon="description" class="print-hide"  v-on:click="product.showdesc = !product.showdesc" />
+                    </div>
+                    <div class="col-12 q-pa-sm bg-grey-2" v-if="product.showdesc">
+                      <q-input v-model="product.details" filled autogrow />
                     </div>
                   </div>
                   <div class="row no-padding q-mt-xs q-mb-lg">

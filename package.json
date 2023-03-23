@@ -11,6 +11,7 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@jhbshow/vue-croppa": "^1.3.9",
     "@quasar/extras": "^1.0.0",
     "@vue-leaflet/vue-leaflet": "^0.6.1",
     "apexcharts": "^3.36.3",
@@ -28,7 +29,6 @@
     "uuid": "^9.0.0",
     "vue": "^3.0.0",
     "vue-apexcharts": "^1.6.2",
-    "vue-croppa": "^1.3.8",
     "vue-html2pdf": "^1.8.0",
     "vue-i18n": "^9.0.0",
     "vue-json-excel": "^0.3.0",
