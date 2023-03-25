@@ -7,7 +7,9 @@
         <span class="text-h6">Projets</span>
       </div>
       <div class="col q-pa-lg float-right text-right">
-        <q-btn color="primary" size="sm" @click="medium2=true">Créer</q-btn>
+        <q-btn color="secondary" icon="calendar_month" size="sm" to="/projet-prevsion">Prévisions par mois</q-btn>
+        &nbsp;&nbsp;
+        <q-btn color="primary" icon="add" size="sm" @click="medium2=true">Créer</q-btn>
       </div>
     </div>
 

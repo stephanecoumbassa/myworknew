@@ -26,24 +26,24 @@
             <input type="hidden" v-model="image_extension" name="image_extension" />
             <!--            <input type="hidden" v-model="type_id" readonly  name="type" />-->
             <div v-if="show_crop" style="height: 320px;">
-              <croppa
-                v-model="myCroppa"
-                :width="type.width"
-                :height="type.height"
-                :quality="type.quality"
-                :canvas-color="'white'"
-                :placeholder-font-size="14"
-                initial-size="contain"
-                :initial-image="name"
-                placeholder="Choisissez votre image"
-                :file-size-limit="9024000"
-                @file-type-mismatch="onFileTypeMismatch"
-                @file-size-exceed="onFileSizeExceed"
-                @zoom="onZoom"
-                @new-image="onNewImage"
-                @image-remove="onRemove"
-              >
-              </croppa><br>
+<!--              <croppa-->
+<!--                v-model="myCroppa"-->
+<!--                :width="type.width"-->
+<!--                :height="type.height"-->
+<!--                :quality="type.quality"-->
+<!--                :canvas-color="'white'"-->
+<!--                :placeholder-font-size="14"-->
+<!--                initial-size="contain"-->
+<!--                :initial-image="name"-->
+<!--                placeholder="Choisissez votre image"-->
+<!--                :file-size-limit="9024000"-->
+<!--                @file-type-mismatch="onFileTypeMismatch"-->
+<!--                @file-size-exceed="onFileSizeExceed"-->
+<!--                @zoom="onZoom"-->
+<!--                @new-image="onNewImage"-->
+<!--                @image-remove="onRemove"-->
+<!--              >-->
+<!--              </croppa><br>-->
               <input type="file" @change="change" />
               <input v-if="choose_status" type="range" @input="onSliderChange" :min="sliderMin" :max="sliderMax" step="0.00001" v-model="sliderVal" style="width: 200px; max-width: 100%">
               <br><q-btn size="xs" v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
@@ -70,7 +70,7 @@
 
 <script>
 import $httpService from '../boot/httpService';
-import Croppa from 'vue-croppa'
+// import Croppa from 'vue-croppa'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -103,7 +103,7 @@ export default defineComponent({
     }
   },
   components: {
-    'croppa': Croppa.component
+    // 'croppa': Croppa.component
   },
   props: {
     typerubrique: Number,

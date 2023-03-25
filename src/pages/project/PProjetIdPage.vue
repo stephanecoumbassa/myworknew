@@ -68,6 +68,7 @@
                   <q-tab name="taches" label="Taches" />
                   <q-tab name="fichiers" label="Fichiers" />
                   <q-tab name="activites" label="Matières Utilisées" />
+                  <q-tab name="previsions" label="Prévisions" />
                   <q-tab name="parametres" label="Paramètres" />
                 </q-tabs>
                 <q-separator />
@@ -232,7 +233,18 @@
             </div>
           </q-tab-panel>
 
-          <q-tab-panel name="parametres">
+          <q-tab-panel name="previsions" class="no-padding no-margin">
+            <br>
+            <div class="row">
+              <div class="col-12 q-mb-md">
+                <q-card class="q-pa-lg">
+                  <h6>Prévisions</h6>
+                </q-card>
+              </div>
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel name="parametres" class="no-padding no-margin">
             <br>
             <div class="row">
               <div class="col-12 q-mb-md">

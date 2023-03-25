@@ -119,17 +119,18 @@ export default {
     handleFile (_name) {
       this.p_task[_name] = this.$refs[_name].files[0]
     },
-    p_task_get () {
-      p_task_get().then((response) => {
-        this.p_tasks = response
-      });
-    },
+
     onSubmit () {
       if (this.p_task.id) {
         this.p_task_update()
       } else {
         this.p_task_post()
       }
+    },
+    p_task_get () {
+      p_task_get().then((response) => {
+        this.p_tasks = response
+      });
     },
     p_task_post () {
       this.showLoading()

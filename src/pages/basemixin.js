@@ -10,6 +10,9 @@ var basemixin = {
     return {
       store: {},
       role: '0',
+      today: null,
+      month: null,
+      year: null,
       first: null,
       last: null,
       loading: false,
@@ -75,6 +78,9 @@ var basemixin = {
     var date = new Date();
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
+    this.today = date.toISOString().slice(0, 10);
+    this.year = this.today.split('-')[0];
+    this.month = this.today.split('-')[1];
     if (LocalStorage.getItem('current_user')) {
       this.role = LocalStorage.getItem('current_user')['roles'][0];
       this.state.current_user = LocalStorage.getItem('current_user');

@@ -64,6 +64,7 @@ const routes = [
       {path: '/evenement', component: () => import('pages/project/PEvenementPage.vue'), meta: required},
       {path: '/fichier', component: () => import('pages/project/PFichierPage.vue'), meta: required},
       {path: '/projet', component: () => import('pages/project/PProjetPage.vue'), meta: required},
+      {path: '/projet-prevsion', component: () => import('pages/project/PProjetPrevision.vue'), meta: required},
       {path: '/projet/:id', component: () => import('pages/project/PProjetIdPage.vue'), meta: required},
       {path: '/salaire', component: () => import('pages/project/PSalairePage.vue'), meta: required},
       {path: '/taches', component: () => import('pages/project/PTaskPage.vue'), meta: required},

@@ -6,30 +6,30 @@
 <!--          <input type="hidden" v-model="type_id"  name="type" value="2" />-->
 <!--          <div v-if="show_crop" style="height: 320px;">-->
           <div v-if="show_crop">
-            <croppa
-              v-model="myCroppa"
-              :width="type.width"
-              :height="type.height"
-              :quality="quality"
-              :canvas-color="'transparent'"
-              :placeholder-font-size="14"
-              :removeButtonSize="18"
-              initial-size="contain"
-              :initial-image="name"
-              :border="true"
-              border-color="'default'"
-              :border-size="2"
-              placeholder="Choisissez votre image"
-              :file-size-limit="9024000"
-              @file-type-mismatch="onFileTypeMismatch"
-              @file-size-exceed="onFileSizeExceed"
-              @zoom="onZoom"
-              @new-image="onNewImage"
-              @image-remove="onRemove"
-              style="border: 1px solid #c7b9b9"
-            >
-               <img slot="placeholder" crossorigin="anonymous" :src="src" style="object-fit: cover" />
-            </croppa>
+<!--            <croppa-->
+<!--              v-model="myCroppa"-->
+<!--              :width="type.width"-->
+<!--              :height="type.height"-->
+<!--              :quality="quality"-->
+<!--              :canvas-color="'transparent'"-->
+<!--              :placeholder-font-size="14"-->
+<!--              :removeButtonSize="18"-->
+<!--              initial-size="contain"-->
+<!--              :initial-image="name"-->
+<!--              :border="true"-->
+<!--              border-color="'default'"-->
+<!--              :border-size="2"-->
+<!--              placeholder="Choisissez votre image"-->
+<!--              :file-size-limit="9024000"-->
+<!--              @file-type-mismatch="onFileTypeMismatch"-->
+<!--              @file-size-exceed="onFileSizeExceed"-->
+<!--              @zoom="onZoom"-->
+<!--              @new-image="onNewImage"-->
+<!--              @image-remove="onRemove"-->
+<!--              style="border: 1px solid #c7b9b9"-->
+<!--            >-->
+<!--               <img slot="placeholder" crossorigin="anonymous" :src="src" style="object-fit: cover" />-->
+<!--            </croppa>-->
             <input v-if="choose_status" type="range" @input="onSliderChange" :min="sliderMin" :max="sliderMax" step="0.00001" v-model="sliderVal" style="width: 200px; max-width: 100%">
             <br><q-btn size="xs" v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
                        @click="uploadCroppedImage('image/jpeg')">Recadrer</q-btn>
@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import Croppa from 'vue-croppa'
+// import Croppa from 'vue-croppa'
 export default {
     name: 'ImageComponent',
     data: function () {
@@ -72,7 +72,7 @@ export default {
         }
     },
     components: {
-        'croppa': Croppa.component
+        // 'croppa': Croppa.component
     },
     props: {
         typerubrique: Number,
