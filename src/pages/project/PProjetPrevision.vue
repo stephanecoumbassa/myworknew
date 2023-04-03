@@ -13,10 +13,6 @@
                 <div class="col-4 q-pa-sm">
                   <q-input type="month" v-model="date" placeholder="Mois" :dense="true" @change="p_projet_previson_get(date)" hint="Mois" />
                 </div>
-<!--                <div class="col-4 q-pa-sm"><br>OU</div>-->
-<!--                <div class="col-4 q-pa-sm">-->
-<!--                  <q-input type="year" v-model="date" placeholder="Year" :dense="true" @change="stock_get()" hint="Année" />-->
-<!--                </div>-->
               </div>
             </q-card-section>
           </q-item>
@@ -48,10 +44,10 @@
               <!--              <q-td key="datedebut" :props="props"> {{props.row.datedebut}} </q-td>-->
               <!--              <q-td key="datefin" :props="props"> {{props.row.datefin}} </q-td>-->
               <q-td key="retard" :props="props">
-<!--                <q-btn outline size="sm" v-if="props.row.datefin <= today" style="color: #FF0080" label="Retard" />-->
-<!--                <q-btn outline size="sm" v-if="props.row.datefin > today" style="color: #31bd8c" label="Succès" />-->
-<!--                {{props.row.date_prevision}}<br>-->
-<!--                {{props.row.date_effective}}-->
+                <!--                <q-btn outline size="sm" v-if="props.row.datefin <= today" style="color: #FF0080" label="Retard" />-->
+                <!--                <q-btn outline size="sm" v-if="props.row.datefin > today" style="color: #31bd8c" label="Succès" />-->
+                <!--                {{props.row.date_prevision}}<br>-->
+                <!--                {{props.row.date_effective}}-->
                 <q-btn outline size="sm" v-if="props.row.date_prevision < props.row.date_effective"
                        style="color: #bd3156" label="Mauvais" />
                 <q-btn outline size="sm" v-if="props.row.date_prevision >= props.row.date_effective" style="color: #31bd8c" label="Bon" />
@@ -59,9 +55,9 @@
               <q-td key="prix_unitaire" :props="props"> {{props.row.prix_unitaire}} </q-td>
               <q-td key="montant_ht" :props="props"> {{props.row.montant_ht}} </q-td>
               <q-td key="qte" :props="props"> {{props.row.qte}} </q-td>
-<!--              <q-td key="dejalivre" :props="props"> {{props.row.dejalivre}} </q-td>-->
+              <!--              <q-td key="dejalivre" :props="props"> {{props.row.dejalivre}} </q-td>-->
               <q-td key="dejalivre" :props="props"> {{props.row.livree}} </q-td>
-<!--              <q-td key="reste" :props="props"> {{props.row.reste}} </q-td>-->
+              <!--              <q-td key="reste" :props="props"> {{props.row.reste}} </q-td>-->
               <q-td key="reste" :props="props"> {{props.row.qte - props.row.livree}} </q-td>
 
               <q-td key="qte_prevision" :props="props"> <q-input dense type="number" v-model="props.row.qte_prevision" style="width: 70px" /> </q-td>
@@ -70,7 +66,9 @@
               <q-td key="date_effective" :props="props"> <q-input dense type="date" v-model="props.row.date_effective" /> </q-td>
               <q-td key="status_effective" :props="props"> {{props.row.status_effective}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="sm" color="secondary" v-on:click="stock_post(props.row)" icon="verified" />
+                <!--                <q-btn class="q-mr-xs" size="sm" color="secondary" v-on:click="stock_post(props.row)" icon="verified" />-->
+                <q-btn class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
+                       v-on:click="p_projet_previson_remove(props.row.id)"  />
               </q-td>
             </q-tr>
           </template>
@@ -176,6 +174,11 @@ export default {
           this.p_projets = response
         })
     },
+    p_projet_previson_remove(_id) {
+      this.p_projections = this.p_projections.filter(x => {
+        return x.id !== _id
+      })
+    },
     p_projet_previson_get (date='2023-03') {
       let year = date.split('-')[0];
       this.year = date.split('-')[0];
@@ -201,20 +204,27 @@ export default {
     },
     previson_post(stock) {
       stock.forEach((x) => {
-       x.puuid = uuidv4();
-       x.annee = this.year;
-       x.mois = this.month;
-       x.project_id = x.id;
-       x.dejalivre = Number(x.livree);
-      })
+        if(!x.puuid) {
+          x.puuid = uuidv4();
+        }
+        if(x.project_id) {
+          x.project_id = x.project_id;
+        } else {
+          x.project_id = x.id;
+        }
+        x.annee = this.year;
+        x.mois = this.month;
+        x.dejalivre = Number(x.livree);
+      });
+      // console.log(stock);
+      // return stock;
       if (confirm("Voulez vous valider ?")) {
         $httpService.postWithParams('/my/post/p_projet_previson', stock)
           .then((response) => {
-            console.log(response);
-            // this.$q.notify({
-            //   color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
-            // });
-            // this.products_get();
+            this.$q.notify({
+              color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
+            });
+            this.p_projet_previson_get(this.date);
           });
       }
     },

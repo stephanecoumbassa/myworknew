@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div id="chart">
+    <div id="chart" v-if="categories.length >0">
+      <!--      {{categories}}-->
       <apexchart :type="type" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
   </div>
@@ -14,6 +15,11 @@ export default {
     apexchart: VueApexCharts
   },
   props: {
+    categories: {
+      type: Array, default () {
+        return [ 'janv', 'fev', 'Mar', 'Avr', 'Mai', 'Jui', 'Jul', 'Aou', 'Sep', 'oct', 'nov', 'dec' ]
+      }
+    },
     series: {
       type: Array, default () { return [
         {
@@ -23,11 +29,19 @@ export default {
       ]
       }
     },
+    percent: { type: Number, default: 35 },
     type: { type: String, default: 'area' },
     title: { type: String, default: 'Nombre items' },
     titletooltip: { type: String, default: 'Nombre items' },
     color: { type: String, default: '#26a69a' },
     horizontal: { type: Boolean, default: false }
+  },
+  watch: {
+    categories(newQuestion, oldQuestion) {
+      console.log("new", JSON.parse(JSON.stringify(newQuestion)))
+      console.log("old", JSON.parse(JSON.stringify(oldQuestion)))
+      this.chartOptions.xaxis.categories = JSON.parse(JSON.stringify(newQuestion))
+    }
   },
   data () {
     return {
@@ -42,7 +56,7 @@ export default {
         plotOptions: {
           bar: {
             horizontal: this.horizontal,
-            columnWidth: '35%',
+            columnWidth: this.percent+'%',
             endingShape: 'rounded'
           },
         },
@@ -52,7 +66,9 @@ export default {
           colors: ['transparent']
         },
         xaxis: {
-          categories: [ 'janv', 'fev', 'Mar', 'Avr', 'Mai', 'Jui', 'Jul', 'Aou', 'Sep', 'oct', 'nov', 'dec' ],
+          // categories: this.categories,
+          categories: [],
+          // categories: this.categories,
           // title: { text: this.title }
         },
         yaxis: { title: { text: this.title } },

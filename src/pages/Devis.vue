@@ -93,41 +93,48 @@
           </q-card>
         </q-dialog>
 
+
         <q-dialog v-model="fileStatus">
-          <q-card style="width: 500px; max-width: 100%;" id="fichiers" :flat="true">
-            <q-card-section>
-              <form method="post" enctype="multipart/form-data">
-<!--                <q-input type="file" id="doc" name="doc" @change="changePhoto" />-->
-                <q-input dense v-model="fileTitre" label="titre" />
-                <br>
-                <input type="file" ref="doc" id="doc" name="doc" @change="changePhoto" />
-                <br>
-                <br>
-                <q-btn  color="secondary" class="full-width" size="sm" label="Envoyer" @click="sendFile()" />
-              </form>
-            </q-card-section>
-            <q-card-section>
-              <q-list bordered padding class="rounded-borders">
-                <q-item clickable v-ripple v-for="(myfile, key) in files" :key="key">
-                  <q-item-section avatar top>
-                    <q-avatar color="primary" text-color="white">{{myfile.extension}}</q-avatar>
-                  </q-item-section>
-
-                  <q-item-section>
-                    <q-item-label lines="1">{{myfile.titre}}</q-item-label>
-                    <q-item-label caption>{{myfile.date}}</q-item-label>
-                  </q-item-section>
-
-                  <q-item-section side>
-                    <a target="_blank" :href="'https://fmmi.ci/apistock/public/assets/uploads/devis/'+myfile.file">
-                      <q-icon name="visibility" color="primary" />
-                    </a>
-                  </q-item-section>
-                </q-item>
-              </q-list>
-            </q-card-section>
+          <q-card style="width: 600px" class="q-pa-lg">
+            <filescomponent type="devis" :typeid="devisId" folder="devis" />
           </q-card>
         </q-dialog>
+
+<!--        <q-dialog v-model="fileStatus">-->
+<!--          <q-card style="width: 500px; max-width: 100%;" id="fichiers" :flat="true">-->
+<!--            <q-card-section>-->
+<!--              <form method="post" enctype="multipart/form-data">-->
+<!--&lt;!&ndash;                <q-input type="file" id="doc" name="doc" @change="changePhoto" />&ndash;&gt;-->
+<!--                <q-input dense v-model="fileTitre" label="titre" />-->
+<!--                <br>-->
+<!--                <input type="file" ref="doc" id="doc" name="doc" @change="changePhoto" />-->
+<!--                <br>-->
+<!--                <br>-->
+<!--                <q-btn  color="secondary" class="full-width" size="sm" label="Envoyer" @click="sendFile()" />-->
+<!--              </form>-->
+<!--            </q-card-section>-->
+<!--            <q-card-section>-->
+<!--              <q-list bordered padding class="rounded-borders">-->
+<!--                <q-item clickable v-ripple v-for="(myfile, key) in files" :key="key">-->
+<!--                  <q-item-section avatar top>-->
+<!--                    <q-avatar color="primary" text-color="white">{{myfile.extension}}</q-avatar>-->
+<!--                  </q-item-section>-->
+
+<!--                  <q-item-section>-->
+<!--                    <q-item-label lines="1">{{myfile.titre}}</q-item-label>-->
+<!--                    <q-item-label caption>{{myfile.date}}</q-item-label>-->
+<!--                  </q-item-section>-->
+
+<!--                  <q-item-section side>-->
+<!--                    <a target="_blank" :href="'https://fmmi.ci/apistock/public/assets/uploads/devis/'+myfile.file">-->
+<!--                      <q-icon name="visibility" color="primary" />-->
+<!--                    </a>-->
+<!--                  </q-item-section>-->
+<!--                </q-item>-->
+<!--              </q-list>-->
+<!--            </q-card-section>-->
+<!--          </q-card>-->
+<!--        </q-dialog>-->
 
         <q-btn class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
                @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
@@ -148,7 +155,8 @@
                 </div>
               </q-card-section>
               <q-card-actions>
-                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>
+<!--                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>-->
+                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente;"></q-btn>
                 <q-btn flat icon="edit" @click="fullWidth = true; add_status = false; devis_get_by(item.id_vente)"></q-btn>
                 <q-btn flat icon="receipt" @click="facture_status2 = true; devis_get_by(item.id_vente)"></q-btn>
               </q-card-actions>
@@ -171,6 +179,7 @@ import * as _ from 'lodash';
 import FactureComponent from '../components/facture_component.vue';
 import axios from "axios";
 import {postApi} from "src/services/apiService";
+import Filescomponent from "components/filescomponent.vue";
 export default {
   name: 'DevisPage',
   data () {
@@ -226,6 +235,7 @@ export default {
     }
   },
   components: {
+    Filescomponent,
     'facture': FactureComponent
   },
   mixins: [basemixin],

@@ -4,7 +4,7 @@
 
     <div class="row justify-center">
       <div class="col-12 q-mt-md">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />
+        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true; p_employe= {}" />
         <br><br>
         <q-table title="p_employes" :rows="p_employes" :columns="columns" :filter="filter"
                  :pagination="pagination" row-key="name">
@@ -39,6 +39,7 @@
 <!--              <q-td key='euuid' :props='props'> {{props.row.euuid}} </q-td>-->
 
               <q-td key="actions" :props="props">
+                <q-btn outline class="q-mr-xs" size="xs" color="dark" v-on:click="typeid=props.row.id;modalPhoto=true" icon="photo"></q-btn>
                 <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
                 <q-btn class="q-mr-xs" size="xs" color="primary" outline icon="event_available"
                        @click="modalArrivee = true; p_arrivee_get(props.row.id)"></q-btn>
@@ -54,31 +55,50 @@
     <q-dialog v-model="medium2">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
-          <div class="text-h6">Ajouter un Employe</div>
+          <div class="text-h6" v-if="!p_employe.id">Ajouter un Employe</div>
+          <div class="text-h6" v-if="p_employe.id">Modifier un employe</div>
         </q-card-section>
         <q-card-section>
           <q-form  @submit="onSubmit" class="q-gutter-md">
             <div class="row">
               <div class="col-12">
                 <vue-qr v-if="p_employe.id" :size="75" :text="p_employe.euuid" :qid="p_employe.euuid" />
-                <q-input dense v-model='p_employe.nom' label='nom' />
-                <q-input dense v-model='p_employe.prenom' label='prenom' />
-                <q-input dense v-model='p_employe.telephone' label='telephone' />
-                <q-input dense v-model='p_employe.email' label='email' />
-                <q-input dense v-model='p_employe.cni' label='cni' />
+                <br>
+                <q-input outlined dense v-model='p_employe.nom' label='nom' />
+                <br>
+                <q-input outlined dense v-model='p_employe.prenom' label='prenom' />
+                <br>
+                <q-input outlined dense v-model='p_employe.telephone' label='telephone' />
+                <br>
+                <q-input outlined dense v-model='p_employe.email' label='email' />
+                <br>
+                <q-input outlined dense v-model='p_employe.cni' label='cni' />
+                <br>
                 <upload v-model='p_employe.photo' title='photo' @blurevent="setEvent($event, 'photo')" />
-                <q-input dense v-model='p_employe.whatsapp' label='whatsapp' />
-                <q-input dense type='textarea' v-model='p_employe.adresse' label='adresse' />
-                <q-input dense type='date' v-model='p_employe.datenaissance' label='datenaissance' />
-                <q-input dense v-model='p_employe.genre' label='genre' />
-                <q-input dense v-model='p_employe.banquerib' label='banquerib' />
-                <q-input dense v-model='p_employe.banquename' label='banquename' />
-                <q-input dense v-model='p_employe.fonction' label='fonction' />
-                <q-input dense type='date' v-model='p_employe.datearrivee' label='datearrivee' />
-                <q-input dense type='date' v-model='p_employe.datefin' label='datefin' />
-                <q-input dense type='textarea' v-model='p_employe.experience' label='experience' />
-                <q-input dense type='textarea' v-model='p_employe.education' label='education' />
-                <q-input dense v-model='p_employe.euuid' label='euuid' />
+                <br>
+                <q-input outlined dense v-model='p_employe.whatsapp' label='whatsapp' />
+                <br>
+                <q-input outlined dense type='textarea' v-model='p_employe.adresse' label='adresse' />
+                <br>
+                <q-input outlined dense type='date' v-model='p_employe.datenaissance' label='datenaissance' />
+                <br>
+                <q-input outlined dense v-model='p_employe.genre' label='genre' />
+                <br>
+                <q-input outlined dense v-model='p_employe.banquerib' label='banquerib' />
+                <br>
+                <q-input outlined dense v-model='p_employe.banquename' label='banquename' />
+                <br>
+                <q-input outlined dense v-model='p_employe.fonction' label='fonction' />
+                <br>
+                <q-input outlined dense type='date' v-model='p_employe.datearrivee' label='datearrivee' />
+                <br>
+                <q-input outlined dense type='date' v-model='p_employe.datefin' label='datefin' />
+                <br>
+                <q-input outlined dense type='textarea' v-model='p_employe.experience' label='experience' />
+                <br>
+                <q-input outlined dense type='textarea' v-model='p_employe.education' label='education' />
+<!--                <br>-->
+<!--                <q-input dense v-model='p_employe.euuid' label='euuid' />-->
               </div>
             </div>
             <div class="row">
@@ -94,6 +114,11 @@
       </q-card>
     </q-dialog>
 
+    <q-dialog v-model="modalPhoto">
+        <q-card style="width: 600px" class="q-pa-lg">
+          <photoscomponent type="employe" :typeid="typeid" folder="employe" />
+        </q-card>
+    </q-dialog>
     <q-dialog v-model="modalArrivee" full-width position="top">
       <div class="row justify-center">
         <div class="col-12 q-mt-md">
@@ -128,10 +153,12 @@
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import vueQr from 'vue-qr/src/packages/vue-qr.vue'
+import Photoscomponent from "components/photoscomponent.vue";
 
 export default {
   data () {
     return {
+      typeid: 0,
       p_employe_id: 1,
       loading1: false,
       red: '#6d1412',
@@ -183,6 +210,7 @@ export default {
   },
   mixins: [basemixin],
   components: {
+    Photoscomponent,
     vueQr
   },
   created () {

@@ -2,14 +2,16 @@
 
   <q-page>
 
-    <div class="row  q-pa-xs q-ma-xs">
-      <q-btn label="Ajouter une depense" class="offset-lg-1 offset-md-1" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
-      <br>
+    <div class="row q-pa-xs q-ma-xs">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
+        <q-btn label="Ajouter une depense" class="offset-lg-1 offset-md-1" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
+        <br>
+      </div>
     </div>
 
-    <div class="row justify-center text-center  q-pa-xs q-ma-xs">
+    <div class="row justify-center text-center q-pa-xs q-ma-xs">
 
-      <div class="col-md-10 col-sm-12 col-xs-12">
+      <div class="col-md-12 col-sm-12 col-xs-12">
 
         <q-table title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
                  :pagination="pagination">
@@ -48,16 +50,16 @@
                 <div class="col-10">
 
                   <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md"  >
-                    <q-input autocomplete v-model="depense.name" label="Titre *" hint="Titre"
+                    <q-input outlined dense autocomplete v-model="depense.name" label="Titre *" hint="Titre"
                              lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />
-                    <q-input autocomplet type="textarea" v-model="depense.description" label="Description *" />
-                    <q-input autocomplete  v-model="depense.price" label="Prix Prestation *" />
-                    <q-input autocomplete type="date" v-model="depense.date" label="Date *"
+                    <q-input outlined dense autocomplet type="textarea" v-model="depense.description" label="Description *" />
+                    <q-input outlined dense autocomplete  v-model="depense.price" label="Prix Prestation *" />
+                    <q-input outlined dense autocomplete type="date" v-model="depense.date" label="Date *"
                              lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />
-                    <q-input type="text" v-model="depense.code_comptable"  label="code comptable"></q-input>
-                    <q-input type="text" v-model="depense.client"  label="Beneficiaire *"></q-input>
-                    <q-input type="text" v-model="depense.telephone"  label="Telephone *"></q-input>
-                    <q-input type="email" v-model="depense.email"  label="Email *"></q-input>
+                    <q-input outlined dense type="text" v-model="depense.code_comptable"  label="code comptable"></q-input>
+                    <q-input outlined dense type="text" v-model="depense.client"  label="Beneficiaire *"></q-input>
+                    <q-input outlined dense type="text" v-model="depense.telephone"  label="Telephone *"></q-input>
+                    <q-input outlined dense type="email" v-model="depense.email"  label="Email *"></q-input>
                     <div>
                       <q-btn label="Modifier" v-if="status_update" v-on:click="depense_update()" type="button" color="secondary"/>
                       <q-btn label="Valider" v-if="!status_update"  type="submit" color="secondary"/>

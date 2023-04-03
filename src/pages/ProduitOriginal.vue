@@ -78,7 +78,7 @@
 
     <div class="row justify-center q-pa-sm">
       <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md q-pa-sm">
-        <q-btn id="add" label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
+        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
                v-on:click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
         <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
         <br><br>
@@ -165,7 +165,7 @@
                          lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
 
                 <q-select v-model="product.type" :options="['matiere', 'produit', 'outil']" id="type" label="type" map-options emit-value :dense="true"
-                          stack-label input-debounce="0" outlined />
+                          stack-label input-debounce="0" :rules="[ val => val || 'champs obligattoire']" outlined />
 
                 <q-select v-model="product.domainid" :options="domains" id="domainid" label="Domains" map-options emit-value :dense="true"
                           option-value="id" stack-label input-debounce="0" option-label="name" outlined
@@ -175,10 +175,39 @@
                           option-value="id" stack-label input-debounce="0" option-label="name" outlined
                           @input="categorie_get(product.parent_categorie_id)" :rules="[ val => val || 'champs obligattoire']" />
 
+<!--                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"-->
+<!--                          option-value="id" stack-label input-debounce="0" option-label="name" />-->
+<!--                <br>-->
+<!--                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"-->
+<!--                          option-value="id" stack-label input-debounce="0" option-label="nom" />-->
+<!--                <br>-->
                 <q-input autocomplete type="number" v-model="product.price" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
+<!--                <br>-->
+<!--                <q-input type="number"  v-model="product.tva" label="TVA *" />-->
+<!--                <br>-->
+<!--                <q-input autocomplete type="number"  v-model="product.promo" label="Prix de promotionel" :dense="true" />-->
 
+<!--                <div class="q-gutter-sm">-->
+<!--                  <br>-->
+<!--                  <label>Voulez vous vendre sur internet</label>-->
+<!--                  <q-radio v-model="product.webstatus" :val="0" label="Non" />-->
+<!--                  <q-radio v-model="product.webstatus" :val="1" label="Oui" />-->
+<!--                </div>-->
+
+<!--                <div class="q-gutter-sm">-->
+<!--                  <br>-->
+<!--                  <label>Ce produit est-il customizable </label>-->
+<!--                  <q-radio v-model="product.customize" :val="0" label="Non" />-->
+<!--                  <q-radio v-model="product.customize" :val="1" label="Oui" />-->
+<!--                </div>-->
+
+<!--                <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />-->
                 <q-input type="number"  v-model="product.alert_threshold" label="Alert *" outlined dense hint="" />
+                <!--<q-input autocomplete type="textarea"  v-model="product.serial" label="Numero de serie" />-->
                 <q-input type="text"  v-model="product.reference" label="Reference Produit" outlined dense hint="" />
+
+<!--                <q-input v-if="!product.id" type="number" v-model="product.buy_price" label="Prix achat *" />-->
+<!--                <q-input v-if="!product.id" type="number" v-model="product.stock" label="Stock Initial *" />-->
 
                 <q-input type="text" v-model="product.youtube" label="Url Video Youtube *" outlined dense hint="" />
 
@@ -194,6 +223,7 @@
               <div class="col-md-5 col-sm-12 content-center text-center">
                 <vue-qr :size="200" :text="JSON.stringify(product.id)" :callback="test" qid="testid" />
                 <br>
+                {{product.photo}}
                 <q-uploader
                   v-model="product.photo"
                   class="text-center"

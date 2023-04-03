@@ -127,7 +127,9 @@
               <q-td key='client' :props='props'> {{props.row.client}} </q-td>
               <q-td key='titre' :props='props'> {{props.row.titre}} </q-td>
               <q-td key='description' :props='props'> {{props.row.description}} </q-td>
-              <q-td key='status' :props='props'> {{props.row.status}} </q-td>
+              <q-td key='status' :props='props'>
+                <q-btn outline color="grey" size="sm">{{props.row.status}} </q-btn>
+              </q-td>
               <q-td key='qte' :props='props'> {{props.row.qte}} </q-td>
               <q-td key='prix_unitaire' :props='props'> {{props.row.prix_unitaire}} </q-td>
               <q-td key='montant_ht' :props='props'> {{props.row.montant_ht}} </q-td>
@@ -205,19 +207,30 @@
           <q-form  @submit="onSubmit" class="q-gutter-md">
             <div class="row">
               <div class="col-12">
-                <q-input dense v-model='p_projet.titre' label='titre' />
-                <q-input dense type='textarea' v-model='p_projet.description' label='description' />
-                <q-input dense v-model='p_projet.status' label='status' />
-                <q-input dense v-model='p_projet.objectif' label='objectif' />
-                <q-input dense type='number' v-model='p_projet.progress' label='progress' />
-                <q-input dense type='date' v-model='p_projet.datedebut' label='datedebut' />
-                <q-input dense type='date' v-model='p_projet.datefin' label='datefin' />
-                <q-input dense type='number' v-model='p_projet.createdby' label='createdby' />
-                <q-input dense v-model='p_projet.priorite' label='priorite' />
-                <q-input dense type='number' v-model='p_projet.cout' label='cout' />
-                <q-input dense type='number' v-model='p_projet.clientid' label='clientid' />
-                <q-input dense type='number' v-model='p_projet.porteur' label='porteur' />
-                <q-input dense v-model='p_projet.puuid' label='puuid' />
+                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
+                          v-model="p_projet.clientid" :options="clients" label="Clients" option-value="id" p_projet.clientid
+                          input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
+                <q-input outlined class="q-mb-sm" dense v-model='p_projet.titre' label='titre' />
+                <q-input outlined class="q-mb-sm" dense type='textarea' v-model='p_projet.description' label='description' />
+<!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />-->
+                <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
+                          outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />
+                <q-input outlined class="q-mb-sm" dense v-model='p_projet.objectif' label='objectif' />
+                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.progress' label='progress' />
+                <q-input outlined class="q-mb-sm" dense type='date' v-model='p_projet.datedebut' label='datedebut' />
+                <q-input outlined class="q-mb-sm" dense type='date' v-model='p_projet.datefin' label='datefin' />
+                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.createdby' label='createdby' />
+                <q-input outlined class="q-mb-sm" dense v-model='p_projet.priorite' label='priorite' />
+                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.cout' label='cout' />
+                <q-input outlined class="q-mb-sm" dense type='text' v-model='p_projet.bc' label='N°Bon de Cmde' />
+                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.qte' label='Quantité' />
+                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.prix_unitaire' label='Prix unitaire' />
+                <q-input outlined class="q-mb-sm" dense type='number'
+                         :model-value="p_projet.qte * p_projet.prix_unitaire" label='Montant' />
+
+<!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.clientid' label='clientid' />-->
+<!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.porteur' label='porteur' />-->
+<!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.puuid' label='puuid' />-->
 <!--                <upload v-model='p_projet.photo' title='photo' @blurevent="setEvent($event, 'photo')" />-->
               </div>
             </div>
@@ -257,6 +270,7 @@ export default {
       isGrid: false,
       p_projet: {},
       p_projets: [],
+      clients: [],
       columns: [
         { name: 'client', align: 'left', label: 'Client', field: 'client', sortable: true },
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
@@ -287,11 +301,19 @@ export default {
   mixins: [basemixin, apimixin],
   created () {
     this.p_projet_get()
+    this.clients_get()
     const date = new Date()
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   },
   methods: {
+    clients_get () {
+      this.getApi('/my/get/client').then((response) => {
+          this.clients = response;
+        }).catch(() => {
+          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
+        });
+    },
     update_get (props) {
       this.p_projet = props
       this.medium2 = true
@@ -316,21 +338,24 @@ export default {
       }
     },
     p_projet_post () {
+      this.p_projet.montant_ht = this.p_projet.qte * this.p_projet.prix_unitaire
       this.showLoading()
+      this.p_projet.puuid = this.generateUuid();
       $httpService.postWithParams('/api/post/p_projet', this.p_projet)
         .then((response) => {
           this.p_projet = {}
           this.p_projet_get()
-          this.showAlert(response.msg, 'secondary')
+          this.showAlert(response, 'secondary')
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
     },
     p_projet_update () {
+      this.p_projet.montant_ht = this.p_projet.qte * this.p_projet.prix_unitaire
       this.showLoading()
       $httpService.putWithParams('/api/put/p_projet', this.p_projet)
         .then((response) => {
           this.p_projet_get()
-          this.showAlert(response.msg, 'secondary')
+          this.showAlert(response, 'secondary')
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
     },

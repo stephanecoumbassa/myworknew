@@ -51,20 +51,53 @@
               <q-item-section> <q-item-label>{{ link.text }}</q-item-label> </q-item-section>
             </q-item>
           </div>
-          <div>
-            <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/commandes-clients'" active-class="text-teal">
-              <q-item-section avatar> <q-icon name="pie_chart" />  </q-item-section>
-              <q-item-section>
-                <q-item-label>Commande Ecommerce
-                  <q-badge class="animate__animated animate__pulse animate__infinite animate__slower" color="red">{{count}}</q-badge>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
-          </div>
+<!--          <div>-->
+<!--            <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/commandes-clients'" active-class="text-teal">-->
+<!--              <q-item-section avatar> <q-icon name="pie_chart" />  </q-item-section>-->
+<!--              <q-item-section>-->
+<!--                <q-item-label>Commande Ecommerce-->
+<!--                  <q-badge class="animate__animated animate__pulse animate__infinite animate__slower" color="red">{{count}}</q-badge>-->
+<!--                </q-item-label>-->
+<!--              </q-item-section>-->
+<!--            </q-item>-->
+<!--          </div>-->
 
           <q-separator inset class="q-my-sm" />
 
-
+          <q-expansion-item
+            class="GNL__drawer-item"
+            expand-separator
+            icon="settings"
+            label="Paramètres"
+          >
+            <q-list class="q-pl-sm">
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/projet'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="settings" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Paramètres</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/budget-revenu'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="diversity_2" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Budget Revenu</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/budget-depense'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="engineering" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Budget Dépense</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <!--            <q-card>-->
+            <!--              <q-card-section>-->
+            <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti-->
+            <!--                commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste-->
+            <!--                eveniet doloribus ullam aliquid.-->
+            <!--              </q-card-section>-->
+            <!--            </q-card>-->
+          </q-expansion-item>
 
           <q-expansion-item
             class="GNL__drawer-item"
@@ -78,6 +111,12 @@
                 <q-item-section avatar> <q-icon name="diversity_2" /> </q-item-section>
                 <q-item-section>
                   <q-item-label>Projet</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/projet-prevsion'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="diversity_2" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Previsions</q-item-label>
                 </q-item-section>
               </q-item>
               <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/employe'" active-class="text-teal">
@@ -159,20 +198,20 @@ export default {
         { icon: 'money_off', text: 'Achats', link: '/achats', role: this.role_achat() },
         { icon: 'money_off', text: 'Devis', link: '/devis', role: this.role_achat() },
         { icon: 'shopping_cart', text: 'Produits', link: '/produits', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
-        { icon: 'shopping_cart', text: 'Budget Revenu', link: '/budget-revenu', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
-        { icon: 'shopping_cart', text: 'Budget Dépense', link: '/budget-depense', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
+        // { icon: 'shopping_cart', text: 'Budget Revenu', link: '/budget-revenu', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
+        // { icon: 'shopping_cart', text: 'Budget Dépense', link: '/budget-depense', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
         // { icon: 'published_with_changes', text: 'Location', link: '/location', role: this.role_vendor() },
         // { icon: 'shopping_cart', text: 'Produits à louer', link: '/produits-location', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
-        { icon: 'local_atm', text: 'Prestations', link: '/prestations', role: this.role_vendor() },
+        // { icon: 'local_atm', text: 'Prestations', link: '/prestations', role: this.role_vendor() },
         { icon: 'money_off', text: 'Depense', link: '/depenses', role: this.role_achat() },
-        { icon: 'room_service', text: 'Services', link: '/services', role: true, style: 'border: 2px solid orange; border-radius: 45%' },
+        // { icon: 'room_service', text: 'Services', link: '/services', role: true, style: 'border: 2px solid orange; border-radius: 45%' },
         // { icon: 'remove_shopping_cart', text: 'Pertes', link: '/pertes', role: true },
         { icon: 'category', text: 'Categories', link: '/categories', role: true },
         { icon: 'how_to_reg', text: 'Clients', link: '/clients', role: true },
         { icon: 'transfer_within_a_station', text: 'Fournisseurs', link: '/fournisseurs', role: true },
         // { icon: 'pie_chart', text: 'Commandes Ecommerce', link: '/commandes-clients', role: true },
         // { icon: 'score', text: 'Inventaire', link: '/produits/inventaire', role: this.role_manager() },
-        { icon: 'settings_applications', text: 'Parametres', link: '/parametres', role: this.role_manager() }
+        // { icon: 'settings_applications', text: 'Parametres', link: '/parametres', role: this.role_manager() }
       ],
       links2: [
         // { icon: 'settings_applications', text: 'Parametres' }

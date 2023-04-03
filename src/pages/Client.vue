@@ -41,6 +41,9 @@
                   <q-item clickable v-close-popup @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
                     <q-item-label>Liste des achats</q-item-label>
                   </q-item>
+                  <q-item clickable v-close-popup @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
+                    <q-item-label>Liste des devis</q-item-label>
+                  </q-item>
                 </q-btn-dropdown>
 
               </q-td>
@@ -139,6 +142,38 @@
 
     </div>
 
+
+    <div class="row justify-center text-center q-pa-md">
+
+
+      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
+        <q-card class="text-center justify-center content-center">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-center text-h6">Stats par mois</div>
+              <br>
+              <div class="row">
+                <div class="col-12 q-pa-sm">
+                  <q-input type="month" v-model="date" placeholder="Mois" :dense="true" @change="client_stat(date)" hint="Mois" />
+                </div>
+              </div>
+            </q-card-section>
+          </q-item>
+        </q-card>
+      </div>
+
+
+      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md" style="min-width: 350px">
+        <q-card class="my-card" square>
+          <q-card-section>
+            <areachart-component color="primary" type="bar" :horizontal="false" :percent="5"
+                                 :categories="namedata" :series="sumdata" title="Montant généré" titletooltip="depense" />
+          </q-card-section>
+        </q-card>
+      </div>
+
+    </div>
+
   </q-page>
 
 </template>
@@ -150,6 +185,7 @@ import CountryComponent from '../components/country.vue';
 import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
+import AreachartComponent from "components/areachart.vue";
 export default {
   name: 'ClientPage',
   data () {
@@ -157,6 +193,7 @@ export default {
       selected: [],
       options: [ { id: 1, name: 'personne' }, { id: 2, name: 'compagnie' } ],
       client: { },
+      date: false,
       status_update: false,
       post: { body: '', subject: '' },
       entreprise: {},
@@ -193,6 +230,8 @@ export default {
       products: [],
       sales_list: [],
       products_list: [],
+      sumdata: [],
+      namedata: [],
       appro_list: [{ p: { sell_price: 0, id: null, quantity: 1 }, quantity: 1 }],
       product: { description: '' },
       sales_columns: [
@@ -211,6 +250,7 @@ export default {
     }
   },
   components: {
+    AreachartComponent,
     FactureComponent,
     CountryComponent,
     'downloadExcel': vue3JsonExcel
@@ -229,6 +269,19 @@ export default {
     }
   },
   methods: {
+    client_stat (date) {
+      let year = date.split('-')[0];
+      let month = date.split('-')[1];
+      $httpService.postWithParams('/my/get/client_stats', {annee: year, mois: month})
+        .then((response) => {
+          console.log(response);
+          this.sumdata = [{ name: 'Tarif Généré', data: response['sumvente'] }];
+          this.namedata = response['fullname'];
+        })
+        .catch(() => {
+          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
+        });
+    },
     loadData () {
       $httpService.getWithParams('/my/get/client')
         .then((response) => {

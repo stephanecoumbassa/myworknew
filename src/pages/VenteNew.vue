@@ -349,7 +349,6 @@ export default {
       this.myclient.telephone = client.telephone;
       this.myclient.telephone_code = client.telephone_code;
       this.products_get();
-      console.log(client);
     },
     qr_get(dataUrl) {
       this.image = dataUrl;

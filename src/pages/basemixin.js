@@ -4,6 +4,7 @@ import storeGlobal from '../stores/storeController'
 import $httpService from '../boot/httpService';
 import {useCounterStore} from "stores/baseState";
 import {Loading} from 'quasar';
+import { v4 as uuidv4 } from 'uuid';
 
 var basemixin = {
   data () {
@@ -15,6 +16,7 @@ var basemixin = {
       year: null,
       first: null,
       last: null,
+      modalPhoto: false,
       loading: false,
       state: storeGlobal.state,
       baseurl: 'https://fmmi.ci',
@@ -97,6 +99,9 @@ var basemixin = {
   methods: {
     currentUser() {
       return this.$q.localStorage.getItem('current_user')
+    },
+    generateUuid() {
+      return uuidv4();
     },
     navigate(url) {
       this.$router.push(url)

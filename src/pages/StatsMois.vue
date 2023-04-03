@@ -193,9 +193,9 @@ export default {
     this.appro_stats_global();
     this.products_get();
     const store = useCounterStore()
-    console.log(store.increment())
-    console.log(store.counter)
-    console.log(store.doubleCount)
+    // console.log(store.increment())
+    // console.log(store.counter)
+    // console.log(store.doubleCount)
   },
   methods: {
     convert(str) {

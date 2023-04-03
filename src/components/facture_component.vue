@@ -167,8 +167,13 @@ export default {
   },
   computed: {
     total() {
-      // return this.products.reduce((product, item) => product + (item.p.sales_price * item.quantity + (item.p.tva * item.p.sales_price * item.quantity)), 0);
-      return this.products.reduce((product, item) => product + (item.total * 1), 0);
+      console.log()
+      // return this.products.reduce((product, item) => product + (item.montant_vendu * item.quantity + (item.tva * item.montant_vendu * item.quantity) ), 0);
+      let sum = 0
+      this.products.forEach((product) => {
+        sum = sum + (product.prix_unitaire * product.quantity + ( product.prix_unitaire * product.quantity * product.tva /100 ))
+      });
+      return sum
     },
     remise() {
       return this.products.reduce((product, item) => product + (item.remise_totale * 1), 0);

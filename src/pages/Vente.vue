@@ -236,10 +236,13 @@ export default {
           let credit_sum = response.vente_credit_sum.credit;
           const val3 = Object.values(vente_sum);
           const valcredit = Object.values(credit_sum);
+          const budgetrevenu = Object.values(response.budgetrevenu);
+          console.log(response);
           this.series_vente_sum = [
             { name: 'Vendu', type: 'column', data: val3 },
             { name: 'Encaissé', type: 'column', data: valcredit },
-            {name: 'Budget', type: 'line', data: [1200000, 1300000, 1400000, 1500000, 44, 45, 50, 58] }
+            // {name: 'Budget', type: 'line', data: [1200000, 1300000, 1400000, 1500000, 44, 45, 50, 58] }
+            {name: 'Budget', type: 'line', data: budgetrevenu }
           ];
         });
     },

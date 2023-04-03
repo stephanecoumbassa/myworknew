@@ -18,7 +18,9 @@
             <q-tr :props="props">
               <q-td key='libelle' :props='props'> {{props.row.libelle}} </q-td>
               <q-td key='description' :props='props'> {{props.row.description}} </q-td>
-              <q-td key='status' :props='props'> {{props.row.status}} </q-td>
+              <q-td key='status' :props='props'>
+                <q-btn outline color="grey" size="sm">{{props.row.status}} </q-btn>
+              </q-td>
               <q-td key='p_projet_id' :props='props'> {{props.row.p_projet_id}} </q-td>
               <q-td key='debut' :props='props'> {{props.row.debut}} </q-td>
               <q-td key='fin' :props='props'> {{props.row.fin}} </q-td>
@@ -45,11 +47,13 @@
               <div class="col-12">
                 <q-input dense v-model='p_task.libelle' label='libelle' />
                 <q-input dense type='textarea' v-model='p_task.description' label='description' />
-                <q-input dense v-model='p_task.status' label='status' />
+<!--                <q-input dense v-model='p_task.status' label='status' />-->
+                <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
+                          outlined class="q-mb-sm" dense v-model='p_task.status' label='status' />
                 <q-input dense type='number' v-model='p_task.p_projet_id' label='p_projet_id' />
                 <q-input dense type='date' v-model='p_task.debut' label='debut' />
                 <q-input dense type='date' v-model='p_task.fin' label='fin' />
-                <q-input dense v-model='p_task.tuuid' label='tuuid' />
+<!--                <q-input dense v-model='p_task.tuuid' label='tuuid' />-->
               </div>
             </div>
             <div class="row">
@@ -134,6 +138,7 @@ export default {
     },
     p_task_post () {
       this.showLoading()
+      this.p_task.tuuid = this.generateUuid()
       $httpService.postWithParams('/api/post/p_task', this.p_task)
         .then((response) => {
           this.p_task = {}
