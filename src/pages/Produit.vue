@@ -83,10 +83,11 @@
         <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
         <br><br>
 
-        <q-table dense title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
+        <q-table id="printMe" dense title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
           <template v-slot:top>
             <div class="col-7 q-table__title">Liste des produits</div>
             <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
           </template>
           <template v-slot:body="props">
             <q-tr :props="props" :class="alerte(props.row)" :key="props.row.id">
@@ -193,18 +194,24 @@
               </div>
               <div class="col-md-5 col-sm-12 content-center text-center">
                 <vue-qr :size="200" :text="JSON.stringify(product.id)" :callback="test" qid="testid" />
-                <br>
-                <q-uploader
-                  v-model="product.photo"
-                  class="text-center"
-                  :url="apiurl+'/my/photo/products/'+product.id"
-                  color="grey"
-                  :headers="[{name: 'Authorization', value: 'Bearer '+token}]"
-                  :form-fields="[{name: 'id', value: product.id}]"
-                  flat
-                  bordered
-                  style="max-width: 200px; margin: 0 auto"
-                />
+<!--                <br>-->
+<!--                <q-uploader-->
+<!--                  v-model="product.photo"-->
+<!--                  class="text-center"-->
+<!--                  :url="apiurl+'/my/photo/products/'+product.id"-->
+<!--                  color="grey"-->
+<!--                  :headers="[{name: 'Authorization', value: 'Bearer '+token}]"-->
+<!--                  :form-fields="[{name: 'id', value: product.id}]"-->
+<!--                  flat-->
+<!--                  bordered-->
+<!--                  style="max-width: 200px; margin: 0 auto"-->
+<!--                />-->
+<!--                <br>-->
+                <div class="row q-pa-lg">
+                  <div class="col-12">
+                    <filescomponent type="product" folder="product" :typeid="product.id" />
+                  </div>
+                </div>
               </div>
             </div>
             <q-editor v-model="product.description" min-height="5rem" :toolbar="toolbar" />
@@ -316,6 +323,7 @@ import AreachartComponent from '../components/areachart.vue';
 import {ClientApi} from "src/services/api/client.api";
 import {SProductPrixApi} from "src/services/api/SProductPrixApi";
 import {LocalStorage} from "quasar";
+import Filescomponent from "components/filescomponent.vue";
 export default {
   name: 'ProduitName',
   data () {
@@ -366,11 +374,11 @@ export default {
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
         { name: 'photo', align: 'left', label: 'photo' },
         { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
-        { name: 'domainname', align: 'left', label: 'Domaine', field: 'domainname', sortable: true },
+        { name: 'domainname', align: 'left', label: 'Categorie', field: 'domainname', sortable: true },
         { name: 'parent_categorie_name', align: 'left', label: 'Parent', field: 'parent_categorie_name', sortable: true },
-        { name: 'categorie', align: 'left', label: 'Catégorie', field: 'categorie', sortable: true },
-        { name: 'marque', align: 'left', label: 'Marque', field: 'marque', sortable: true },
-        { name: 'amount', align: 'left', label: 'Qté Reste', field: 'amount', sortable: true },
+        // { name: 'categorie', align: 'left', label: 'Catégorie', field: 'categorie', sortable: true },
+        // { name: 'marque', align: 'left', label: 'Marque', field: 'marque', sortable: true },
+        // { name: 'amount', align: 'left', label: 'Qté Reste', field: 'amount', sortable: true },
         { name: 'actions', label: 'Actions' }
       ],
       sales_columns: [
@@ -393,6 +401,7 @@ export default {
     }
   },
   components: {
+    Filescomponent,
     areachart: AreachartComponent,
     HelloComponent,
     vueQr
@@ -451,9 +460,9 @@ export default {
       this.medium2 = true;
     },
     alerte(item) {
-      if (item.reste <= item.alert_threshold) {
-        return 'bg-red-1';
-      }
+      // if (item.reste <= item.alert_threshold) {
+      //   return 'bg-red-1';
+      // }
     },
     products_post: function () {
       if (confirm('Voulez vous ajouter ?')) {

@@ -64,40 +64,6 @@
 
           <q-separator inset class="q-my-sm" />
 
-          <q-expansion-item
-            class="GNL__drawer-item"
-            expand-separator
-            icon="settings"
-            label="Paramètres"
-          >
-            <q-list class="q-pl-sm">
-              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/projet'" active-class="text-teal">
-                <q-item-section avatar> <q-icon name="settings" /> </q-item-section>
-                <q-item-section>
-                  <q-item-label>Paramètres</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/budget-revenu'" active-class="text-teal">
-                <q-item-section avatar> <q-icon name="diversity_2" /> </q-item-section>
-                <q-item-section>
-                  <q-item-label>Budget Revenu</q-item-label>
-                </q-item-section>
-              </q-item>
-              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/budget-depense'" active-class="text-teal">
-                <q-item-section avatar> <q-icon name="engineering" /> </q-item-section>
-                <q-item-section>
-                  <q-item-label>Budget Dépense</q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-list>
-            <!--            <q-card>-->
-            <!--              <q-card-section>-->
-            <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti-->
-            <!--                commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste-->
-            <!--                eveniet doloribus ullam aliquid.-->
-            <!--              </q-card-section>-->
-            <!--            </q-card>-->
-          </q-expansion-item>
 
           <q-expansion-item
             class="GNL__drawer-item"
@@ -140,6 +106,43 @@
             <!--              </q-card-section>-->
             <!--            </q-card>-->
           </q-expansion-item>
+
+
+          <q-expansion-item
+            class="GNL__drawer-item"
+            expand-separator
+            icon="settings"
+            label="Paramètres"
+          >
+            <q-list class="q-pl-sm">
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/projet'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="settings" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Paramètres</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/budget-revenu'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="diversity_2" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Budget Revenu</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/budget-depense'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="engineering" /> </q-item-section>
+                <q-item-section>
+                  <q-item-label>Budget Dépense</q-item-label>
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <!--            <q-card>-->
+            <!--              <q-card-section>-->
+            <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti-->
+            <!--                commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste-->
+            <!--                eveniet doloribus ullam aliquid.-->
+            <!--              </q-card-section>-->
+            <!--            </q-card>-->
+          </q-expansion-item>
+
 
           <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/users'" active-class="text-teal">
             <q-item-section avatar> <q-icon name="people" /> </q-item-section>

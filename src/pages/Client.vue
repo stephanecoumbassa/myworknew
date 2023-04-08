@@ -11,12 +11,12 @@
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
         <!--grid-->
 
-        <q-table title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md" :pagination="pagination">
+        <q-table id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
+                 class="q-pa-md q-ma-md" :pagination="pagination" :filter="filter" flat>
           <template v-slot:top="props">
             <div class="col-4 q-table__title">Clients</div>
-            <download-excel name="vente.xls" :data="data">
-              <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
-            </download-excel>
+            <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(data, 'vente')"/>
+            <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
             <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  @click="props.toggleFullscreen" class="q-ml-md" />
           </template>
           <template v-slot:body="props">
@@ -147,18 +147,22 @@
 
 
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
-        <q-card class="text-center justify-center content-center">
-          <q-item clickable>
-            <q-card-section>
-              <div class="text-center text-h6">Stats par mois</div>
-              <br>
-              <div class="row">
-                <div class="col-12 q-pa-sm">
-                  <q-input type="month" v-model="date" placeholder="Mois" :dense="true" @change="client_stat(date)" hint="Mois" />
-                </div>
+        <q-card class="text-center justify-center content-center q-pa-lg">
+          <div class="text-center text-h6">Stats par interval</div>
+          <br>
+          <div class="grid">
+            <div class="row">
+              <div class="col-3 q-pa-sm">
+                <q-input type="date" v-model="datemin" placeholder="Mois" :dense="true" hint="Mois" />
               </div>
-            </q-card-section>
-          </q-item>
+              <div class="col-3 q-pa-sm">
+                <q-input type="date" v-model="datemax" placeholder="Mois" :dense="true"  hint="Mois" />
+              </div>
+              <div class="col-2 q-pa-sm">
+                <q-btn label="filtrer" @click="client_stat(datemin, datemax)" />
+              </div>
+            </div>
+          </div>
         </q-card>
       </div>
 
@@ -166,6 +170,7 @@
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md" style="min-width: 350px">
         <q-card class="my-card" square>
           <q-card-section>
+<!--            {{namedata}}-->
             <areachart-component color="primary" type="bar" :horizontal="false" :percent="5"
                                  :categories="namedata" :series="sumdata" title="Montant généré" titletooltip="depense" />
           </q-card-section>
@@ -197,6 +202,8 @@ export default {
       status_update: false,
       post: { body: '', subject: '' },
       entreprise: {},
+      datemin: null,
+      datemax: null,
       model: null,
       filter: '',
       medium: false,
@@ -224,7 +231,7 @@ export default {
         { name: 'last_name', required: true, label: 'Prenom', field: row => row.last_name, format: val => `${val}`, sortable: true },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'telephone', label: 'Telephone', field: 'telephone', sortable: true },
-        { name: 'actions', label: 'Actions' }
+        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
       facture_id: null,
       products: [],
@@ -269,10 +276,8 @@ export default {
     }
   },
   methods: {
-    client_stat (date) {
-      let year = date.split('-')[0];
-      let month = date.split('-')[1];
-      $httpService.postWithParams('/my/get/client_stats', {annee: year, mois: month})
+    client_stat (datemin, datemax) {
+      $httpService.postWithParams('/my/get/client_stats', {datemin, datemax})
         .then((response) => {
           console.log(response);
           this.sumdata = [{ name: 'Tarif Généré', data: response['sumvente'] }];

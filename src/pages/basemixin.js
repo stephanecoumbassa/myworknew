@@ -1,10 +1,11 @@
 // définir un objet mixin
-import { LocalStorage } from 'quasar';
+import {Loading, LocalStorage} from 'quasar';
 import storeGlobal from '../stores/storeController'
 import $httpService from '../boot/httpService';
 import {useCounterStore} from "stores/baseState";
-import {Loading} from 'quasar';
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
+import print from 'vue3-print-nb'
+
 
 var basemixin = {
   data () {
@@ -16,6 +17,8 @@ var basemixin = {
       year: null,
       first: null,
       last: null,
+      datemin: null,
+      datemax: null,
       modalPhoto: false,
       loading: false,
       state: storeGlobal.state,
@@ -34,6 +37,7 @@ var basemixin = {
         times_new_roman: 'Times New Roman',
         verdana: 'Verdana'
       },
+      isprinted: false,
       entreprise: { name: '', city: 1, footer_facture: 'agffggf', footer_site: '', footer_livraison: '', footer_paiement: '', footer_faq: '', contact: '' },
       toolbar: [
         [
@@ -69,6 +73,9 @@ var basemixin = {
         ['viewsource']
       ]
     }
+  },
+  directives: {
+    print
   },
   mounted() {
     var date = new Date();
@@ -266,6 +273,18 @@ var basemixin = {
       download(__name + ".csv", csv);
       return csv;
     },
+    async base64toFile(base64String, fileName) {
+      const response = await fetch(`data:application/octet-stream;base64,${base64String}`);
+      const data = await response.blob();
+      const metadata = { type: 'application/octet-stream' };
+      return new File([data], fileName, metadata);
+    },
+    urltoFile(url, filename, mimeType){
+      return (fetch(url)
+          .then(function(res){return res.arrayBuffer();})
+          .then(function(buf){return new File([buf], filename,{type:mimeType});})
+      );
+    }
   },
 };
 export default basemixin;

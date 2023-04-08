@@ -6,9 +6,9 @@
       <div class="col-9 q-pa-lg">
         <span class="text-h6">Projets</span>
       </div>
-      <div class="col q-pa-lg float-right text-right">
-        <q-btn color="primary" size="sm">Créer</q-btn>
-      </div>
+<!--      <div class="col q-pa-lg float-right text-right">-->
+<!--        <q-btn color="primary" size="sm">Créer</q-btn>-->
+<!--      </div>-->
     </div>
 
     <div class="row" v-if="p_projet.id">
@@ -25,7 +25,7 @@
             </div>
             <div class="col-7 q-pa-lg">
               <span class="text-h5">
-                237
+                {{p_tasks.length}}
                 <q-badge outline color="green" label="Taches" />
               </span>
 <!--              <p class="text-h6 text-grey">Projets courants</p>-->
@@ -66,10 +66,9 @@
                 >
                   <q-tab name="mails" label="Résumé" />
                   <q-tab name="taches" label="Taches" />
-                  <q-tab name="fichiers" label="Fichiers" />
                   <q-tab name="activites" label="Matières Utilisées" />
-                  <q-tab name="previsions" label="Prévisions" />
-                  <q-tab name="parametres" label="Paramètres" />
+<!--                  <q-tab name="previsions" label="Prévisions" />-->
+                  <q-tab name="fichiers" label="Fichiers" @click="fileStatus=!fileStatus" />
                 </q-tabs>
                 <q-separator />
               </q-card>
@@ -82,7 +81,60 @@
           <q-tab-panel name="mails" class="no-margin no-padding">
             <br>
             <div class="row">
-              <div class="col-6 q-mb-md">
+
+              <div class="col-6 q-mt-md">
+                <q-card class="q-mr-md q-pa-lg">
+                  <span class="text-h5">
+                    Dernières tâches
+                  </span>
+                  <p class="text-h6 text-grey">Liste des taches courantes</p>
+<!--                  <list-item />-->
+                  <q-list bordered padding class="rounded-borders">
+                    <q-item clickable v-ripple v-for="task in p_tasks.slice(0, 5)">
+                      <q-item-section avatar top>
+                        <q-avatar icon="folder" color="primary" text-color="white" />
+                      </q-item-section>
+
+                      <q-item-section>
+                        <q-item-label lines="1">{{task.libelle}}</q-item-label>
+                        <q-item-label caption>{{task.debut}} au {{task.fin}}</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section side>
+                        <q-icon name="info" color="green" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-card>
+              </div>
+
+              <div class="col-6 q-mt-md">
+                <q-card class="q-ml-md q-pa-lg">
+                  <span class="text-h5">
+                    Utilisateurs
+                  </span>
+                  <p class="text-h6 text-grey">liste des travailleurs affectés</p>
+                  <q-list bordered padding class="rounded-borders">
+                    <q-item clickable v-ripple v-for="employe in employes.slice(0, 5)">
+                      <q-item-section avatar top>
+                        <q-avatar icon="folder" color="primary" text-color="white" />
+                      </q-item-section>
+
+                      <q-item-section>
+                        <q-item-label lines="1">{{employe.nom}} {{employe.prenom}}</q-item-label>
+                        <q-item-label caption>{{employe.fonction}}</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section side>
+                        <q-icon name="info" color="green" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+<!--                  <list-item />-->
+                </q-card>
+              </div>
+
+              <div class="col-6 q-mt-md">
                 <q-card class="q-mr-md q-pa-lg">
                   <span class="text-h5">
                     Résumé des tâches
@@ -126,35 +178,6 @@
                 </q-card>
               </div>
 
-              <div class="col-6 q-mb-md">
-                <q-card class="q-ml-md q-pa-lg">
-                  <span class="text-h5">
-                    Derniers fichiers
-                  </span>
-                  <p class="text-h6 text-grey">Projets courants</p>
-                  <list-item />
-                </q-card>
-              </div>
-
-              <div class="col-6 q-mt-md">
-                <q-card class="q-mr-md q-pa-lg">
-                  <span class="text-h5">
-                    Dernières tâches
-                  </span>
-                  <p class="text-h6 text-grey">Projets courants</p>
-                  <list-item />
-                </q-card>
-              </div>
-
-              <div class="col-6 q-mt-md">
-                <q-card class="q-ml-md q-pa-lg">
-                  <span class="text-h5">
-                    Utilisateurs
-                  </span>
-                  <p class="text-h6 text-grey">Projets courants</p>
-                  <list-item />
-                </q-card>
-              </div>
 
             </div>
 
@@ -166,27 +189,6 @@
             </q-card>
           </q-tab-panel>
 
-          <q-tab-panel name="fichiers" class="no-padding no-margin">
-            <br>
-            <div class="row">
-              <div class="col-12">
-                <q-card class="q-pa-lg">
-                  <upload-form-data uploaded="uploaded()" />
-                  <br>
-                  <br>
-                  <di class="row">
-                    <div class="col-3 q-pa-md" v-for="img in [{},{},{},{},{},{},{},{},{},{},{}]">
-                      <q-img
-                        src="https://cdn.quasar.dev/img/image-src.png"
-                        spinner-color="white"
-                        style="height: 140px; max-width: 150px"
-                      />
-                    </div>
-                  </di>
-                </q-card>
-              </div>
-            </div>
-          </q-tab-panel>
 
           <q-tab-panel name="activites" class="no-padding no-margin">
             <br>
@@ -261,6 +263,13 @@
       </div>
     </div>
 
+
+    <q-dialog v-model="fileStatus">
+      <q-card style="width: 600px" class="q-pa-lg">
+        <filescomponent type="projet" :typeid="$route.params.id" folder="projet" />
+      </q-card>
+    </q-dialog>
+
   </q-page>
 </template>
 
@@ -272,13 +281,16 @@ import ListItem from "components/listItem.vue";
 import TaskList from "components/taskList.vue";
 import {employeGetService, p_task_get} from "src/services/api/rh.api";
 import UploadFormData from "components/uploadFormData.vue";
+import Filescomponent from "components/filescomponent.vue";
+
 export default {
-  components: {UploadFormData, TaskList, ListItem},
+  components: {UploadFormData, TaskList, ListItem, Filescomponent},
   data () {
     return {
       tab: "mails",
       p_projet_id: 1,
       loading1: false,
+      fileStatus: false,
       red: '#6d1412',
       first: null,
       last: null,
@@ -347,7 +359,7 @@ export default {
         })
     },
     p_projet_get () {
-      $httpService.getApi('/api/get/p_projet/'+this.$route.params.id)
+      $httpService.getApi('/my/get/p_projet/'+this.$route.params.id)
         .then((response) => {
           this.p_projet = response
         })

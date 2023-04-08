@@ -11,23 +11,37 @@
                      v-on:keyup="facture_filter_get(search)" label="Rechercher" />
           </div>
           <div class="col-12">
-            <q-table title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
-                     :pagination="pagination" :filter="filter">
+
+<!--            <div id="printMe" style="background:red;">-->
+<!--              <p>葫芦娃，葫芦娃</p>-->
+<!--              <p>一根藤上七朵花 </p>-->
+<!--              <p>小小树藤是我家 啦啦啦啦 </p>-->
+<!--              <p>叮当当咚咚当当　浇不大</p>-->
+<!--              <p> 叮当当咚咚当当 是我家</p>-->
+<!--              <p> 啦啦啦啦</p>-->
+<!--              <p>...</p>-->
+<!--            </div>-->
+<!--            <button v-print="'#printMe'">Print local range</button>-->
+
+            <q-table id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
+                     :pagination="pagination" :filter="filter" dense>
               <template v-slot:top="props">
                 <div class="col-4 q-table__title">Liste des factures</div>&nbsp;&nbsp;&nbsp;
-                <q-input dense debounce="300" type="search" icon="search" v-model="filter" placeholder="Rechercher" />
+<!--                <q-input dense debounce="300" type="search" icon="search" v-model="filter" placeholder="Rechercher" />-->
+                <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(factures, 'vente')"/>
+                <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
                 <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />
                 <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
               </template>
               <template v-slot:body="props">
-                <q-tr :props="props">
+                 <q-tr :props="props">
                   <q-td key="facture" :props="props">{{ props.row.facture }}</q-td>
                   <q-td key="dateposted" :props="props">{{ props.row.dateposted }}</q-td>
                   <q-td key="fullname" :props="props">{{ props.row.fullname }}</q-td>
                   <q-td key="total" :props="props">{{ props.row.total }}</q-td>
                   <q-td key="versement" :props="props">{{ props.row.versement }}</q-td>
                   <q-td key="reste" :props="props">{{ props.row.total - props.row.versement }}</q-td>
-                  <q-td key="actions" :props="props">
+                  <q-td key="actions" :props="props" class="print-hide">
                     <q-btn flat icon="edit" @click="fullWidth = true; get_facture_id(props.row.facture); factures_get_credit(props.row.facture)"></q-btn>
                     <q-btn flat icon="receipt" @click="facture_status2 = true; get_facture_id(props.row.facture); factures_get_credit(props.row.facture)"></q-btn>
                   </q-td>
@@ -151,7 +165,7 @@
 </template>
 
 <script>
-import basemixin from './basemixin'
+import basemixin from './basemixin';
 
 const data = [{ 'name': 'Facebook' }, { 'name': 'Google' }, { 'name': 'Twitter' }];
 import $httpService from '../boot/httpService';
@@ -215,7 +229,7 @@ export default {
         { name: 'total', align: 'left', label: 'Total', field: 'total', sortable: true },
         { name: 'versement', align: 'left', label: 'Versement', field: 'versement', sortable: true },
         { name: 'reste', align: 'left', label: 'reste', field: 'reste', sortable: true },
-        { name: 'actions', align: 'left', label: 'Actions' }
+        { name: 'actions', align: 'left', classes: 'print-hide', headerClasses: 'print-hide', label: 'Actions' }
       ],
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
       data: []
@@ -252,7 +266,13 @@ export default {
       }
     },
     facture_filter_get() {
-      const val1 = this.factures_init.filter((x) => { return x.facture.toString().includes(this.search); });
+      const val1 = this.factures_init.filter((x) => {
+        return x.facture.toLowerCase().includes(this.search)
+          || x.dateposted.toString().includes(this.search)
+          || x.fullname.toLowerCase().includes(this.search.toLowerCase())
+          || x.montant_vendu.includes(this.search.toLowerCase())
+          ;
+      });
       this.factures = val1;
     },
     shop_get() {
@@ -407,7 +427,6 @@ export default {
         });
         return
       }
-
       update(() => {
         const needle = val.toLowerCase();
         this.items = data.filter(v => v.name.toLowerCase().indexOf(needle) > -1)

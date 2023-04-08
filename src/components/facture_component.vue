@@ -97,13 +97,16 @@
                     <td align="left">{{numerique(product.quantity)}}</td>
                     <td align="left">{{numerique(product.price)}}</td>
                     <td align="left">{{numerique(product.tva)}}%</td>
-                    <td align="right">{{numerique(product.total)}}</td>
+                    <td align="right">{{numerique(
+                      (product.quantity * product.price) + (product.quantity * product.price * product.tva /100)
+                    )}}</td>
+<!--                    <td align="right">{{numerique(product.total)}}</td>-->
                   </tr>
                   </tbody>
                 </table>
                 <br>
                 <div class="total-Ht">
-                  <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(total)}} </div>
+                  <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(totalHt)}} </div>
                   <div class="reduc">TVA</div> <div class="montant"> 18%</div>
                   <!--              <div class="tva">Tva</div> <div class="montant">0</div>-->
                   <div class="reduc" v-if="remise">Remise</div> <div v-if="remise" class="montant"> {{numerique(remise)}}</div>
@@ -167,11 +170,16 @@ export default {
   },
   computed: {
     total() {
-      console.log()
-      // return this.products.reduce((product, item) => product + (item.montant_vendu * item.quantity + (item.tva * item.montant_vendu * item.quantity) ), 0);
       let sum = 0
       this.products.forEach((product) => {
         sum = sum + (product.prix_unitaire * product.quantity + ( product.prix_unitaire * product.quantity * product.tva /100 ))
+      });
+      return sum
+    },
+    totalHt() {
+      let sum = 0
+      this.products.forEach((product) => {
+        sum = sum + (product.prix_unitaire * product.quantity)
       });
       return sum
     },

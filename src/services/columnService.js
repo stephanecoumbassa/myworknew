@@ -43,8 +43,8 @@ export const approColumnsHome = [
 export const productColumnsHome = [
   { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
   { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
-  { name: 'amount', align: 'left', label: 'Quantité Restante', field: 'amount', sortable: true }
-  // { name: 'actions', label: 'Actions' }
+  // { name: 'amount', align: 'left', label: 'Quantité Restante', field: 'amount', sortable: true },
+  { name: 'actions', label: 'Actions' }
 ];
 // --------------------------END HOME COLUMNS---------------------------------------------------------
 

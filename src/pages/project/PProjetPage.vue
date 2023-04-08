@@ -14,12 +14,12 @@
     </div>
 
     <div class="row">
-      <div class="col q-pa-lg">
+      <div class="col-md-4 col-6 q-pa-lg">
         <q-card class="q-pa-md">
           <span class="text-h5">237</span>
           <p class="text-h6 text-grey">Projets courants</p>
           <div class="row">
-            <div class="col-6">
+            <div class="col-6 ">
               <q-circular-progress
                 :value="40"
                 size="150px"
@@ -32,68 +32,49 @@
             <div class="col-6 q-pa-md">
               <q-list dense>
                 <q-item clickable v-ripple>
-                  <q-item-label><span class="text-grey text-weight-bold">-</span> En cours</q-item-label>
+                  <q-item-label><span class="text-grey text-weight-bold">-</span> ({{stats.cours}}) En cours</q-item-label>
                 </q-item>
                 <q-item clickable v-ripple>
-                    <q-item-label><span class="text-green text-weight-bold">-</span>Terminé(s)</q-item-label>
+                    <q-item-label><span class="text-green text-weight-bold">-</span> ({{stats.termine}}) Terminé(s)</q-item-label>
                 </q-item>
                 <q-item clickable v-ripple>
-                    <q-item-label><span class="text-red text-weight-bold">-</span>Echec(s)</q-item-label>
+                    <q-item-label><span class="text-red text-weight-bold">-</span> ({{stats.attente}}) Attente(s)</q-item-label>
                 </q-item>
               </q-list>
             </div>
           </div>
         </q-card>
       </div>
-      <div class="col q-pa-lg">
+      <div class="col-md-4 col-6 q-pa-lg">
         <q-card class="q-pa-md">
-          <span class="text-h5">3,290.00 CFA</span>
+          <span class="text-h5">{{numerique(array_somme(p_projections, 'montant_ht'))}} CFA</span>
           <p class="text-h6 text-grey">Projets finance</p>
-          <q-list dense>
-            <q-item dense>
+          <q-list bordered>
+            <q-item class="q-pa-md" dense v-for="projection in p_projections" border>
               <q-item-section>
-                <q-item-label>Single line item</q-item-label>
+                <q-item-label>{{ projection.titre }}</q-item-label>
               </q-item-section>
               <q-item-section side>
-                <q-item-label caption>5 min ago</q-item-label>
+                <q-item-label caption>{{ numerique(projection.montant_ht) }} CFA</q-item-label>
               </q-item-section>
             </q-item>
-            <q-separator spaced inset />
-            <q-item dense>
-              <q-item-section>
-                <q-item-label>Single line item</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-item-label caption>5 min ago</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-separator spaced inset />
-            <q-item dense>
-              <q-item-section>
-                <q-item-label>Single line item</q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-item-label caption>5 min ago</q-item-label>
-              </q-item-section>
-            </q-item>
-            <q-separator spaced inset />
-
           </q-list>
         </q-card>
       </div>
-      <div class="col q-pa-lg">
+      <div class="col-md-4 col-6 q-pa-lg">
         <q-card class="q-pa-md">
           <span class="text-h5">49</span>
           <p class="text-h6 text-grey">Clients</p>
           <div class="row" style="height: 145px;">
+            {{clients.length}}
             <q-avatar
-              v-for="n in 7"
-              :key="n"
+              v-for="(n, index) in clients"
+              :key="n.id"
               size="40px"
               class="overlapping"
-              :style="`left: ${n * 25}px`"
+              :style="`left: ${index * 25}px`"
             >
-              <img :src="`https://cdn.quasar.dev/img/avatar${n + 1}.jpg`">
+              <img :src="`https://cdn.quasar.dev/img/avatar${index + 1}.jpg`">
             </q-avatar>
           </div>
         </q-card>
@@ -207,8 +188,11 @@
           <q-form  @submit="onSubmit" class="q-gutter-md">
             <div class="row">
               <div class="col-12">
-                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
-                          v-model="p_projet.clientid" :options="clients" label="Clients" option-value="id" p_projet.clientid
+                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
+                          v-model="p_projet.clientid" :options="clients" label="Clients" option-value="id" option-label="fullname"
+                          input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
+                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
+                          v-model="p_projet.productid" :options="products" label="Produits" option-value="id" option-label="name"
                           input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
                 <q-input outlined class="q-mb-sm" dense v-model='p_projet.titre' label='titre' />
                 <q-input outlined class="q-mb-sm" dense type='textarea' v-model='p_projet.description' label='description' />
@@ -254,6 +238,8 @@
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import apimixin from "src/services/apimixin";
+import {ClientApi} from "src/services/api/client.api";
+import {PProjetApi} from "src/services/api/PProjetApi";
 export default {
   data () {
     return {
@@ -268,9 +254,12 @@ export default {
       name: null,
       image: null,
       isGrid: false,
+      stats: {},
       p_projet: {},
       p_projets: [],
+      p_projections: [],
       clients: [],
+      products: [],
       columns: [
         { name: 'client', align: 'left', label: 'Client', field: 'client', sortable: true },
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
@@ -300,19 +289,33 @@ export default {
   },
   mixins: [basemixin, apimixin],
   created () {
+    this.products_get()
     this.p_projet_get()
-    this.clients_get()
+    this.p_projet_stats()
     const date = new Date()
+    ClientApi.get().then((res) => this.clients = res)
+    this.p_projet_previson_get('2023-03')
+    PProjetApi.get().then((res) => this.projets = res)
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   },
   methods: {
-    clients_get () {
-      this.getApi('/my/get/client').then((response) => {
-          this.clients = response;
-        }).catch(() => {
-          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
-        });
+    products_get () {
+      $httpService.getWithParams('/my/get/products')
+        .then((response) => {
+          this.products = response;
+        })
+    },
+    p_projet_previson_get (date='2023-03') {
+      let year = date.split('-')[0];
+      this.year = date.split('-')[0];
+      let month = date.split('-')[1];
+      this.month = date.split('-')[1];
+      $httpService.getApi('/my/get/p_projet_previson?mois='+month+'&annee='+year)
+        .then((response) => {
+          this.p_projections = response['data'];
+          this.$q.notify(response['msg']);
+        })
     },
     update_get (props) {
       this.p_projet = props
@@ -325,9 +328,15 @@ export default {
       this.p_projet[_name] = this.$refs[_name].files[0]
     },
     p_projet_get () {
-      $httpService.getApi('/api/get/p_projet')
+      $httpService.getApi('/my/get/p_projet')
         .then((response) => {
           this.p_projets = response
+        })
+    },
+    p_projet_stats () {
+      $httpService.getApi('/my/stats/p_projet')
+        .then((response) => {
+          this.stats = response
         })
     },
     onSubmit () {

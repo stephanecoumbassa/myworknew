@@ -5,14 +5,15 @@
     <div class="col-md-11 col-12 q-pa-xs q-ma-xs">
       <!--grid-->
 
-      <q-table title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md" :pagination="pagination">
+      <q-table title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
+               :pagination="pagination" :filter="filter" flat>
         <template v-slot:top="props">
           <div class="col-4 q-table__title">
             <q-btn label="Ajouter" class="q-ma-md" size="sm" icon="add" color="secondary" v-on:click="fournisseur = {} ; medium = true" />
             Fournisseurs</div>
-          <download-excel name="vente.xls" :data="data">
-            <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
-          </download-excel>
+          <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+          <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(data, 'vente')"/>
+          <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
           <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  @click="props.toggleFullscreen" class="q-ml-md" />
         </template>
         <template v-slot:body="props">
@@ -188,7 +189,7 @@ export default {
         { name: 'last_name', required: true, label: 'Prenom', field: row => row.last_name, format: val => `${val}`, sortable: true },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'telephone', label: 'Telephone', field: 'telephone', sortable: true },
-        { name: 'actions', label: 'Actions' }
+        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
         // { name: 'type', label: 'Type', field: 'type', sortable: true }
       ],
       appro_columns: [

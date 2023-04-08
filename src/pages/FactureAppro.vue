@@ -176,7 +176,7 @@ export default {
         { name: 'sell_price', align: 'left', label: 'Prix Vente.', field: 'sell_price', sortable: true },
         { name: 'fournisseur_user', align: 'left', label: 'Fournisseur', field: 'fournisseur_user', sortable: true },
         { name: 'code_ap_name', align: 'left', label: 'Code Appruo', field: 'code_ap_name', sortable: true },
-        { name: 'actions', label: 'Actions' }
+        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
       columns_facture: [
         { name: 'facture', align: 'left', label: 'Facture', field: 'facture', sortable: true },
@@ -185,7 +185,7 @@ export default {
         { name: 'total', align: 'left', label: 'Total', field: 'total', sortable: true },
         { name: 'versement', align: 'left', label: 'Versement', field: 'versement', sortable: true },
         { name: 'reste', align: 'left', label: 'reste', field: 'reste', sortable: true },
-        { name: 'actions', align: 'left', label: 'Actions' }
+        { name: 'actions', align: 'left', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
       data: []

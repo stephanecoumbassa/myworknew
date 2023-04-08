@@ -24,14 +24,13 @@
               <div class="col q-pa-sm"><br><q-btn color="dark" label="filtrer" v-on:click="sales_stats_get()" /></div>
             </div>
 
-            <q-table title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="columns"
+            <q-table id="printMe" title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="columns"
                      :pagination="pagination" :filter="filter">
               <template v-slot:top="props">
                 <div class="col-4 q-table__title">Liste des ventes</div>&nbsp;&nbsp;&nbsp;
                 <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-                <download-excel name="vente.xls" :json-data="sales_list">
-                  <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
-                </download-excel>
+                <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(sales_list, 'vente')"/>
+                <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
                 <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />
                 <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
               </template>
@@ -267,7 +266,7 @@ export default {
         { name: 'total', align: 'left', label: 'Total', field: 'total', sortable: true, format: val => `${this.numerique(val)}` },
         { name: 'a_name', align: 'left', label: 'Agent', field: 'a_name', sortable: true },
         { name: 'id_vente', align: 'left', label: 'Facture ID', field: 'id_vente', sortable: true },
-        { name: 'actions', label: 'Actions' }
+        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
       data: [],
       entreprise: {},

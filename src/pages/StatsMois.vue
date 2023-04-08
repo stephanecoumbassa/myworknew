@@ -69,7 +69,8 @@
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 350px">
             <q-card class="my-card" square>
               <q-card-section>
-                <areachart color="primary" type="bar" :horizontal="false" :series="depense_sum_data" title="Montants des depenses" titletooltip="depense" />
+                <areachart color="red" :series="depense_sum_data" title="Montants des depenses" titletooltip="depense" />
+<!--                <areachart color="primary" type="bar" :horizontal="false" :series="depense_sum_data" title="Montants des depenses" titletooltip="depense" />-->
               </q-card-section>
             </q-card>
           </div>
@@ -113,6 +114,7 @@
                   <q-td key="id" :props="props"> {{props.row.id}} </q-td>
                   <q-td key="name" :props="props"> {{props.row.name}} </q-td>
                   <q-td key="amount" :props="props"> {{props.row.reste}} </q-td>
+                  <q-td key="actions" :props="props">  </q-td>
                 </q-tr>
               </template>
             </q-table>
@@ -265,9 +267,9 @@ export default {
         })
     },
     alerte(item) {
-      if (item.amount <= item.alert_threshold) {
-        return 'bg-red-2';
-      }
+      // if (item.amount <= item.alert_threshold) {
+      //   return 'bg-red-2';
+      // }
     }
   }
 }

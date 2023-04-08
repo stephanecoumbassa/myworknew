@@ -13,15 +13,17 @@
 
       <div class="col-md-12 col-sm-12 col-xs-12">
 
-        <q-table title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
-                 :pagination="pagination">
+        <q-table id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
+                 :pagination="pagination" :filter="filter" :grid="grid" dense flat>
           <template v-slot:top="props">
-            <div class="col-4 q-table__title">Depenses</div>
-            <download-excel name="depenses.xls" :data="data">
-              <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md"></q-btn>
-            </download-excel>
+            <div class="print-hide col-4 q-table__title">Depenses</div>
+            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md print-hide" @click="json2csv(data, 'vente')"/>
+            <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md print-hide" />
+            <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md print-hide" />
             <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+                   @click="props.toggleFullscreen" class="q-ml-md print-hide" />
+            <br>
           </template>
           <template v-slot:body="props">
             <q-tr :props="props">
@@ -31,6 +33,7 @@
               <q-td key="client" :props="props"> {{props.row.client}} </q-td>
               <q-td key="email" :props="props"> {{props.row.email}} </q-td>
               <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
+              <q-td key="date" :props="props"> {{props.row.date}} </q-td>
               <q-td key="actions" :props="props">
                 <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>
                 <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>
@@ -109,6 +112,7 @@ export default {
       model: null,
       filter: '',
       status_update: false,
+      grid: false,
       medium: false,
       loading: false,
       visibleColumns: ['email', 'phoneNumber', 'type'],
@@ -126,7 +130,8 @@ export default {
         { name: 'client', label: 'Beneficiaire', field: 'client', sortable: true },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'telephone', label: 'Telephone', field: 'telephone', sortable: true },
-        { name: 'actions', label: 'Actions' }
+        { name: 'date', label: 'Date', field: 'date', sortable: true },
+        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
       data: []
     }
