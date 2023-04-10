@@ -48,7 +48,8 @@
     "vue3-html2pdf": "^1.1.2",
     "vue3-json-excel": "^1.0.10-alpha",
     "vue3-leaflet": "^1.0.43",
-    "vue3-print-nb": "^0.1.4"
+    "vue3-print-nb": "^0.1.4",
+    "vuedraggable": "4.1.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",

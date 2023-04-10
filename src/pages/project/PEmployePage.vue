@@ -15,36 +15,26 @@
                    @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
           </template>
           <template v-slot:body="props">
-            <q-tr :props="props">
+            <q-tr :props="props" @click="p_employe_id = props.row.id;">
               <q-td key='qrcode' :props='props'>
                 <vue-qr :size="128" :text="props.row.euuid" :qid="props.row.euuid" />
+                <!--                <vue-qr :size="128" :text="props.row.euuid" :qid="props.row.euuid" />-->
               </q-td>
               <q-td key='nom' :props='props'> {{props.row.nom}} </q-td>
               <q-td key='prenom' :props='props'> {{props.row.prenom}} </q-td>
               <q-td key='telephone' :props='props'> {{props.row.telephone}} </q-td>
               <q-td key='email' :props='props'> {{props.row.email}} </q-td>
               <q-td key='cni' :props='props'> {{props.row.cni}} </q-td>
-<!--              <q-td key='photo' :props='props'> <img v-if='props.row.photo' width='80' height='80' :src="uploadurl+'/p_employe/'+props.row.photo" :alt='props.row.photo' /> </q-td>-->
-<!--              <q-td key='whatsapp' :props='props'> {{props.row.whatsapp}} </q-td>-->
-<!--              <q-td key='adresse' :props='props'> {{props.row.adresse}} </q-td>-->
               <q-td key='datenaissance' :props='props'> {{props.row.datenaissance}} </q-td>
               <q-td key='genre' :props='props'> {{props.row.genre}} </q-td>
-<!--              <q-td key='banquerib' :props='props'> {{props.row.banquerib}} </q-td>-->
-<!--              <q-td key='banquename' :props='props'> {{props.row.banquename}} </q-td>-->
               <q-td key='fonction' :props='props'> {{props.row.fonction}} </q-td>
-<!--              <q-td key='datearrivee' :props='props'> {{props.row.datearrivee}} </q-td>-->
-<!--              <q-td key='datefin' :props='props'> {{props.row.datefin}} </q-td>-->
-<!--              <q-td key='experience' :props='props'> {{props.row.experience}} </q-td>-->
-<!--              <q-td key='education' :props='props'> {{props.row.education}} </q-td>-->
-<!--              <q-td key='euuid' :props='props'> {{props.row.euuid}} </q-td>-->
-
               <q-td key="actions" :props="props">
-                <q-btn outline class="q-mr-xs" size="xs" color="dark" v-on:click="typeid=props.row.id;modalPhoto=true" icon="photo"></q-btn>
-                <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
-                <q-btn class="q-mr-xs" size="xs" color="primary" outline icon="event_available"
+                <q-btn title="photo" outline class="q-mr-xs" size="xs" color="dark" v-on:click="typeid=props.row.id;modalPhoto=true" icon="photo"></q-btn>
+                <q-btn title="modifier" outline class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
+                <q-btn title="presence" class="q-mr-xs" size="xs" color="primary" outline icon="event_available"
                        @click="modalArrivee = true; p_arrivee_get(props.row.id)"></q-btn>
-                <q-btn class="q-mr-xs" size="xs" color="red" outline icon="event_busy"></q-btn>
-                <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_employe_delete(props.row.id)" icon="delete"></q-btn>
+                <q-btn title="absence" @click="modalAbsence = true; p_absence_get(props.row.id)" class="q-mr-xs" size="xs" color="red" outline icon="event_busy"></q-btn>
+                <q-btn title="supprimer" class="q-mr-xs" size="xs" color="red" v-on:click="p_employe_delete(props.row.id)" icon="delete"></q-btn>
               </q-td>
             </q-tr>
           </template>
@@ -97,8 +87,8 @@
                 <q-input outlined dense type='textarea' v-model='p_employe.experience' label='experience' />
                 <br>
                 <q-input outlined dense type='textarea' v-model='p_employe.education' label='education' />
-<!--                <br>-->
-<!--                <q-input dense v-model='p_employe.euuid' label='euuid' />-->
+                <!--                <br>-->
+                <!--                <q-input dense v-model='p_employe.euuid' label='euuid' />-->
               </div>
             </div>
             <div class="row">
@@ -115,35 +105,80 @@
     </q-dialog>
 
     <q-dialog v-model="modalPhoto">
-        <q-card style="width: 600px" class="q-pa-lg">
-          <photoscomponent type="employe" :typeid="typeid" folder="employe" />
-        </q-card>
+      <q-card style="width: 1000px" class="q-pa-lg">
+        <filescomponent type="employe" :typeid="typeid" folder="employe" />
+      </q-card>
     </q-dialog>
-    <q-dialog v-model="modalArrivee" full-width position="top">
-      <div class="row justify-center">
-        <div class="col-12 q-mt-md">
-          <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />
-          <br><br>
-          <q-table title="p_arrivees" :rows="p_arrivees" :columns="columnsArrivees" :filter="filter" :pagination="pagination" row-key="name">
-            <template v-slot:top="props">
-              <div class="col-7 q-table__title">Liste des arrivées</div>
-              <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            </template>
-            <template v-slot:body="props">
-              <q-tr :props="props">
-                <q-td key='venue' :props='props'> {{props.row.venue}} </q-td>
-                <q-td key='depart' :props='props'> {{props.row.depart}} </q-td>
-                <q-td key='heurepause' :props='props'> {{props.row.heurepause}} </q-td>
-                <q-td key='p_employe_id' :props='props'> {{props.row.p_employe_id}} </q-td>
-<!--                <q-td key="actions" :props="props">-->
-<!--                  <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>-->
-<!--                  <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_arrivee_delete(props.row.id)" icon="delete"></q-btn>-->
-<!--                </q-td>-->
-              </q-tr>
-            </template>
-          </q-table>
+
+    <q-dialog v-model="modalArrivee" position="top" full-width>
+      <q-card style="width: 1000px" class="q-pa-lg">
+        <div class="row justify-center">
+          <div class="col-12 q-mt-md">
+            <q-table title="p_arrivees" :rows="p_arrivees" :columns="columnsArrivees"
+                     :filter="filter" :pagination="pagination" row-key="name" dense>
+              <template v-slot:top="props">
+                <div class="col-7 q-table__title">Liste des arrivées</div>
+                <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+              </template>
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key='venue' :props='props'> {{props.row.venue}} </q-td>
+                  <q-td key='depart' :props='props'> {{props.row.depart}} </q-td>
+                  <q-td key='heurepause' :props='props'> {{props.row.heurepause}} </q-td>
+                  <q-td key='p_employe_id' :props='props'> {{props.row.p_employe_id}} </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+          </div>
         </div>
-      </div>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="modalAbsence" position="top" full-width>
+      <q-card style="width: 1000px" class="q-pa-lg">
+        <q-form  @submit="p_absence_post()" class="q-gutter-md">
+          <div class="row justify-center">
+            <div class="col-2 q-pr-md">
+              <q-input v-model="absence.date" type="date" label="Date" />
+            </div>
+            <div class="col-1 q-pr-md">
+              <q-input v-model="absence.heure" type="number" label="Heure" />
+            </div>
+            <div class="col-8 q-pr-md">
+              <q-input v-model="absence.justificatif" type="text" label="Justificatif" />
+            </div>
+            <div class="col-1 q-pr-md">
+              <q-btn label="Valider" type="submit" />
+            </div>
+          </div>
+        </q-form>
+        <br>
+        <div class="row justify-center">
+          <div class="col-12 q-mt-md">
+            <q-table title="p_arrivees" :rows="p_absences" :columns="columnsAbsences"
+                     :filter="filter" :pagination="pagination" row-key="name" dense>
+              <template v-slot:top="props">
+                <div class="col-7 q-table__title">Liste des absences</div>
+                <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+              </template>
+              <template v-slot:body="props">
+                <q-tr :props="props">
+                  <q-td key="actions" :props="props">
+                    <q-btn class="q-mr-xs" size="xs" color="primary" icon="photo"></q-btn>
+                    <q-popup-edit v-model="props.row.id" v-slot="scope">
+                      <filescomponent type="absence" :typeid="props.row.id" folder="absence" />
+                    </q-popup-edit>
+                  </q-td>
+                  <q-td key='date' :props='props'> {{props.row.date}} </q-td>
+                  <q-td key='justificatif' :props='props'> {{props.row.justificatif}} </q-td>
+                  <q-td key='heure' :props='props'> {{props.row.heure}} </q-td>
+                  <q-td key='p_employe_id' :props='props'> {{props.row.p_employe_id}} </q-td>
+                </q-tr>
+              </template>
+            </q-table>
+          </div>
+        </div>
+      </q-card>
     </q-dialog>
 
   </q-page>
@@ -154,6 +189,7 @@ import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import vueQr from 'vue-qr/src/packages/vue-qr.vue'
 import Photoscomponent from "components/photoscomponent.vue";
+import Filescomponent from "components/filescomponent.vue";
 
 export default {
   data () {
@@ -167,12 +203,15 @@ export default {
       medium: false,
       medium2: false,
       modalArrivee: false,
+      modalAbsence: false,
       maximizedToggle: true,
       name: null,
       image: null,
       p_employe: {},
+      absence: {heure: 24},
       p_employes: [],
       p_arrivees: [],
+      p_absences: [],
       columnsArrivees: [
         { name: 'venue', align: 'left', label: 'venue', field: 'venue', sortable: true },
         { name: 'depart', align: 'left', label: 'depart', field: 'depart', sortable: true },
@@ -180,6 +219,13 @@ export default {
         { name: 'p_employe_id', align: 'left', label: 'p_employe_id', field: 'p_employe_id', sortable: true },
 
         { name: 'actions', align: 'left', label: 'Actions' }
+      ],
+      columnsAbsences: [
+        { name: 'actions', align: 'left', label: 'Actions' },
+        { name: 'date', align: 'left', label: 'Date', field: 'date', sortable: true },
+        { name: 'justificatif', align: 'left', label: 'Justificatif', field: 'justificatif', sortable: true },
+        { name: 'heure', align: 'left', label: 'Heure', field: 'heure', sortable: true },
+        { name: 'p_employe_id', align: 'left', label: 'Employe', field: 'p_employe_id', sortable: true },
       ],
       columns: [
         { name: 'qrcode', align: 'left', label: 'qrcode', field: 'qrcode', sortable: true },
@@ -210,6 +256,7 @@ export default {
   },
   mixins: [basemixin],
   components: {
+    Filescomponent,
     Photoscomponent,
     vueQr
   },
@@ -236,6 +283,12 @@ export default {
           this.p_arrivees = response
         })
     },
+    p_absence_get (__id) {
+      $httpService.getApi('/api/get/p_absence/'+__id)
+        .then((response) => {
+          this.p_absences = response
+        })
+    },
     p_employe_get () {
       $httpService.getApi('/api/get/p_employe')
         .then((response) => {
@@ -248,6 +301,17 @@ export default {
       } else {
         this.p_employe_post()
       }
+    },
+    p_absence_post () {
+      this.absence.p_employe_id = this.p_employe_id;
+      this.showLoading();
+      $httpService.postWithParams('/api/post/p_absence', this.absence)
+        .then((response) => {
+          this.absence = {heure: 24}
+          this.p_absence_get(this.p_employe_id)
+          this.showAlert(response.msg, 'secondary')
+          this.hideLoading()
+        }).catch(() => { this.hideLoading() })
     },
     p_employe_post () {
       this.showLoading()
