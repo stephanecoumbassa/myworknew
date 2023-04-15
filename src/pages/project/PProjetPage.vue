@@ -7,8 +7,6 @@
         <span class="text-h6">Projets</span>
       </div>
       <div class="col q-pa-lg float-right text-right">
-        <q-btn color="secondary" icon="calendar_month" size="sm" to="/projet-prevsion">Prévisions par mois</q-btn>
-        &nbsp;&nbsp;
         <q-btn color="primary" icon="add" size="sm" @click="medium2=true">Créer</q-btn>
       </div>
     </div>
@@ -350,7 +348,7 @@ export default {
       this.p_projet.montant_ht = this.p_projet.qte * this.p_projet.prix_unitaire
       this.showLoading()
       this.p_projet.puuid = this.generateUuid();
-      $httpService.postWithParams('/api/post/p_projet', this.p_projet)
+      $httpService.postWithParams('/my/post/p_projet', this.p_projet)
         .then((response) => {
           this.p_projet = {}
           this.p_projet_get()
@@ -361,7 +359,7 @@ export default {
     p_projet_update () {
       this.p_projet.montant_ht = this.p_projet.qte * this.p_projet.prix_unitaire
       this.showLoading()
-      $httpService.putWithParams('/api/put/p_projet', this.p_projet)
+      $httpService.putWithParams('/my/put/p_projet', this.p_projet)
         .then((response) => {
           this.p_projet_get()
           this.showAlert(response, 'secondary')
@@ -370,7 +368,7 @@ export default {
     },
     p_projet_delete (_id) {
       this.showLoading()
-      $httpService.deleteWithParams('/api/delete/p_projet/' + _id)
+      $httpService.deleteWithParams('/my/delete/p_projet/' + _id)
         .then((response) => {
           this.p_projet_get()
           this.showAlert(response.msg, 'secondary')

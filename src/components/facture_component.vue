@@ -44,8 +44,8 @@
               </div>
               <div class="col-3 text-right" v-if="!printStatus">
                 <button v-on:click="generateReport()">PDF</button>
-                &nbsp;
-                <button v-on:click="mail()">Mail</button>
+<!--                &nbsp;-->
+<!--                <button v-on:click="mail()">Mail</button>-->
               </div>
             </div>
           </header>

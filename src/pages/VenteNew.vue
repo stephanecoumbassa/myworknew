@@ -31,7 +31,7 @@
                 <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
                 <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(sales_list, 'vente')"/>
                 <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
-                <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />
+<!--                <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />-->
                 <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
               </template>
               <template v-slot:body="props">

@@ -50,8 +50,8 @@
                     <q-input class="col-2 q-pl-sm" :dense="true" type="number" :label="calculTotal(product.prix_unitaire, product.quantite_vendu, product.tva)" disable disabled="" />
                     <div class="col-1 row q-pl-xs">
                       <br>
-                      <q-btn flat size="sm" color="secondary" v-on:click="sales_update(product)" icon="edit" />
-                      <q-btn flat size="sm" color="negative" v-on:click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" icon="remove" />
+                      <q-btn flat size="sm" color="secondary" v-on:click="devis_put(product)" icon="edit" />
+                      <q-btn flat size="sm" color="negative" v-on:click="devis_delete(product.id)" icon="remove" />
                     </div>
                   </div>
                 </div>
@@ -364,9 +364,18 @@ export default {
       }
     },
 
-    sales_put() {
-      if (confirm('Voulez vous modifier')) {
-        $httpService.putWithParams('/my/put/sales', this.product).then((response) => {
+    devis_put(devis) {
+      if (confirm('Voulez vous modifier ?')) {
+        $httpService.postWithParams('/my/put/devis', devis).then((response) => {
+          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+          this.sales_get();
+        })
+      }
+    },
+
+    devis_delete(_id) {
+      if (confirm('Voulez vous supprimer ?')) {
+        $httpService.deleteWithParams('/my/delete/devis/'+_id).then((response) => {
           this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
           this.sales_get();
         })

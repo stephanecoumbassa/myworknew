@@ -95,10 +95,9 @@
                 {{props.row.id}}
                 <q-icon name="dashboard_customize" v-if="props.row.customize" />
               </q-td>
-              <q-td key="photo" :props="props">
-<!--                <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>-->
-                <img v-if="props.row.photo" :src="uploadurl+'/uploads/products/'+props.row.photo" style="width: 70px; height: 70px; object-fit: cover"/>
-              </q-td>
+<!--              <q-td key="photo" :props="props">-->
+<!--                <img v-if="props.row.photo" :src="uploadurl+'/uploads/products/'+props.row.photo" style="width: 70px; height: 70px; object-fit: cover"/>-->
+<!--              </q-td>-->
               <q-td key="name" :props="props"> {{props.row.name}} </q-td>
               <q-td key="domainname" :props="props"> {{props.row.domainname}} </q-td>
               <q-td key="parent_categorie_name" :props="props"> {{props.row.parent_categorie_name}} </q-td>
@@ -111,7 +110,7 @@
                 <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " label="vente" />
                 <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" label="achat" />
                 <q-btn class="q-mr-xs" size="xs" color="teal" v-on:click="update_get(props.row)" icon="edit" />
-                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" v-on:click="photo_get(props.row)" icon="photo" />
+<!--                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" v-on:click="photo_get(props.row)" icon="photo" />-->
                 <q-btn size="xs" color="red-9" title="Désactivé" v-on:click="product_disable(props.row)" icon="toggle_off" />
                 <!--<q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
               </q-td>
@@ -372,7 +371,7 @@ export default {
       product: { description: '', stock: 0, buy_price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1, customize: 0 },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'photo', align: 'left', label: 'photo' },
+        // { name: 'photo', align: 'left', label: 'photo' },
         { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
         { name: 'domainname', align: 'left', label: 'Categorie', field: 'domainname', sortable: true },
         { name: 'parent_categorie_name', align: 'left', label: 'Parent', field: 'parent_categorie_name', sortable: true },
