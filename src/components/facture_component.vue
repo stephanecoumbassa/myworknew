@@ -21,33 +21,39 @@
       <!--      <section ref="pdf-content">-->
       <template  v-slot:pdf-content>
         <div id="a4" size="A4">
-          <h1 v-if="typeselected==='proforma'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
+          <h1 v-if="typeselected==='proforma'" style="position: absolute;top: 20%;left: 0%;color: #FF00002A;
                     letter-spacing: 30px;transform: rotate(318deg);font-weight: bolder;z-index: 9;">PROFORMA</h1>
-          <h1 v-if="typeselected==='devis'" style="position: absolute;top: 20%;left: 10%;color: #ff000045;
+          <h1 v-if="typeselected==='devis'" style="position: absolute;top: 20%;left: 10%;color: #FF00002A;
                     letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
                         font-size: 150px; ;z-index: 9">DEVIS</h1>
-          <h1 v-if="typeselected==='facture'" style="position: absolute;top: 25%;left: 0%;color: #ff000045;
+          <h1 v-if="typeselected==='facture'" style="position: absolute;top: 25%;left: 0%;color: #FF00002A;
                   letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
                       font-size: 120px;z-index: 9">FACTURE</h1>
-          <h1 v-if="typeselected==='bl'" style="position: absolute;top: 20%;left: 0%;color: #ff000045;
+          <h1 v-if="typeselected==='bl'" style="position: absolute;top: 20%;left: 0%;color: #FF00002A;
                        transform: rotate(318deg);font-weight: bolder;font-size: 90px;z-index: 9;">BON DE LIVRAISON</h1>
           <header>
             <div class="row no-padding no-margin print-hide title">
-              <div class="col-3">
-                <!--                <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>-->
+              <div class="col-2">
+                <!-- <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>-->
               </div>
-              <div class="col-3"></div>
+              <div class="col-4">
+                <div class="q-pa-md">
+                <q-checkbox
+                  v-model="showCachet"
+                  color="green"
+                  label="cachet"
+                />
+                </div>
+              </div>
               <div class="col-3" v-if="!printStatus">
-                <span>
                   <q-select dense v-model="typeselected" :options="['bl', 'facture', 'devis', 'proforma']" />
-                </span>
               </div>
               <div class="col-3 text-right" v-if="!printStatus">
-                <button v-on:click="generateReport()">PDF</button>
+                <q-btn size="xs" color="grey" v-on:click="generateReport()">PDF</q-btn>
               </div>
             </div>
           </header>
-          <div class="container" style="position: relative; top: 100px; padding-right: 1cm; padding-left: 1cm;">
+          <div class="container" style="position: relative; top: 150px; padding-right: 1cm; padding-left: 1cm;">
 
             <div class="facture">
               <div class="logo"></div>
@@ -120,7 +126,7 @@
             </div>
 
           </div>
-          <img class="float-right" src="~assets/cachet.png"
+          <img class="float-right" src="~assets/cachet.png" v-if="showCachet"
                style="height: 120px; object-fit: cover; position: absolute; bottom: 200px; right: 50px"/>
 
           <!--          <footer contenteditable="true" class="text-center">-->
@@ -153,8 +159,9 @@ export default {
   data () {
     return {
       date: '',
-      typeselected: 'FACTURE',
+      typeselected: 'facture',
       printStatus: false,
+      showCachet: true,
       facturenumero: ''
       // series: [{
       //     name: 'Nbre Dons.', data: [14, 45, 12, 47, 44, 32, 74, 12, 12]

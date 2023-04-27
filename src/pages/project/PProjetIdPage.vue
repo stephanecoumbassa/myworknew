@@ -25,8 +25,9 @@
             </div>
             <div class="col-7 q-pa-lg">
               <span class="text-h5">
-                {{p_tasks.length}}
-                <q-badge outline color="green" label="Taches" />
+<!--                {{p_tasks.length}}-->
+<!--                <q-badge size="lg" outline color="green" label="Taches" />-->
+                <q-btn size="md" outline color="green" :label="p_tasks.length+ ' Taches'" />
               </span>
               <!--              <p class="text-h6 text-grey">Projets courants</p>-->
               <p class="text-h6 text-grey">{{p_projet.description}}</p>
@@ -188,7 +189,7 @@
 
           <q-tab-panel name="taches" class="no-padding no-margin">
             <q-card class="q-pa-lg q-mt-lg">
-              <task-list :employes="employes" :tasks="p_tasks" :update="myupdate"/>
+              <task-list :employes="employes" :tasks="p_tasks" :project_id="$route.params.id" :update="myupdate"/>
             </q-card>
           </q-tab-panel>
 
@@ -281,7 +282,7 @@ import basemixin from '../basemixin';
 import apimixin from "src/services/apimixin";
 import ListItem from "components/listItem.vue";
 import TaskList from "components/taskList.vue";
-import {employeGetService, p_task_get} from "src/services/api/rh.api";
+import {employeGetService, p_task_get, p_task_projet_get} from "src/services/api/rh.api";
 import UploadFormData from "components/uploadFormData.vue";
 import Filescomponent from "components/filescomponent.vue";
 
@@ -395,7 +396,7 @@ export default {
         }).catch(() => { this.hideLoading() })
     },
     getTaskList () {
-      p_task_get().then((response) => {
+      p_task_projet_get(this.$route.params.id).then((response) => {
         this.p_tasks = response
       });
     },

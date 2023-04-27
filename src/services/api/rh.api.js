@@ -16,6 +16,14 @@ export async function p_task_id_get (id) {
   });
 }
 
+export async function p_task_projet_get (id) {
+  return new Promise(resolve => {
+    getApi('/api/projet/p_task/'+id)
+      .then(response => resolve(response) )
+      .catch(error => error);
+  });
+}
+
 export async function p_task_post () {
   await postApi('/api/post/p_task', this.p_task)
     .then(response => response).catch(error => error)

@@ -192,15 +192,16 @@
                 <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
                           v-model="p_projet.productid" :options="products" label="Produits" option-value="id" option-label="name"
                           input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
+                <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
+                          filled outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />
                 <q-input outlined class="q-mb-sm" dense v-model='p_projet.titre' label='titre' />
                 <q-input outlined class="q-mb-sm" dense type='textarea' v-model='p_projet.description' label='description' />
 <!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />-->
-                <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
-                          outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />
                 <q-input outlined class="q-mb-sm" dense v-model='p_projet.objectif' label='objectif' />
                 <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.progress' label='progress' />
-                <q-input outlined class="q-mb-sm" dense type='date' v-model='p_projet.datedebut' label='datedebut' />
-                <q-input outlined class="q-mb-sm" dense type='date' v-model='p_projet.datefin' label='datefin' />
+                <q-input stack-label outlined class="q-mb-sm" dense type='date' v-model='p_projet.datedebut' label='datedebut' />
+                <q-input stack-label outlined class="q-mb-sm" dense type='date' v-model='p_projet.datefin' label='datefin' />
+                <q-input stack-label outlined class="q-mb-sm" dense type='date' v-model='p_projet.livraison' label='livraison' />
                 <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.createdby' label='createdby' />
                 <q-input outlined class="q-mb-sm" dense v-model='p_projet.priorite' label='priorite' />
                 <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.cout' label='cout' />

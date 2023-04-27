@@ -20,16 +20,18 @@
               <br>
               <q-input outlined dense type='textarea' v-model='p_task.description' label='description' />
               <br>
-              <q-input outlined dense v-model='p_task.status' label='status' />
+              <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
+                        filled outlined class="q-mb-sm" dense v-model='p_task.status' label='status' />
+<!--              <q-input outlined dense v-model='p_task.status' label='status' />-->
+<!--              <br>-->
+<!--              <q-input outlined dense type='number' v-model='p_task.p_projet_id' label='p_projet_id' />-->
               <br>
-              <q-input outlined dense type='number' v-model='p_task.p_projet_id' label='p_projet_id' />
-              <br>
-              <q-select outlined filled v-model="p_task.p_employe_id" :options="employes" label="Executant"
+              <q-select dense outlined filled v-model="p_task.p_employe_id" :options="employes" label="Executant"
                         map-options emit-value option-value="id" option-label="nom" />
               <br>
-              <q-input outlined dense type='date' v-model='p_task.debut' label='debut' />
+              <q-input stack-label outlined dense type='date' v-model='p_task.debut' label='debut' />
               <br>
-              <q-input outlined dense type='date' v-model='p_task.fin' label='fin' />
+              <q-input stack-label outlined dense type='date' v-model='p_task.fin' label='fin' />
               <br>
               <q-input outlined dense v-model='p_task.tuuid' label='tuuid' />
               <br>
@@ -48,34 +50,6 @@
       </q-card-actions>
     </q-card>
   </q-dialog>
-
-<!--  <q-dialog v-model="openAssign">-->
-<!--    <q-card style="width: 700px; max-width: 80vw;">-->
-<!--      <q-card-section>-->
-<!--        <div class="text-h6">Assigner une tâche</div>-->
-<!--      </q-card-section>-->
-<!--      <q-card-section>-->
-<!--        <q-form class="q-gutter-md" @submit="assignationPost()">-->
-<!--          <div class="row">-->
-<!--            <div class="col-12">-->
-<!--              <q-input readonly dense type='number' v-model='p_assignation.p_task_id' label='p_task_id' />-->
-<!--              <q-input readonly dense type='number' v-model='p_assignation.p_assigneur_id' label='p_assigneur_id' />-->
-<!--              <q-select filled v-model="p_assignation.p_executant_id" :options="employes" label="Executant"-->
-<!--                        map-options emit-value option-value="id" option-label="nom"  />-->
-<!--            </div>-->
-<!--          </div>-->
-<!--          <div class="row">-->
-<!--            <div class="col-12">-->
-<!--              <q-btn color="primary" label="Valider" type="submit" />-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </q-form>-->
-<!--      </q-card-section>-->
-<!--      <q-card-actions align="right" class="bg-white text-teal">-->
-<!--        <q-btn flat label="Fermer" v-close-popup />-->
-<!--      </q-card-actions>-->
-<!--    </q-card>-->
-<!--  </q-dialog>-->
 
   <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="openModal = true; p_task = {}" />
 
@@ -135,6 +109,7 @@ export default {
 
   // props: ['p_tasks', 'p_task'],
   props: {
+    project_id: {type: Number, required: true},
     tasks: {type: Array, default: () => [], required: false },
     employes: {type: Array, default: () => [], required: false },
     post: { type: Function, required: false },
@@ -185,6 +160,7 @@ export default {
         }).catch(() => { this.hideLoading() })
     },
     p_task_post () {
+      this.p_task.p_projet_id = this.project_id;
       this.showLoading()
       $httpService.postWithParams('/api/post/p_task', this.p_task)
         .then((response) => {
@@ -195,6 +171,7 @@ export default {
         }).catch(() => { this.hideLoading() })
     },
     p_task_update () {
+      this.p_task.p_projet_id = this.project_id;
       this.showLoading()
       $httpService.putWithParams('/api/put/p_task', this.p_task)
         .then((response) => {
