@@ -6,9 +6,9 @@
       <div class="col-9 q-pa-lg">
         <span class="text-h6">Projets</span>
       </div>
-<!--      <div class="col q-pa-lg float-right text-right">-->
-<!--        <q-btn color="primary" size="sm">Créer</q-btn>-->
-<!--      </div>-->
+      <!--      <div class="col q-pa-lg float-right text-right">-->
+      <!--        <q-btn color="primary" size="sm">Créer</q-btn>-->
+      <!--      </div>-->
     </div>
 
     <div class="row" v-if="p_projet.id">
@@ -28,12 +28,12 @@
                 {{p_tasks.length}}
                 <q-badge outline color="green" label="Taches" />
               </span>
-<!--              <p class="text-h6 text-grey">Projets courants</p>-->
+              <!--              <p class="text-h6 text-grey">Projets courants</p>-->
               <p class="text-h6 text-grey">{{p_projet.description}}</p>
               <br>
               <div class="row">
                 <div class="col-3 q-pa-sm q-mr-sm" style="border: 1px #e3e3e3 dashed">
-<!--                  <span class="text-weight-bold">20 Déc 2023</span><br>-->
+                  <!--                  <span class="text-weight-bold">20 Déc 2023</span><br>-->
                   <span class="text-weight-bold">{{p_projet.datedebut}}</span><br>
                   <span>Début</span>
                 </div>
@@ -67,8 +67,11 @@
                   <q-tab name="mails" label="Résumé" />
                   <q-tab name="taches" label="Taches" />
                   <q-tab name="activites" label="Matières Utilisées" />
-<!--                  <q-tab name="previsions" label="Prévisions" />-->
                   <q-tab name="fichiers" label="Fichiers" @click="fileStatus=!fileStatus" />
+                  <q-tab name="previsions" label="Prévisions" />
+                  <q-tab name="depenses" label="Dépenses" />
+                  <q-tab name="facture" label="Factures" />
+                  <q-tab name="versement" label="Versements" />
                 </q-tabs>
                 <q-separator />
               </q-card>
@@ -88,7 +91,7 @@
                     Dernières tâches
                   </span>
                   <p class="text-h6 text-grey">Liste des taches courantes</p>
-<!--                  <list-item />-->
+                  <!--                  <list-item />-->
                   <q-list bordered padding class="rounded-borders">
                     <q-item clickable v-ripple v-for="task in p_tasks.slice(0, 5)">
                       <q-item-section avatar top>
@@ -130,7 +133,7 @@
                       </q-item-section>
                     </q-item>
                   </q-list>
-<!--                  <list-item />-->
+                  <!--                  <list-item />-->
                 </q-card>
               </div>
 
@@ -189,7 +192,6 @@
             </q-card>
           </q-tab-panel>
 
-
           <q-tab-panel name="activites" class="no-padding no-margin">
             <br>
             <div class="row">
@@ -207,9 +209,9 @@
                         option-value="id"
                         map-options emit-value :options="products" label="produits" />
                     </div>
-<!--                    <div class="col-2 q-pa-sm">-->
-<!--                      <q-input :model-value="100" type="number" label="quantité restante" />-->
-<!--                    </div>-->
+                    <!--                    <div class="col-2 q-pa-sm">-->
+                    <!--                      <q-input :model-value="100" type="number" label="quantité restante" />-->
+                    <!--                    </div>-->
                     <div class="col-2 q-pa-sm">
                       <q-input  type="number" label="quantité utilisé" v-model="use.quantite" />
                     </div>

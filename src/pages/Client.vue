@@ -78,17 +78,23 @@
                 <div class="col-10">
 
                   <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md"  >
-                    <q-select filled v-model="client.type" :options="options" label="Type de client"
+                    <q-select dense outlined filled v-model="client.type" :options="options" label="Type de client"
                               map-options emit-value option-value="id" option-label="name" />
-                    <q-input autocomplete v-model="client.name" label="Nom *"
+                    <q-input dense outlined autocomplete v-model="client.name" label="Nom *"
                              lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
-                    <q-input autocomplete  v-model="client.last_name" label="Prenom *" />
-                    <q-input type="number" v-model="client.telephone_code"  label="indicatif *" />
-                    <q-input type="text" v-model="client.telephone" label="telephone *" />
-                    <q-input type="email" v-model="client.email" label="Email *" />
+                    <q-input dense outlined autocomplete  v-model="client.last_name" label="Prenom *" />
+                    <q-input dense outlined type="number" v-model="client.telephone_code"  label="indicatif *" />
+                    <q-input dense outlined type="text" v-model="client.telephone" label="telephone *" />
+                    <q-input dense outlined type="email" v-model="client.email" label="Email *" />
                     <country-component v-model="client.country" code="civ"></country-component>
-                    <q-input type="text" v-model="client.city" label="Ville" />
-                    <q-input type="textarea" v-model="client.address" label="Adresse" />
+                    <q-input dense outlined type="text" v-model="client.city" label="Ville" />
+                    <q-input dense outlined type="textarea" v-model="client.address" label="Adresse" />
+                    <br>
+                    <div class="q-gutter-sm">
+                      <q-radio v-model="client.exonere" :val="0" label="Pas exonere" color="grey" />
+                      <q-radio v-model="client.exonere" :val="1" label="Exonere" color="green" />
+                    </div>
+                    <!--                    </div>-->
                     <!--                    <q-input type="email" v-model="client.compagnie" label="Compagnie" />-->
                     <!--                <q-input type="password" v-model="client.password" label="Mot de passe *" />-->
 
@@ -170,7 +176,7 @@
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md" style="min-width: 350px">
         <q-card class="my-card" square>
           <q-card-section>
-<!--            {{namedata}}-->
+            <!--            {{namedata}}-->
             <areachart-component color="primary" type="bar" :horizontal="false" :percent="5"
                                  :categories="namedata" :series="sumdata" title="Montant généré" titletooltip="depense" />
           </q-card-section>
@@ -197,7 +203,7 @@ export default {
     return {
       selected: [],
       options: [ { id: 1, name: 'personne' }, { id: 2, name: 'compagnie' } ],
-      client: { },
+      client: { exonere: 0},
       date: false,
       status_update: false,
       post: { body: '', subject: '' },

@@ -55,14 +55,15 @@
             <span style="color: #ec8888"></span>
             <q-card class="my-card" square>
               <q-card-section>
-                <areachart color="#ec8888" :series="series_appro_sum" title="Montants Achetes en FCFA" titletooltip="achat" />
+                <areachart color="#ec8888" :series="series_appro_sum" title="Montants d'achat de matière première" titletooltip="achat" />
               </q-card-section>
             </q-card>
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 350px">
             <q-card class="my-card" square>
               <q-card-section>
-                <areachart type="bar" :horizontal="true" :series="service_sum_data" title="Montants generere par les services" titletooltip="service" />
+<!--                <areachart type="bar" :horizontal="true" :series="service_sum_data" title="Montants generere par les services" titletooltip="service" />-->
+                <areachart type="bar" :horizontal="true" :series="service_sum_data" title="Cumul des sorties(Achats, Dépense, Salaire)" titletooltip="service" />
               </q-card-section>
             </q-card>
           </div>

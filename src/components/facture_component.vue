@@ -34,7 +34,7 @@
           <header>
             <div class="row no-padding no-margin print-hide title">
               <div class="col-3">
-                <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>
+                <!--                <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>-->
               </div>
               <div class="col-3"></div>
               <div class="col-3" v-if="!printStatus">
@@ -44,51 +44,51 @@
               </div>
               <div class="col-3 text-right" v-if="!printStatus">
                 <button v-on:click="generateReport()">PDF</button>
-<!--                &nbsp;-->
-<!--                <button v-on:click="mail()">Mail</button>-->
               </div>
             </div>
           </header>
-          <div class="container" style="position: relative; top: 100px; contenteditable: true;
-            padding-right: 1cm; padding-left: 1cm;">
+          <div class="container" style="position: relative; top: 100px; padding-right: 1cm; padding-left: 1cm;">
 
             <div class="facture">
-              <div class="logo">
-              </div>
-              <div class="fact-header">
+              <div class="logo"></div>
+
+              <div class="fact-header" contenteditable="true">
                 <div class="col">
                   <div class="card">
-                    <div class="card-header"> {{myentreprise.name}} </div>
+                    <!--                    <div class="card-header"> {{myentreprise.name}} </div>-->
                     <div class="card-body">
-                      <p>Tel: {{myentreprise.telephone}}</p>
-                      <p>Email: {{myentreprise.email}}</p>
-                      <p>CC N°:</p>
-                      <p>RCCM:</p>
-                      <p>BL: <input class="no-border" /> </p>
-                      <p>BC: <input class="no-border" /> </p>
+                      <!--                      <p>Tel: {{myentreprise.telephone}}</p>-->
+                      <!--                      <p>Email: {{myentreprise.email}}</p>-->
+                      <!--                      <p>CC N°:</p>-->
+                      <!--                      <p>RCCM:</p>-->
+                      <p>BL: <input class="no-border" :value="products[0]?.bl" /> </p>
+                      <p>BC: <input class="no-border" :value="products[0]?.bc" /> </p>
                     </div>
                   </div>
                 </div>
-                <div class="info-right">
+
+                <div class="info-right" contenteditable="true">
                   <div class="title h4">Facture #: <input class="no-border" v-model="facturenumero" /></div>
                   <div class="title h4">{{client?.fullname}}</div>
                   <div class="title h4">{{client?.telephone_code}} {{client?.telephone}}</div>
                   <div class="title h4">{{client?.email}}</div>
                   <p>Date de creation <span>{{date}}</span></p>
-                  <div class="resum-total">
-                    <p>A payer (CFA) <span> {{numerique(total)}}</span></p>
-                  </div>
+                  <!--                  <div class="resum-total">-->
+                  <!--                    <p>A payer (CFA) <span> {{numerique(total)}}</span></p>-->
+                  <!--                  </div>-->
                 </div>
               </div>
+
               <div class="container-fluid" style="margin-top: -50px">
                 <table class="table table-bordered" style="width: 100%; border: 1px solid">
                   <thead>
                   <tr>
                     <th align="left">Libellé</th>
-                    <th align="left">Quantité</th>
+                    <th align="left">Qté</th>
                     <th align="left">PU</th>
                     <th align="left">TVA</th>
-                    <th align="right">Montant</th>
+                    <th align="left">HT</th>
+                    <th align="right">Total</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -97,10 +97,11 @@
                     <td align="left">{{numerique(product.quantity)}}</td>
                     <td align="left">{{numerique(product.price)}}</td>
                     <td align="left">{{numerique(product.tva)}}%</td>
+                    <td align="left">{{numerique(product.quantity * product.price)}}</td>
                     <td align="right">{{numerique(
                       (product.quantity * product.price) + (product.quantity * product.price * product.tva /100)
                     )}}</td>
-<!--                    <td align="right">{{numerique(product.total)}}</td>-->
+                    <!--                    <td align="right">{{numerique(product.total)}}</td>-->
                   </tr>
                   </tbody>
                 </table>
@@ -114,15 +115,18 @@
                   <div class="total-ttc text-r">Total TTC</div> <div class="montant fin text-right">{{numerique(total)}} <span>CFA</span></div>
                 </div>
                 <p class="nb">Condition de paiement: <span class="nb-text">30 % à la commande, paiement à reception de facture</span></p>
-                <p class="nb">Mode de paiement: <span class="nb-text">Par virement ou chèque</span></p>
+                <!--                <p class="nb">Mode de paiement: <span class="nb-text">Par virement ou chèque</span></p>-->
               </div>
             </div>
 
           </div>
-          <footer contenteditable="true" class="text-center">
-            SARL au capital de 5 000 000 Fcfa- Yopougon quartier maroc- 10 bp 1022 abj 10 <br>
-            RCCM : CI-ABJ-2019-B-19674 Tél : 07360841/02626152/05051912
-          </footer>
+          <img class="float-right" src="~assets/cachet.png"
+               style="height: 120px; object-fit: cover; position: absolute; bottom: 200px; right: 50px"/>
+
+          <!--          <footer contenteditable="true" class="text-center">-->
+          <!--            SARL au capital de 5 000 000 Fcfa- Yopougon quartier maroc- 10 bp 1022 abj 10 <br>-->
+          <!--            RCCM : CI-ABJ-2019-B-19674 Tél : 07360841/02626152/05051912-->
+          <!--          </footer>-->
 
         </div>
       </template>

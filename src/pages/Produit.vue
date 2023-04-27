@@ -183,9 +183,10 @@
                 <q-input type="text" v-model="product.youtube" label="Url Video Youtube *" outlined dense hint="" />
 
                 <div class="row">
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.largeur" label="Largeur en m" :dense="true" outlined />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.longueur" label="Longueur en m" :dense="true" outlined />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.hauteur" label="Hauteur en m" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.largeur" label="Largeur en mm" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.longueur" label="Longueur en mm" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.hauteur" label="Hauteur en mm" :dense="true" outlined />
+                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.epaisseur" label="Epaisseur en mm" :dense="true" outlined />
                   <q-input class="col-6 q-pa-xs" type="number" v-model="product.poids" label="Poids en KG" :dense="true" outlined />
                   <q-input class="col-6 q-pa-xs" type="number" v-model="product.diametre" label="Diamètre" :dense="true" outlined />
                 </div>

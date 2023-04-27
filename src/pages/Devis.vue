@@ -26,12 +26,29 @@
                   <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>
                 </div>
                 <div class="col-6 text-right float-right">
-                  <div>Facture #: {{facture_number}}</div>
-                  <div>Creation: {{date}}</div>
-                  <div><q-icon name="business" />Entreprise Corporation</div>
-                  <div v-if="client"><q-icon name="face" />{{client.name}} {{client.last_name}}</div>
-                  <div v-if="client"><q-icon name="phone" />+ {{client.telephone_code}} {{client.telephone}}</div>
-                  <div v-if="client"><q-icon name="email" /> {{client.email}}</div>
+<!--                  <div>Facture #: {{facture_number}}</div>-->
+<!--                  <div>Creation: {{date}}</div>-->
+<!--                  <div><q-icon name="business" />Entreprise Corporation</div>-->
+<!--                  <div v-if="client"><q-icon name="face" />{{client.name}} {{client.last_name}}</div>-->
+<!--                  <div v-if="client"><q-icon name="phone" />+ {{client.telephone_code}} {{client.telephone}}</div>-->
+<!--                  <div v-if="client"><q-icon name="email" /> {{client.email}}</div>-->
+                  <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
+                    <q-input stack-label v-model="date" type="datetime-local" label="Date" :dense="true"></q-input>
+                    <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
+                              v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                              input-debounce="0" :option-label="'fullname'"
+                              @update:model-value="assign_client(client)"
+                              :rules="[val => !!val || 'Ce champs est requis']" />
+                  </div>
+                  <div class="row float-right q-mt-sm hidden-sm hidden-xs mobile-hide">
+                    <!--                        <div class="col-12">Facture #: {{facture_number}}</div>-->
+                    <div class="col-12">Facture #: <input v-model="facture_number" style="border: 0; border-bottom: 1px dashed grey" /></div>
+                    <div class="col-12">Creation: {{date}}</div>
+                    <div class="col-12">Entreprise Corporation</div>
+                    <div class="col-12" v-if="myclient.id">{{myclient.fullname}}</div>
+                    <div class="col-12" v-if="myclient.id">{{'+ '+myclient.telephone_code}} {{myclient.telephone}}</div>
+                    <div class="col-12" v-if="myclient.id">{{myclient.email}}</div>
+                  </div>
                 </div>
               </div>
             </q-card-section>
@@ -100,41 +117,6 @@
           </q-card>
         </q-dialog>
 
-<!--        <q-dialog v-model="fileStatus">-->
-<!--          <q-card style="width: 500px; max-width: 100%;" id="fichiers" :flat="true">-->
-<!--            <q-card-section>-->
-<!--              <form method="post" enctype="multipart/form-data">-->
-<!--&lt;!&ndash;                <q-input type="file" id="doc" name="doc" @change="changePhoto" />&ndash;&gt;-->
-<!--                <q-input dense v-model="fileTitre" label="titre" />-->
-<!--                <br>-->
-<!--                <input type="file" ref="doc" id="doc" name="doc" @change="changePhoto" />-->
-<!--                <br>-->
-<!--                <br>-->
-<!--                <q-btn  color="secondary" class="full-width" size="sm" label="Envoyer" @click="sendFile()" />-->
-<!--              </form>-->
-<!--            </q-card-section>-->
-<!--            <q-card-section>-->
-<!--              <q-list bordered padding class="rounded-borders">-->
-<!--                <q-item clickable v-ripple v-for="(myfile, key) in files" :key="key">-->
-<!--                  <q-item-section avatar top>-->
-<!--                    <q-avatar color="primary" text-color="white">{{myfile.extension}}</q-avatar>-->
-<!--                  </q-item-section>-->
-
-<!--                  <q-item-section>-->
-<!--                    <q-item-label lines="1">{{myfile.titre}}</q-item-label>-->
-<!--                    <q-item-label caption>{{myfile.date}}</q-item-label>-->
-<!--                  </q-item-section>-->
-
-<!--                  <q-item-section side>-->
-<!--                    <a target="_blank" :href="'https://fmmi.ci/apistock/public/assets/uploads/devis/'+myfile.file">-->
-<!--                      <q-icon name="visibility" color="primary" />-->
-<!--                    </a>-->
-<!--                  </q-item-section>-->
-<!--                </q-item>-->
-<!--              </q-list>-->
-<!--            </q-card-section>-->
-<!--          </q-card>-->
-<!--        </q-dialog>-->
 
         <q-btn class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
                @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
@@ -180,6 +162,7 @@ import FactureComponent from '../components/facture_component.vue';
 import axios from "axios";
 import {postApi} from "src/services/apiService";
 import Filescomponent from "components/filescomponent.vue";
+import apimixin from "src/services/apimixin";
 export default {
   name: 'DevisPage',
   data () {
@@ -213,6 +196,7 @@ export default {
       files: [],
       date: '',
       devisId: 1,
+      myclient: {},
       client: 1,
       client2: { id: null },
       image: '',
@@ -238,7 +222,7 @@ export default {
     Filescomponent,
     'facture': FactureComponent
   },
-  mixins: [basemixin],
+  mixins: [basemixin, apimixin],
   created () {
     this.formData = new FormData();
     var date = new Date();
@@ -256,9 +240,11 @@ export default {
     }
   },
   methods: {
+
     calculTotal(qte, prix, tva) {
       return (qte * prix) + (qte * prix * tva)/100
     },
+
     onSubmit () {
       if (this.accept !== true) {
         this.sales_post();
@@ -266,6 +252,7 @@ export default {
         this.$q.notify({ color: 'green-4', textColor: 'white', icon: 'fas fa-check-circle', message: 'Submitted' })
       }
     },
+
     facture_filter_get() {
       const val1 = this.sales_init.filter((x) => {
         return x.id_vente.toLowerCase().includes(this.search.toLowerCase())
@@ -274,28 +261,41 @@ export default {
       });
       this.sales_list = val1;
     },
+
     shop_get() {
       $httpService.getWithParams('/my/get/shop')
         .then((response) => {
           this.entreprise = response;
         })
     },
+
     assign (product, index) {
       this.products[index].quantite_vendu = 1;
       this.products[index].prix_unitaire = this.products[index].p.sales_price;
       this.products[index].remise_totale = 0;
     },
-    // assign2 (product, index) { },
+
     assign_client (client) {
-      this.client2.id = client.id;
-      this.client2.fullname = client.fullname;
-      this.client2.email = client.email;
-      this.client2.telephone = client.telephone;
-      this.client2.telephone_code = client.telephone_code;
+      this.clientId = client.id;
+      this.myclient.id = client.id;
+      this.myclient.fullname = client.fullname;
+      this.myclient.email = client.email;
+      this.myclient.telephone = client.telephone;
+      this.myclient.telephone_code = client.telephone_code;
+      this.products_get();
     },
+    // assign2 (product, index) { },
+    // assign_client (client) {
+    //   this.client2.id = client.id;
+    //   this.client2.fullname = client.fullname;
+    //   this.client2.email = client.email;
+    //   this.client2.telephone = client.telephone;
+    //   this.client2.telephone_code = client.telephone_code;
+    // },
     qr_get(dataUrl) {
       this.image = dataUrl;
     },
+
     clients_get () {
       $httpService.getWithParams('/my/get/client')
         .then((response) => {
@@ -307,6 +307,7 @@ export default {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
     },
+
     update_show(item) {
       this.medium2 = true;
       this.product = item;
@@ -340,7 +341,8 @@ export default {
     },
 
     sales_post() {
-      let params = { agent: this.agent, products: this.products2, clientid: this.client2.id, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc };
+      // let params = { agent: this.agent, products: this.products2, clientid: this.client2.id, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc };
+      let params = { agent: this.agent, products: this.products2, clientid: this.clientId, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc };
       if (confirm('Voulez vous ajouter')) {
         $httpService.postWithParams('/my/post/devis', params)
           .then((response) => {
@@ -349,16 +351,16 @@ export default {
               this.$q.notify({
                 color: 'green', position: 'top', message: response.msg, icon: 'report_problem', timeout: 10000
               });
-              window.location.reload()
               this.devis_get_by(this.facture_number);
               // this.facture_number = response['factureid'];
               this.validate_status = false;
               this.sales_get();
+              // window.location.reload()
             } else {
-              window.location.reload()
               this.$q.notify({
                 color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
               });
+              // window.location.reload()
             }
           })
       }
@@ -382,12 +384,34 @@ export default {
       }
     },
 
+    // products_get () {
+    //   $httpService.getWithParams('/my/get/products')
+    //     .then((response) => {
+    //       this.products_list = response;
+    //       this.products_list2 = response;
+    //     })
+    // },
+
     products_get () {
-      $httpService.getWithParams('/my/get/products')
-        .then((response) => {
-          this.products_list = response;
-          this.products_list2 = response;
-        })
+      this.getApi('/my/get/products').then((res) => {
+        var products = res;
+        this.getApi('/my/client/s_product_prix/'+this.clientId)
+          .then((response) => {
+            var products2 = response;
+            _.forEach(products, (arr1Item) => {
+              const arr2Item = _.find(products2, { 'product_id': arr1Item.id });
+              if (arr2Item) {
+                arr1Item.priceItem = arr2Item.prix_vente
+                arr1Item.price = arr2Item.prix_vente
+                arr1Item.sales_price = arr2Item.prix_vente
+              }
+            });
+            this.appro_list = products;
+            this.appro_list2 = products;
+            this.products_list = products;
+            this.products_list2 = products;
+          })
+      })
     },
 
     sales_get () {
@@ -404,6 +428,11 @@ export default {
           this.products = response;
           this.facture_number = idvente;
           this.client = JSON.parse(response[0]['client']);
+          this.client2 = JSON.parse(response[0]['client']);
+          this.myclient = JSON.parse(response[0]['client']);
+          this.date = response[0]['date_posted'];
+          this.bc = response[0]['bc'];
+          this.bl = response[0]['bl'];
 
           for (let i = 0; i < response.length; i++) {
             response[i].price = response[i].prix_unitaire;

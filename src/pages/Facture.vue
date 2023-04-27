@@ -123,14 +123,16 @@
                 <div v-if="status_download" class="print-hide">
                   <div class="col-12">
                     <div class="text-h6">Gestion des versements</div>
-                    &nbsp;<q-btn outline color="grey" size="sm" v-on:click="versements.pop()">-</q-btn>
-                    &nbsp;<q-btn outline color="primary" size="sm" v-on:click="versements.push({montant: 0})" icon="add">
+                    &nbsp;<q-btn outline color="grey" size="xs" v-on:click="versements.pop()">-</q-btn>
+                    &nbsp;<q-btn outline color="primary" size="xs" v-on:click="versements.push({montant: 0})" icon="add">
                       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
                     </q-btn>
                   </div>
                   <div class="row" v-for="fac in versements" v-bind:key="fac.id">
-                    <q-input class="col-2 q-ma-sm" :dense="true" label="Date" type="date" stack-label v-model="fac.date"  />
-                    <q-input class="col-2 q-ma-sm" :dense="true" label="Montant" stack-label type="number" v-model="fac.montant" />
+                    <q-input class="col-1 q-ma-sm" :dense="true" label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
+                    <q-input class="col-1 q-ma-sm" :dense="true" label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />
+                    <q-input class="col-1 q-ma-sm" :dense="true" label="Date Vers" type="date" stack-label v-model="fac.date"  />
+                    <q-input class="col-1 q-ma-sm" :dense="true" label="Montant Vers" stack-label type="number" v-model="fac.montant" />
                     <div class="col-1">
                       <br>
                       <q-btn outline color="secondary" size="sm" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
