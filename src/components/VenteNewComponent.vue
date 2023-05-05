@@ -3,48 +3,37 @@
   <q-card style="width: 1300px; max-width: 100%;" id="facture" :flat="true">
     <q-form  @submit="onSubmit" class="q-gutter-md">
 
-      <q-card-section >
-        <div class="row" >
+      <q-card-section class="no-margin q-pt-lg q-mt-lg">
+        <div class="row q-pt-lg">
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alignleft hidden-xs mobile-hide">
-            <!--                      <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 100px; height: 100px; object-fit: cover"/>-->
-            <!--                      <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 100px; height: 100px; object-fit: cover"/>-->
-            <img src="~assets/fmmi-logo.jpeg" style="width: 100px; height: 100px; object-fit: cover"/>
-            <div>{{entreprise.name}}</div>
-            <div>{{entreprise.telephone}}</div>
-            <div>{{entreprise.email}}</div>
-            <div>BL: <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" /> </div>
-            <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>
+            <q-input v-model="bl" label="BC" dense outlined />
+            <q-input v-model="bc" label="BL" dense outlined />
+            <q-input v-model="condition" label="Texte Condition de paiement" dense outlined />
+            <q-input v-model="delai" type="date" stack-label label="Délai de livraison" dense outlined />
           </div>
           <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 content-center text-center print-only">
-            <!--                                            <q-input stack-label v-model="dateposted" type="date" label="Date"></q-input>-->
-            <!--                      <vue-qr class="hidden" :size="100" :text="JSON.stringify(products)" :callback="qr_get" qid="testid" />-->
-            <!--                      <vue-qr :size="100" :text="JSON.stringify(products)" />-->
           </div>
-          <!--                                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right float-right" style="min-width: 200px">-->
           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right float-right" style="min-width: 300px">
             <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
               <q-input stack-label v-model="dateposted" type="datetime-local" label="Date" :dense="true"></q-input>
               <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
-                        v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                        input-debounce="0" :option-label="'fullname'"
-                        @update:model-value="assign_client(client)"
-                        :rules="[val => !!val || 'Ce champs est requis']" />
+                        v-model="projetid" :options="p_projets" label="Projets" :option-value="'id'" :option-label="'titre'"
+                        input-debounce="0" />
+              <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
+                        v-model="client" :options="clients" label="Clients" :option-value="'id'" :option-label="'fullname'"
+                        input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" @update:model-value="assign_client(client)" />
+
             </div>
             <div class="row float-right q-mt-sm hidden-sm hidden-xs mobile-hide">
-              <!--                        <div class="col-12">Facture #: {{facture_number}}</div>-->
-              <div class="col-12">Facture #: <input v-model="facture_number" style="border: 0; border-bottom: 1px dashed grey" /></div>
-              <div class="col-12">Creation: {{date}}</div>
-              <div class="col-12">Entreprise Corporation</div>
-              <div class="col-12" v-if="myclient.id">{{myclient.fullname}}</div>
-              <div class="col-12" v-if="myclient.id">{{'+ '+myclient.telephone_code}} {{myclient.telephone}}</div>
-              <div class="col-12" v-if="myclient.id">{{myclient.email}}</div>
             </div>
 
           </div>
         </div>
       </q-card-section>
 
-      <q-card-section class="no-margin">
+      <q-card-section class="no-margin q-mt-lg q-pt-lg">
+        <br>
+        <br>
         <div class="row no-margin no-padding mobile-hide hidden-sm hidden-xs" style="height: 47px">
           <div class="col-4 q-pa-sm">Nom</div>
           <div class="col-1 q-pa-sm">Qte</div>
@@ -57,10 +46,11 @@
                     option-label="name" @focusout="assign(index)" @input="assign(index)" :dense="true" />
           <q-input class="col-md-1 col-2 q-pa-sm" :dense="true" type="number" v-model="product.quantity" minlength="1"
                    @input="assign(index)" @focusout="getVal(index, product.quantity)" aria-valuemin="0" hint="qty" />
-          <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.p.tva" hint="tva" />
+<!--          <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.p.tva" hint="tva" />-->
+          <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="tva" hint="tva" />
           <q-input class="col-md-2 col-3 q-pa-sm" :dense="true" type="number" v-model="product.p.sales_price" hint="prix" />
           <q-input class="col-md-2 col-4 q-pa-sm" :dense="true" type="number"
-                   :model-value="(product.p.sales_price * product.quantity) + (product.p.sales_price * product.quantity * product.p.tva)/100" />
+                   :model-value="(product.p.sales_price * product.quantity) + (product.p.sales_price * product.quantity * tva)/100" />
           <div class="col-1"><br>
             <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-if="status_download" v-on:click="delete_product(index)" />
             &nbsp;
@@ -71,30 +61,41 @@
           </div>
         </div>
         <div class="row no-padding q-mt-xs q-mb-lg">
-          <div class="col-3 q-pa-lg" v-if="status_download">
-            <q-checkbox v-model="credit" label="Credit" color="red" />
+          <div class="col-2" v-if="status_download">
+            <q-checkbox v-model="credit" label="Payé par échéance" color="primary" />
           </div>
-          <div class="offset-lg-6 col-md-3 col-12 q-pa-sm">
-            <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>
-            <h6 class="no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</h6>
+          <div class="col-2" v-if="status_download">
+            <q-input type="number" v-model="creditNumber" label="Nombre d'échéances" color="primary" dense
+             @change="changeNumber(creditNumber)" />
           </div>
+<!--          <div class="offset-lg-6 col-md-3 col-12">-->
+<!--            <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>-->
+<!--            <h6 class="no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</h6>-->
+<!--          </div>-->
         </div>
 
-        <div v-if="medium2 && status_download" class="row print-hide q-pa-lg">
-          <div class="col-12">
-            Liste des versement
-            &nbsp;<q-btn size="xs" v-on:click="versements.pop()">-</q-btn>
-            &nbsp;<q-btn size="xs" v-on:click="versements.push({montant: 0})">+</q-btn>
-          </div>
-          <div class="row" v-for="fac in versements" v-bind:key="fac.id">
-            <q-input class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label v-model="fac.date"  />
-            <q-input class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" v-model="fac.montant" />
-            <q-btn class="no-padding" size="xs" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-            <q-btn size="xs" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
-          </div>
+        <div class="row" v-for="fac in versements" v-bind:key="fac.id" v-if="credit">
+          <q-input filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
+          <q-input filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label v-model="fac.pourcentage"
+                   @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
+          <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number"
+                   v-model="fac.montant_echeance" />
+<!--          <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />-->
+          &nbsp;
+          &nbsp;
+          <q-select class="col-1 q-ma-sm" dense label="Type paiement" stack-label v-model="fac.paiement"
+                    :options="['virement', 'cheque', 'espece']" />
+          <q-input class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label v-model="fac.date"  />
+          <q-input class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" v-model="fac.montant" />
+          <q-input class="col-1 q-ma-sm" dense label="N°Chèque/Virement" v-model="fac.numero" />
+          <q-input class="col-1 q-ma-sm" dense label="Banque" v-model="fac.banque" />
+          <q-input class="col-1 q-ma-sm" dense label="Date Emission" type="date" stack-label v-model="fac.emission"  />
         </div>
-        <!--                <div class="row q-pa-lg" v-if="validate_status">-->
-        <div class="row q-pa-lg q-mt-4" v-if="status_download" style="margin-top: 30px">
+
+        <br>
+        <br>
+        <br>
+        <div class="row q-pa-sm q-mt-4" v-if="status_download" style="margin-top: 30px">
           <q-btn class="print-hide" round color="positive" size="sm" icon="add" v-on:click="specialities_add" />&nbsp;&nbsp;
           <q-btn class="print-hide" color="secondary" label="Valider" size="sm" icon="save" type="submit"  />&nbsp;&nbsp;
           <q-btn icon="receipt" color="grey-10" outline label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" />
@@ -112,6 +113,7 @@ import FactureComponent from "components/facture_component.vue";
 import basemixin from "pages/basemixin";
 import apimixin from "src/services/apimixin";
 import * as _ from "lodash";
+import $httpService from "boot/httpService";
 
 export default {
   name: 'VenteNewComponent',
@@ -122,6 +124,7 @@ export default {
       filter: '',
       fitst: 1,
       last: 30,
+      tva: 18,
       name: null,
       grid: false,
       facture_status2: false,
@@ -131,6 +134,7 @@ export default {
       medium: false,
       medium2: false,
       credit: false,
+      creditNumber: 0,
       solde: true,
       avance: 0,
       agent: null,
@@ -142,13 +146,17 @@ export default {
       buy: null,
       categories: [],
       versements: [],
+      p_projets: [],
       date: '',
       dateposted: '',
       bc: '',
       bl: '',
+      delai: '',
+      condition: '',
       first: '',
-      clientId: 1,
-      client: 1,
+      clientId: null,
+      client: null,
+      projetid: null,
       client2: {},
       myclient: {},
       image: '',
@@ -177,6 +185,7 @@ export default {
     this.shop_get();
     this.clients_get();
     this.products_get();
+    this.p_projet_get();
     // this.sales_get();
     this.factures_number_get();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
@@ -184,7 +193,7 @@ export default {
   },
   computed: {
     total() {
-      return this.products.reduce((product, item) => product + (item.p.sales_price * item.quantity + (item.p.tva * item.p.sales_price * item.quantity /100)), 0);
+      return this.products.reduce((product, item) => product + (item.p.sales_price * item.quantity + (this.tva * item.p.sales_price * item.quantity /100)), 0);
     }
   },
 
@@ -199,6 +208,12 @@ export default {
           icon: 'fas fa-check-circle',
           message: 'Submitted'
         })
+      }
+    },
+    changeNumber(__nb) {
+      this.versements = [];
+      for (let i = 0; i < __nb; i++) {
+        this.versements.push({})
       }
     },
     shop_get() {
@@ -221,13 +236,20 @@ export default {
       this.products[index].p.tva = 0;
     },
     assign_client (client) {
-      this.clientId = client.id;
-      this.myclient.id = client.id;
-      this.myclient.fullname = client.fullname;
-      this.myclient.email = client.email;
-      this.myclient.telephone = client.telephone;
-      this.myclient.telephone_code = client.telephone_code;
+      this.clientId = this.client;
+      this.myclient = this.clients.filter(x => x.id == client )[0]
+      this.tva = 18;
+      console.log(this.myclient.exonere);
+      if(this.myclient.exonere === 1) {
+        this.tva = 0;
+      }
       this.products_get();
+    },
+    p_projet_get () {
+      $httpService.getApi('/my/get/p_projet')
+        .then((response) => {
+          this.p_projets = response
+        })
     },
     qr_get(dataUrl) {
       this.image = dataUrl;
@@ -248,8 +270,8 @@ export default {
       this.product = item;
     },
     sales_post() {
-      this.$emit('reload', true);
-      return false
+      // this.$emit('reload', true);
+      // return false
       let params = { agent: this.agent,
         products: this.products,
         id_vente: this.facture_number,
@@ -257,16 +279,21 @@ export default {
         credit: this.credit,
         avance: this.avance,
         total: this.total,
+        tva: this.tva,
         bl: this.bl,
         bc: this.bc,
-        dateposted: this.dateposted
+        condition: this.condition,
+        delai: this.delai,
+        projetid: this.projetid,
+        dateposted: this.dateposted,
+        versements: this.versements
       };
       if (confirm('Voulez vous ajouter')) {
         this.postApi('/my/post/sales', params)
           .then((response) => {
             var status = response['statut'];
             if (status == !0) {
-              this.postWithParams('/my/post/qr_code', {
+              this.postApi('/my/post/qr_code', {
                 id: response['id'], typerubrique: 3, file: this.image
               });
               this.$q.notify({
@@ -274,7 +301,7 @@ export default {
               });
               this.facture_number = response['factureid'];
               this.validate_status = false;
-              // this.sales_get();
+              this.$emit('reload', true);
             } else {
               this.$q.notify({
                 color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
@@ -360,7 +387,6 @@ export default {
     },
     get_facture_id (_id) {
       this.fullWidth = true;
-      // this.medium2 = true;
       this.factures_get_id(_id);
     },
     factures_get_id (factureid) {
@@ -384,7 +410,26 @@ export default {
           this.client = response[0]['client'] == null ? {} : JSON.parse(response[0]['client']);
           this.status_download = true;
         })
-    }
+    },
+    credit_add(facture) {
+      facture.factureid = this.facture_id;
+      facture.vente = 'vente';
+      facture.type = 'vente';
+      $httpService.postWithParams('/my/post/credit', facture)
+        .then((response) => {
+          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+          this.factures_get_credit();
+        })
+    },
+    credit_update(facture) {
+      facture.factureid = this.facture_id;
+      facture.vente = 'vente';
+      $httpService.postWithParams('/my/put/credit', facture)
+        .then((response) => {
+          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+          this.factures_get_credit();
+        })
+    },
   }
   // setup () {
   //   return {}

@@ -96,7 +96,7 @@
         <q-table title="p_projets" :rows="p_projets" :columns="columns" :filter="filter"
                  :pagination="pagination" row-key="name">
           <template v-slot:top="props">
-            <div class="col-7 q-table__title">Liste des p_projet</div>
+            <div class="col-7 q-table__title">Liste des projets</div>
             <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
             <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                    @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
@@ -189,9 +189,6 @@
                 <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
                           v-model="p_projet.clientid" :options="clients" label="Clients" option-value="id" option-label="fullname"
                           input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
-                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
-                          v-model="p_projet.productid" :options="products" label="Produits" option-value="id" option-label="name"
-                          input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
                 <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
                           filled outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />
                 <q-input outlined class="q-mb-sm" dense v-model='p_projet.titre' label='titre' />
@@ -206,6 +203,9 @@
                 <q-input outlined class="q-mb-sm" dense v-model='p_projet.priorite' label='priorite' />
                 <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.cout' label='cout' />
                 <q-input outlined class="q-mb-sm" dense type='text' v-model='p_projet.bc' label='N°Bon de Cmde' />
+                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
+                          v-model="p_projet.productid" :options="products" label="Produits" option-value="id" option-label="name"
+                          input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
                 <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.qte' label='Quantité' />
                 <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.prix_unitaire' label='Prix unitaire' />
                 <q-input outlined class="q-mb-sm" dense type='number'

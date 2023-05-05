@@ -51,19 +51,17 @@
               <q-item-section> <q-item-label>{{ link.text }}</q-item-label> </q-item-section>
             </q-item>
           </div>
-<!--          <div>-->
-<!--            <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/commandes-clients'" active-class="text-teal">-->
-<!--              <q-item-section avatar> <q-icon name="pie_chart" />  </q-item-section>-->
-<!--              <q-item-section>-->
-<!--                <q-item-label>Commande Ecommerce-->
-<!--                  <q-badge class="animate__animated animate__pulse animate__infinite animate__slower" color="red">{{count}}</q-badge>-->
-<!--                </q-item-label>-->
-<!--              </q-item-section>-->
-<!--            </q-item>-->
-<!--          </div>-->
-
-          <q-separator inset class="q-my-sm" />
-
+          <!--          <div>-->
+          <!--            <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/commandes-clients'" active-class="text-teal">-->
+          <!--              <q-item-section avatar> <q-icon name="pie_chart" />  </q-item-section>-->
+          <!--              <q-item-section>-->
+          <!--                <q-item-label>Commande Ecommerce-->
+          <!--                  <q-badge class="animate__animated animate__pulse animate__infinite animate__slower" color="red">{{count}}</q-badge>-->
+          <!--                </q-item-label>-->
+          <!--              </q-item-section>-->
+          <!--            </q-item>-->
+          <!--          </div>-->
+          <!--          <q-separator inset class="q-my-sm" />-->
 
           <q-expansion-item
             class="GNL__drawer-item"
@@ -80,7 +78,7 @@
                 </q-item-section>
               </q-item>
               <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/projet-prevsion'" active-class="text-teal">
-                <q-item-section avatar> <q-icon name="diversity_2" /> </q-item-section>
+                <q-item-section avatar> <q-icon name="schedule" /> </q-item-section>
                 <q-item-section>
                   <q-item-label>Previsions</q-item-label>
                 </q-item-section>
@@ -91,20 +89,20 @@
                   <q-item-label>Employé</q-item-label>
                 </q-item-section>
               </q-item>
-              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/evenement'" active-class="text-teal">
-                <q-item-section avatar> <q-icon name="event_note" /> </q-item-section>
+              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/salaire'" active-class="text-teal">
+                <q-item-section avatar> <q-icon name="point_of_sale" /> </q-item-section>
                 <q-item-section>
-                  <q-item-label>Evênement</q-item-label>
+                  <q-item-label>Salaire</q-item-label>
                 </q-item-section>
               </q-item>
+              <!--              <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/evenement'" active-class="text-teal">-->
+              <!--                <q-item-section avatar> <q-icon name="event_note" /> </q-item-section>-->
+              <!--                <q-item-section>-->
+              <!--                  <q-item-label>Evênement</q-item-label>-->
+              <!--                </q-item-section>-->
+              <!--              </q-item>-->
             </q-list>
-            <!--            <q-card>-->
-            <!--              <q-card-section>-->
-            <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti-->
-            <!--                commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste-->
-            <!--                eveniet doloribus ullam aliquid.-->
-            <!--              </q-card-section>-->
-            <!--            </q-card>-->
+
           </q-expansion-item>
 
 
@@ -114,6 +112,7 @@
             icon="settings"
             label="Paramètres"
           >
+
             <q-list class="q-pl-sm">
               <q-item v-if="role == 1" class="GNL__drawer-item" clickable :to="'/projet'" active-class="text-teal">
                 <q-item-section avatar> <q-icon name="settings" /> </q-item-section>
@@ -134,13 +133,7 @@
                 </q-item-section>
               </q-item>
             </q-list>
-            <!--            <q-card>-->
-            <!--              <q-card-section>-->
-            <!--                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem, eius reprehenderit eos corrupti-->
-            <!--                commodi magni quaerat ex numquam, dolorum officiis modi facere maiores architecto suscipit iste-->
-            <!--                eveniet doloribus ullam aliquid.-->
-            <!--              </q-card-section>-->
-            <!--            </q-card>-->
+
           </q-expansion-item>
 
 

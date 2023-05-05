@@ -5,7 +5,7 @@
 
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
         <q-card class="text-center justify-center content-center">
-          <q-item clickable>
+          <q-item>
             <q-card-section>
               <div class="text-center text-h6">Prévision par mois ou sur une période donnée</div>
               <br>

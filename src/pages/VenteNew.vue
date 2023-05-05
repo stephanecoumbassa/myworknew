@@ -209,7 +209,7 @@ export default {
   },
   methods: {
     reload($event) {
-      console.log($event)
+      this.sales_get();
     },
     onSubmit () {
       if (this.accept !== true) {

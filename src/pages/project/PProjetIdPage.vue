@@ -26,7 +26,7 @@
             <div class="col-7 q-pa-lg">
               <span class="text-h5">
 <!--                {{p_tasks.length}}-->
-<!--                <q-badge size="lg" outline color="green" label="Taches" />-->
+                <!--                <q-badge size="lg" outline color="green" label="Taches" />-->
                 <q-btn size="md" outline color="green" :label="p_tasks.length+ ' Taches'" />
               </span>
               <!--              <p class="text-h6 text-grey">Projets courants</p>-->
@@ -69,10 +69,10 @@
                   <q-tab name="taches" label="Taches" />
                   <q-tab name="activites" label="Matières Utilisées" />
                   <q-tab name="fichiers" label="Fichiers" @click="fileStatus=!fileStatus" />
-                  <q-tab name="previsions" label="Prévisions" />
                   <q-tab name="depenses" label="Dépenses" />
-                  <q-tab name="facture" label="Factures" />
-                  <q-tab name="versement" label="Versements" />
+                  <!--                  <q-tab name="previsions" label="Prévisions" />-->
+                  <!--                  <q-tab name="facture" label="Factures" />-->
+                  <!--                  <q-tab name="versement" label="Versements" />-->
                 </q-tabs>
                 <q-separator />
               </q-card>
@@ -249,6 +249,57 @@
             </div>
           </q-tab-panel>
 
+          <q-tab-panel name="depenses" class="no-padding no-margin">
+            <br>
+            <q-card class="q-pa-lg">
+              <div class="row">
+<!--                <div class="col-12 q-mb-md">-->
+<!--                  <div class="text-h6">Dépenses</div>-->
+<!--                </div>-->
+                <div class="col-12 q-pa-sm">
+                  <q-table id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="name"
+                           :filter="filter" flat>
+                    <template v-slot:top="props">
+                      <div class="print-hide col-4 q-table__title">Depenses</div>
+                      <div class="col-3"></div>
+                      <div class="col-5">
+                        <q-btn dense outline color="primary" label="Ajouter" class="q-ml-md print-hide" @click="depenseModal=true"/>
+                        <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md print-hide" @click="json2csv(data, 'vente')"/>
+                        <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md print-hide" />
+                        <q-input dense debounce="300" v-model="filter" placeholder="Rechercher" class="float-right q-ml-md" />
+                      </div>
+                      <br>
+                      <br>
+                      <br>
+                    </template>
+                    <template v-slot:body="props">
+                      <q-tr :props="props">
+                        <q-td key="id" :props="props"> {{props.row.id}} </q-td>
+                        <q-td key="name" :props="props"> {{props.row.name}} </q-td>
+                        <q-td key="price" :props="props"> {{props.row.price}} </q-td>
+                        <q-td key="client" :props="props"> {{props.row.client}} </q-td>
+                        <q-td key="email" :props="props"> {{props.row.email}} </q-td>
+                        <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
+                        <q-td key="date" :props="props"> {{props.row.date}} </q-td>
+                        <q-td key="actions" :props="props">
+                          <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>
+                          <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>
+                        </q-td>
+                      </q-tr>
+                    </template>
+                  </q-table>
+
+
+                  <q-dialog v-model="depenseModal">
+                    <DepenseAdd :depense="{projetid: Number($route.params.id)}" />
+                  </q-dialog>
+
+                </div>
+
+              </div>
+            </q-card>
+          </q-tab-panel>
+
           <q-tab-panel name="parametres" class="no-padding no-margin">
             <br>
             <div class="row">
@@ -285,9 +336,10 @@ import TaskList from "components/taskList.vue";
 import {employeGetService, p_task_get, p_task_projet_get} from "src/services/api/rh.api";
 import UploadFormData from "components/uploadFormData.vue";
 import Filescomponent from "components/filescomponent.vue";
+import DepenseAdd from "components/DepenseAdd.vue";
 
 export default {
-  components: {UploadFormData, TaskList, ListItem, Filescomponent},
+  components: {DepenseAdd, UploadFormData, TaskList, ListItem, Filescomponent},
   data () {
     return {
       tab: "mails",
@@ -299,6 +351,7 @@ export default {
       last: null,
       medium: false,
       medium2: false,
+      depenseModal: false,
       maximizedToggle: true,
       name: null,
       image: null,
@@ -308,7 +361,18 @@ export default {
       employes: [],
       products: [],
       used: [],
+      depenses: [],
       product: null,
+      columnsDepense: [
+        { name: 'id', required: true, label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
+        { name: 'name', align: 'center', label: 'Titre', field: 'name', sortable: true },
+        { name: 'price', required: true, label: 'Depense', field: row => row.price, format: val => `${this.numerique(val)}`, sortable: true },
+        { name: 'client', label: 'Beneficiaire', field: 'client', sortable: true },
+        { name: 'email', label: 'Email', field: 'email', sortable: true },
+        { name: 'telephone', label: 'Telephone', field: 'telephone', sortable: true },
+        { name: 'date', label: 'Date', field: 'date', sortable: true },
+        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
+      ],
       columns: [
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
@@ -328,6 +392,7 @@ export default {
 
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
+
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
@@ -335,6 +400,7 @@ export default {
   mixins: [basemixin, apimixin],
   created () {
     // console.log(this.$route.params, this.$route)
+    this.depenseGet()
     this.p_projet_get()
     this.p_projet_stock_get()
     const date = new Date()
@@ -345,6 +411,12 @@ export default {
     this.productsGet()
   },
   methods: {
+    depenseGet () {
+      $httpService.getWithParams('/my/projet/depenses/'+this.$route.params.id)
+        .then((response) => {
+          this.depenses = response;
+        })
+    },
     update_get (props) {
       this.p_projet = props
       this.medium2 = true

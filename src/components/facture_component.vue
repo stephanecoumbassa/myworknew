@@ -33,10 +33,10 @@
                        transform: rotate(318deg);font-weight: bolder;font-size: 90px;z-index: 9;">BON DE LIVRAISON</h1>
           <header>
             <div class="row no-padding no-margin print-hide title">
-              <div class="col-2">
+              <div class="col-2" v-if="!printStatus">
                 <!-- <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>-->
               </div>
-              <div class="col-4">
+              <div class="col-4" v-if="!printStatus">
                 <div class="q-pa-md">
                 <q-checkbox
                   v-model="showCachet"

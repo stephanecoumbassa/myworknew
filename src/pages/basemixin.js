@@ -122,6 +122,9 @@ var basemixin = {
     numerique(value) {
       return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     },
+    __fn(value) {
+      return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    },
     shop_get() {
       $httpService.getWithParams('/my/get/shop')
         .then((response) => {

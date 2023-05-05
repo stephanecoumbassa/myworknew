@@ -85,11 +85,11 @@
                 </div>
                 <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
                   <q-select outlined class="col-4 no-margin text-no-wrap truncate" v-model="product.product_id" use-input map-options emit-value
-                            option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
-                  <q-input class="col-1 row q-pl-sm" autocomplete type="number" v-model="product.quantite_vendu" label="Quantité" />
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix" />
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.tva" label="tva" />
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="product.total = (product.quantite_vendu*product.prix_unitaire) + (product.quantite_vendu*product.prix_unitaire * product.tva) /100"
+                            dense option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
+                  <q-input dense class="col-1 row q-pl-sm" autocomplete type="number" v-model="product.quantite_vendu" label="Quantité" />
+                  <q-input dense class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix" />
+                  <q-input dense class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.tva" label="tva" />
+                  <q-input dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="product.total = (product.quantite_vendu*product.prix_unitaire) + (product.quantite_vendu*product.prix_unitaire * product.tva) /100"
                            :model-value="product.total" />
                   <div class="col-1 row q-pl-xs print-hide">
                     <q-btn flat size="sm" color="secondary" v-on:click="sales_update(product)" icon="edit" />
@@ -118,10 +118,20 @@
                     </q-btn>
                   </div>
                   <div class="row" v-for="fac in versements" v-bind:key="fac.id">
-                    <q-input class="col-1 q-ma-sm" :dense="true" label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
-                    <q-input class="col-1 q-ma-sm" :dense="true" label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />
-                    <q-input class="col-1 q-ma-sm" :dense="true" label="Date Vers" type="date" stack-label v-model="fac.date"  />
-                    <q-input class="col-1 q-ma-sm" :dense="true" label="Montant Vers" stack-label type="number" v-model="fac.montant" />
+
+                    <q-input filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label v-model="fac.pourcentage"  />
+                    <q-input filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
+                    <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />
+                    &nbsp;
+                    &nbsp;
+                    <q-select class="col-1 q-ma-sm" dense label="Type paiement" stack-label v-model="fac.paiement"
+                              :options="['virement', 'cheque', 'espece']" />
+                    <q-input class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label v-model="fac.date"  />
+                    <q-input class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" v-model="fac.montant" />
+                    <q-input class="col-1 q-ma-sm" dense label="N°Chèque/Virement" v-model="fac.numero" />
+                    <q-input class="col-1 q-ma-sm" dense label="Banque" v-model="fac.banque" />
+                    <q-input class="col-1 q-ma-sm" dense label="Date Emission" type="date" stack-label v-model="fac.emission"  />
+
                     <div class="col-1">
                       <br>
                       <q-btn outline color="secondary" size="sm" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
@@ -334,6 +344,7 @@ export default {
     credit_add(facture) {
       facture.factureid = this.facture_id;
       facture.vente = 'vente';
+      facture.type = 'vente';
       $httpService.postWithParams('/my/post/credit', facture)
         .then((response) => {
           this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });

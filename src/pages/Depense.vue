@@ -20,9 +20,6 @@
             <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
             <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md print-hide" @click="json2csv(data, 'vente')"/>
             <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md print-hide" />
-            <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md print-hide" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md print-hide" />
             <br>
           </template>
           <template v-slot:body="props">
@@ -43,40 +40,41 @@
         </q-table>
 
         <q-dialog v-model="medium">
-          <q-card style="width: 700px; max-width: 80vw;">
-            <q-card-section>
-              <div class="text-h6">Ajouter une depense</div>
-            </q-card-section>
+          <DepenseAdd :depense="depense" @reload="loadData()" />
+<!--          <q-card style="width: 700px; max-width: 80vw;">-->
+<!--            <q-card-section>-->
+<!--              <div class="text-h6">Ajouter une depense</div>-->
+<!--            </q-card-section>-->
 
-            <q-card-section>
-              <div class="row justify-center">
-                <div class="col-10">
+<!--            <q-card-section>-->
+<!--              <div class="row justify-center">-->
+<!--                <div class="col-10">-->
 
-                  <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md"  >
-                    <q-input outlined dense autocomplete v-model="depense.name" label="Titre *" hint="Titre"
-                             lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />
-                    <q-input outlined dense autocomplet type="textarea" v-model="depense.description" label="Description *" />
-                    <q-input outlined dense autocomplete  v-model="depense.price" label="Prix Prestation *" />
-                    <q-input outlined dense autocomplete type="date" v-model="depense.date" label="Date *"
-                             lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />
-                    <q-input outlined dense type="text" v-model="depense.code_comptable"  label="code comptable"></q-input>
-                    <q-input outlined dense type="text" v-model="depense.client"  label="Beneficiaire *"></q-input>
-                    <q-input outlined dense type="text" v-model="depense.telephone"  label="Telephone *"></q-input>
-                    <q-input outlined dense type="email" v-model="depense.email"  label="Email *"></q-input>
-                    <div>
-                      <q-btn label="Modifier" v-if="status_update" v-on:click="depense_update()" type="button" color="secondary"/>
-                      <q-btn label="Valider" v-if="!status_update"  type="submit" color="secondary"/>
-                    </div>
-                  </q-form>
+<!--                  <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md"  >-->
+<!--                    <q-input outlined dense autocomplete v-model="depense.name" label="Titre *" hint="Titre"-->
+<!--                             lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />-->
+<!--                    <q-input outlined dense autocomplet type="textarea" v-model="depense.description" label="Description *" />-->
+<!--                    <q-input outlined dense autocomplete  v-model="depense.price" label="Prix Prestation *" />-->
+<!--                    <q-input outlined dense autocomplete type="date" v-model="depense.date" label="Date *"-->
+<!--                             lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />-->
+<!--                    <q-input outlined dense type="text" v-model="depense.code_comptable"  label="code comptable"></q-input>-->
+<!--                    <q-input outlined dense type="text" v-model="depense.client"  label="Beneficiaire *"></q-input>-->
+<!--                    <q-input outlined dense type="text" v-model="depense.telephone"  label="Telephone *"></q-input>-->
+<!--                    <q-input outlined dense type="email" v-model="depense.email"  label="Email *"></q-input>-->
+<!--                    <div>-->
+<!--                      <q-btn label="Modifier" v-if="status_update" v-on:click="depense_update()" type="button" color="secondary"/>-->
+<!--                      <q-btn label="Valider" v-if="!status_update"  type="submit" color="secondary"/>-->
+<!--                    </div>-->
+<!--                  </q-form>-->
 
-                </div>
-              </div>
-            </q-card-section>
+<!--                </div>-->
+<!--              </div>-->
+<!--            </q-card-section>-->
 
-            <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Fermer" v-close-popup />
-            </q-card-actions>
-          </q-card>
+<!--            <q-card-actions align="right" class="bg-white text-teal">-->
+<!--              <q-btn flat label="Fermer" v-close-popup />-->
+<!--            </q-card-actions>-->
+<!--          </q-card>-->
         </q-dialog>
 
       </div>
@@ -91,6 +89,7 @@
 import $httpService from '../boot/httpService';
 import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin'
+import DepenseAdd from "components/DepenseAdd.vue";
 export default {
   name: 'DepensePage',
   data () {
@@ -137,6 +136,7 @@ export default {
     }
   },
   components: {
+    DepenseAdd,
     'downloadExcel': vue3JsonExcel
   },
   created () {
@@ -172,6 +172,7 @@ export default {
       this.accept = false;
     },
     btn_update(item) {
+      this.depense = item;
       this.service = item;
       this.status_update = true;
     },
@@ -207,7 +208,6 @@ export default {
         });
     }
   }
-
 }
 </script>
 
