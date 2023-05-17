@@ -68,15 +68,12 @@
             <q-input type="number" v-model="creditNumber" label="Nombre d'échéances" color="primary" dense
              @change="changeNumber(creditNumber)" />
           </div>
-<!--          <div class="offset-lg-6 col-md-3 col-12">-->
-<!--            <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>-->
-<!--            <h6 class="no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</h6>-->
-<!--          </div>-->
         </div>
 
         <div class="row" v-for="fac in versements" v-bind:key="fac.id" v-if="credit">
           <q-input filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
-          <q-input filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label v-model="fac.pourcentage"
+          <q-input filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label
+                   v-model="fac.pourcentage"
                    @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
           <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number"
                    v-model="fac.montant_echeance" />

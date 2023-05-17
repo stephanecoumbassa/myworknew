@@ -145,9 +145,9 @@ export default {
           this.$q.notify({
             color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
           });
+          this.$emit('reload', true);
           this.loadData();
-        })
-        .catch(() => {
+        }).catch(() => {
           this.$q.notify({
             color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
           });
@@ -159,9 +159,9 @@ export default {
           this.$q.notify({
             color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
           });
+          this.$emit('reload', true);
           this.loadData();
-        })
-        .catch(() => {
+        }).catch(() => {
           this.$q.notify({
             color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
           });

@@ -1,7 +1,0 @@
-[    { value,"code","/descendant::root/status/code/text()" },
-    { value,"contextStatus","/descendant::root/data/CONTEXT_STATUS/text()" },
-    { value,"status","/descendant::root/data/STATUS/text()" },
-    { value,"identifiant","/descendant::root/data/IDENTIFIANT/text()" },
-    { value,"size","/descendant::root/data/SIZE/text()" },
-    { value,"message","/descendant::root/data/MESSAGE/text()" },
-    { value,"montantTotal","/descendant::root/data/MONTANT_TOTAL/text()" }].

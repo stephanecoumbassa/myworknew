@@ -32,17 +32,17 @@
                   <q-item clickable v-close-popup>
                     <q-item-label v-on:click="btn_update(props.row)"> Modifier</q-item-label>
                   </q-item>
-                  <q-item clickable @click="medium2 = true">
-                    <q-item-label>Enoyer un email</q-item-label>
-                  </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
-                    <q-item-label>Envoyer une proforma</q-item-label>
-                  </q-item>
+<!--                  <q-item clickable @click="medium2 = true">-->
+<!--                    <q-item-label>Enoyer un email</q-item-label>-->
+<!--                  </q-item>-->
+<!--                  <q-item clickable v-close-popup @click="medium3 = true">-->
+<!--                    <q-item-label>Envoyer une proforma</q-item-label>-->
+<!--                  </q-item>-->
                   <q-item clickable v-close-popup @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
                     <q-item-label>Liste des achats</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
-                    <q-item-label>Liste des devis</q-item-label>
+                  <q-item clickable v-close-popup @click="fileStatus = true; clientId = props.row.id">
+                    <q-item-label>Photos</q-item-label>
                   </q-item>
                 </q-btn-dropdown>
 
@@ -50,6 +50,7 @@
             </q-tr>
           </template>
         </q-table>
+
         <!--    <q-page-sticky position="bottom-right" :offset="[18, 18]">-->
         <q-dialog v-model="medium2">
           <div class="row" style="max-width: 100%; width: 800px; background: white">
@@ -65,6 +66,7 @@
           </div>
         </q-dialog>
         <!--    </q-page-sticky>-->
+
         <q-dialog v-model="medium" position="top">
           <q-card style="width: 700px; max-width: 80vw;">
             <q-card-section>
@@ -116,9 +118,9 @@
           </q-card>
         </q-dialog>
 
-        <q-dialog v-model="medium3">
-          <facture-component style="width: 1000px; max-width: 100%;"></facture-component>
-        </q-dialog>
+<!--        <q-dialog v-model="medium3">-->
+<!--          <facture-component style="width: 1000px; max-width: 100%;"></facture-component>-->
+<!--        </q-dialog>-->
 
         <q-dialog v-model="vente_status" transition-show="slide-up" transition-hide="slide-down">
 
@@ -144,6 +146,13 @@
 
         </q-dialog>
 
+
+        <q-dialog v-model="fileStatus">
+          <q-card style="width: 600px" class="q-pa-lg">
+            <filescomponent type="client" :typeid="clientId" folder="client" />
+          </q-card>
+        </q-dialog>
+
       </div>
 
     </div>
@@ -153,7 +162,7 @@
 
 
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
-        <q-card class="text-center justify-center content-center q-pa-lg">
+        <q-card class="text-center justify-center content-center q-pa-lg" flat square>
           <div class="text-center text-h6">Stats par interval</div>
           <br>
           <div class="grid">
@@ -174,7 +183,7 @@
 
 
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md" style="min-width: 350px">
-        <q-card class="my-card" square>
+        <q-card class="my-card" square flat>
           <q-card-section>
             <!--            {{namedata}}-->
             <areachart-component color="primary" type="bar" :horizontal="false" :percent="5"
@@ -197,6 +206,7 @@ import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
 import AreachartComponent from "components/areachart.vue";
+import Filescomponent from "components/filescomponent.vue";
 export default {
   name: 'ClientPage',
   data () {
@@ -216,9 +226,11 @@ export default {
       medium2: false,
       medium3: false,
       vente_status: false,
+      fileStatus: false,
       loading: false,
       sales_stats: [],
       appro_stats: [],
+      clientId: 0,
       nbre_achetes: 0,
       montant_achetes: 0,
       nbre_vendus: 0,
@@ -263,6 +275,7 @@ export default {
     }
   },
   components: {
+    Filescomponent,
     AreachartComponent,
     FactureComponent,
     CountryComponent,

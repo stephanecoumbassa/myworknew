@@ -166,12 +166,12 @@
 
                 <q-select v-model="product.type" :options="['matiere', 'produit', 'outil']" id="type" label="type" map-options emit-value :dense="true"
                           stack-label input-debounce="0" outlined />
-
-                <q-select v-model="product.domainid" :options="domains" id="domainid" label="Domains" map-options emit-value :dense="true"
+                <br>
+                <q-select v-model="product.domainid" :options="domains" id="domainid" label="Categorie" map-options emit-value :dense="true"
                           option-value="id" stack-label input-debounce="0" option-label="name" outlined
                           @input="parent_get(product.domainid)" :rules="[ val => val || 'champs obligattoire']" />
 
-                <q-select v-model="product.parent_categorie_id" :options="parents" id="parent_categorie_id" label="Parents" map-options emit-value :dense="true"
+                <q-select v-model="product.parent_categorie_id" :options="parents" id="parent_categorie_id" label="Sous-Categorie" map-options emit-value :dense="true"
                           option-value="id" stack-label input-debounce="0" option-label="name" outlined
                           @input="categorie_get(product.parent_categorie_id)" :rules="[ val => val || 'champs obligattoire']" />
 

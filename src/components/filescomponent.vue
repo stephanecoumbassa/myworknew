@@ -29,13 +29,7 @@
     </div>
 
     <div class="row">
-<!--      <div class="col" v-for="item in photos" :key="item.id">-->
-<!--        <img :src="baseurl+item.url" :alt="baseurl+item.name"-->
-<!--             width="200" height="200" style="object-fit: cover" />-->
-<!--&lt;!&ndash;        {{item.url}}&ndash;&gt;-->
-<!--        <br>-->
-<!--        <qtn class="q-pa-xs bg-red" type="button" @click="photos_delete(item.id)">X</qtn>-->
-<!--      </div>-->
+
       <div class="col-12">
         <q-list bordered padding class="rounded-borders">
           <q-item clickable v-ripple v-for="item in photos" :key="item.id">
@@ -138,17 +132,25 @@ export default {
     handleInput ($event) {
       this.extension = $event.target.files[0].name.split('.')[1];
       if ($event.target.files[0]) {
-        let reader = new FileReader
-        reader.onload = e => {
-          this.previewImage = e.target.result;
-          const file = this.urltoFile(this.previewImage, 'newfile');
+        console.log($event.target.files[0])
+        if($event.target.files[0].type === 'image/png' ||
+          $event.target.files[0].type === 'image/jpeg' ||
+          $event.target.files[0].type === 'image/gif') {
+          let reader = new FileReader
+          reader.onload = e => {
+            this.previewImage = e.target.result;
+            const file = this.urltoFile(this.previewImage, 'newfile');
+          }
+          reader.readAsDataURL($event.target.files[0]);
+          this.$emit('input', $event.target.files[0]);
+        }else {
+          this.file = $event.target.files[0]
         }
-        reader.readAsDataURL($event.target.files[0]);
-        this.$emit('input', $event.target.files[0]);
       }
     },
     photos_get() {
-      axios.get(this.apiurl+'/my/get/photos/'+this.typeid,{
+      // axios.get(this.apiurl+'/my/get/photos/'+this.typeid,{
+      axios.get(this.apiurl+'/my/get/photos/'+this.type+'/'+this.typeid,{
         headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
       }).then((data)=> {
         this.photos = data['data'];

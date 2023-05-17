@@ -70,6 +70,7 @@
                   <q-tab name="activites" label="Matières Utilisées" />
                   <q-tab name="fichiers" label="Fichiers" @click="fileStatus=!fileStatus" />
                   <q-tab name="depenses" label="Dépenses" />
+                  <q-tab name="facture" label="Facture" @click="factures_get()"/>
                   <!--                  <q-tab name="previsions" label="Prévisions" />-->
                   <!--                  <q-tab name="facture" label="Factures" />-->
                   <!--                  <q-tab name="versement" label="Versements" />-->
@@ -253,9 +254,6 @@
             <br>
             <q-card class="q-pa-lg">
               <div class="row">
-<!--                <div class="col-12 q-mb-md">-->
-<!--                  <div class="text-h6">Dépenses</div>-->
-<!--                </div>-->
                 <div class="col-12 q-pa-sm">
                   <q-table id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="name"
                            :filter="filter" flat>
@@ -282,8 +280,8 @@
                         <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
                         <q-td key="date" :props="props"> {{props.row.date}} </q-td>
                         <q-td key="actions" :props="props">
-                          <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>
-                          <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>
+<!--                          <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>-->
+<!--                          <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>-->
                         </q-td>
                       </q-tr>
                     </template>
@@ -291,7 +289,7 @@
 
 
                   <q-dialog v-model="depenseModal">
-                    <DepenseAdd :depense="{projetid: Number($route.params.id)}" />
+                    <DepenseAdd :depense="depense" @reload="depenseGet()" />
                   </q-dialog>
 
                 </div>
@@ -300,15 +298,59 @@
             </q-card>
           </q-tab-panel>
 
-          <q-tab-panel name="parametres" class="no-padding no-margin">
+          <q-tab-panel name="facture" class="no-padding no-margin">
             <br>
-            <div class="row">
-              <div class="col-12 q-mb-md">
-                <q-card class="q-pa-lg">
-                  <h6>Paramètres</h6>
-                </q-card>
+            <q-card class="q-pa-lg">
+              <div class="row">
+
+                <div class="col-12 q-mb-lg q-pa-sm">
+                  <q-card style="width: 1200px; max-width: 100%;" id="facture" :flat="true" v-if="versements && products">
+
+                    <div class="row print-hide">
+
+                      <div class="col-12 q-mb-lg">
+                        <div class="text-h6">Gestion des versements</div>
+                        <br>
+                        &nbsp;<q-btn outline color="grey" size="xs" v-on:click="versements.pop()">-</q-btn>
+                        &nbsp;<q-btn outline color="primary" size="xs" v-on:click="versements.push({montant: 0})" icon="add">
+                          <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
+                        </q-btn>
+                      </div>
+
+                      <div class="row q-mb-md" v-for="fac in versements" v-bind:key="fac.id">
+
+                        <q-input filled class="col-1 q-mr-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
+                        <q-input filled class="col-1 q-mr-sm" dense label="Pourcentage" type="number" stack-label v-model="fac.pourcentage"
+                                 @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
+                        <q-input filled class="col-1 q-mr-sm" dense label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />
+                        &nbsp;
+                        &nbsp;
+                        <q-select class="col-1 q-mr-sm" dense label="Type paiement" stack-label v-model="fac.paiement"
+                                  :options="['virement', 'cheque', 'espece']" />
+                        <q-input class="col-1 q-mr-sm" dense label="Date Vers" type="date" stack-label v-model="fac.date"  />
+                        <q-input class="col-1 q-mr-sm" dense label="Montant Vers" stack-label type="number" v-model="fac.montant" />
+                        <q-input class="col-2 q-mr-sm" dense label="N°Chèque/Virement" v-model="fac.numero" />
+                        <q-input class="col-1 q-mr-sm" dense label="Banque" v-model="fac.banque" />
+                        <q-input class="col-1 q-mr-sm" dense label="Date Emission" type="date" stack-label v-model="fac.emission"  />
+
+                        <div class="col-1 q-ml-sm q-pt-md">
+                          <q-btn outline color="secondary" size="sm" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
+                          <q-btn outline size="sm" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+                        </div>
+                      </div>
+                    </div>
+
+                  </q-card>
+                </div>
+
+
+                <div class="col-12 q-mt-md q-pa-sm text-center">
+                  <facture-component name="Facture de devis" v-if="products"
+                                     :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
+                </div>
+
               </div>
-            </div>
+            </q-card>
           </q-tab-panel>
 
         </q-tab-panels>
@@ -337,9 +379,10 @@ import {employeGetService, p_task_get, p_task_projet_get} from "src/services/api
 import UploadFormData from "components/uploadFormData.vue";
 import Filescomponent from "components/filescomponent.vue";
 import DepenseAdd from "components/DepenseAdd.vue";
+import FactureComponent from "components/facture_component.vue";
 
 export default {
-  components: {DepenseAdd, UploadFormData, TaskList, ListItem, Filescomponent},
+  components: {FactureComponent, DepenseAdd, UploadFormData, TaskList, ListItem, Filescomponent},
   data () {
     return {
       tab: "mails",
@@ -353,13 +396,21 @@ export default {
       medium2: false,
       depenseModal: false,
       maximizedToggle: true,
+      date: null,
+      dateposted: null,
       name: null,
       image: null,
+      facture_number: null,
+      depense: {},
+      client: {},
       p_projet: {},
       p_projets: [],
       p_tasks: [],
       employes: [],
       products: [],
+      versements: [],
+      factures: [],
+      factures_init: [],
       used: [],
       depenses: [],
       product: null,
@@ -398,8 +449,13 @@ export default {
     }
   },
   mixins: [basemixin, apimixin],
+  computed: {
+    total() {
+      return this.products.reduce((product, item) => product + (item.total ), 0);
+    }
+  },
   created () {
-    // console.log(this.$route.params, this.$route)
+    this.depense.projetid = Number(this.$route.params.id)
     this.depenseGet()
     this.p_projet_get()
     this.p_projet_stock_get()
@@ -411,6 +467,60 @@ export default {
     this.productsGet()
   },
   methods: {
+    factures_get () {
+      $httpService.getWithParams('/my/get/factures_id/'+this.$route.params.id)
+        .then((response) => {
+          this.factures = response;
+          this.factures_init = response;
+          this.factures_get_id(response[0].facture);
+          this.factures_get_credit(response[0].facture);
+          for (let i = 0; i < this.factures.length; i++) {
+            if (this.factures[i].client) {
+              this.factures[i].fullname = JSON.parse(this.factures[i].client)['fullname'];
+            }
+          }
+        })
+    },
+    factures_get_id (__facture) {
+      $httpService.getWithParams('/my/get/sales_by_facture', { id_vente: __facture })
+        .then((response) => {
+          this.products = response;
+          this.facture_number = this.products[0].id_vente;
+          this.client = JSON.parse(response[0]['client']);
+          this.date = this.dateformat(this.products[0]['dateposted'], 4);
+          this.dateposted = new Date(this.products[0]['dateposted']).toISOString().slice(0, 16);
+
+          for (let i = 0; i < response.length; i++) {
+            response[i].price = response[i].prix_unitaire;
+            response[i].quantity = response[i].quantite_vendu;
+          }
+        })
+    },
+    factures_get_credit (__facture) {
+      $httpService.getWithParams('/my/get/sales_by_credit', { id_vente: __facture })
+        .then((response) => {
+          this.versements = response;
+        })
+    },
+    credit_add(facture) {
+      facture.factureid = this.facture_number;
+      facture.vente = 'vente';
+      facture.type = 'vente';
+      $httpService.postWithParams('/my/post/credit', facture)
+        .then((response) => {
+          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+          this.factures_get_credit(this.facture_number);
+        })
+    },
+    credit_update(facture) {
+      facture.factureid = this.facture_number;
+      facture.vente = 'vente';
+      $httpService.postWithParams('/my/put/credit', facture)
+        .then((response) => {
+          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+          this.factures_get_credit(this.facture_number);
+        })
+    },
     depenseGet () {
       $httpService.getWithParams('/my/projet/depenses/'+this.$route.params.id)
         .then((response) => {

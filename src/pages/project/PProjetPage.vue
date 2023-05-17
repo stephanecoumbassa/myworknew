@@ -48,7 +48,7 @@
           <span class="text-h5">{{numerique(array_somme(p_projections, 'montant_ht'))}} CFA</span>
           <p class="text-h6 text-grey">Projets finance</p>
           <q-list bordered>
-            <q-item class="q-pa-md" dense v-for="projection in p_projections" border>
+            <q-item class="q-pa-md" dense v-for="projection in p_projections.slice(0, 3)" border>
               <q-item-section>
                 <q-item-label>{{ projection.titre }}</q-item-label>
               </q-item-section>

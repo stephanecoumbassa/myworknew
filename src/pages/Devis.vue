@@ -16,24 +16,14 @@
             <q-card-section contenteditable="true">
               <div class="row">
                 <div class="col-6 alignleft">
-                  <!--                  <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 100px; height: 100px; object-fit: cover"/>-->
-                  <!--                  <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 100px; height: 100px; object-fit: cover"/>-->
                   <img src="~assets/fmmi-logo.jpeg" style="width: 100px; height: 100px; object-fit: cover"/>
-                  <!--  <div>{{entreprise.name}}</div>-->
-                  <div>{{entreprise.telephone}}</div>
-                  <div>{{entreprise.email}}</div>
-                  <div>BL: <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" /> </div>
-                  <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>
+                  <br>
+                  <div>DA: <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" /> </div>
+                  <!-- <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>-->
                 </div>
                 <div class="col-6 text-right float-right">
-<!--                  <div>Facture #: {{facture_number}}</div>-->
-<!--                  <div>Creation: {{date}}</div>-->
-<!--                  <div><q-icon name="business" />Entreprise Corporation</div>-->
-<!--                  <div v-if="client"><q-icon name="face" />{{client.name}} {{client.last_name}}</div>-->
-<!--                  <div v-if="client"><q-icon name="phone" />+ {{client.telephone_code}} {{client.telephone}}</div>-->
-<!--                  <div v-if="client"><q-icon name="email" /> {{client.email}}</div>-->
                   <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
-                    <q-input stack-label v-model="date" type="datetime-local" label="Date" :dense="true"></q-input>
+                    <q-input stack-label v-model="dateposted" type="datetime-local" label="Date" :dense="true"></q-input>
                     <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
                               v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
                               input-debounce="0" :option-label="'fullname'"
@@ -41,10 +31,11 @@
                               :rules="[val => !!val || 'Ce champs est requis']" />
                   </div>
                   <div class="row float-right q-mt-sm hidden-sm hidden-xs mobile-hide">
-                    <!--                        <div class="col-12">Facture #: {{facture_number}}</div>-->
-                    <div class="col-12">Facture #: <input v-model="facture_number" style="border: 0; border-bottom: 1px dashed grey" /></div>
-                    <div class="col-12">Creation: {{date}}</div>
-                    <div class="col-12">Entreprise Corporation</div>
+                    <div class="col-12">Proforma #:
+                      <input v-model="facture_number" style="border: 0; border-bottom: 1px dashed grey" />
+                    </div>
+                    <div class="col-12">----</div>
+                    <div class="col-12">----</div>
                     <div class="col-12" v-if="myclient.id">{{myclient.fullname}}</div>
                     <div class="col-12" v-if="myclient.id">{{'+ '+myclient.telephone_code}} {{myclient.telephone}}</div>
                     <div class="col-12" v-if="myclient.id">{{myclient.email}}</div>
@@ -57,10 +48,11 @@
               <q-form  @submit="onSubmit" class="">
                 <br>
                 <div>
-
                   <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
-                    <q-select class="col-4 no-margin" v-model="product.product_id" use-input map-options emit-value :dense="true" @filter="filterFn"
-                              option-value="id" option-label="name" stack-label input-debounce="0" label="produits" :options="products_list" />
+                    <!--                    <q-select class="col-4 no-margin" v-model="product.product_id" use-input map-options emit-value :dense="true" @filter="filterFn"-->
+                    <q-select class="col-4 no-margin" v-model="product.product_id" map-options emit-value :dense="true"
+                              option-value="id" option-label="name" stack-label input-debounce="0" label="produits"
+                              :options="products_list" />
                     <q-input class="col-1 row q-pl-sm" autocomplete type="number" v-model="product.quantite_vendu" label="Quantité" :dense="true" />
                     <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix" :dense="true" />
                     <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.tva" label="TVA" :dense="true" />
@@ -137,7 +129,7 @@
                 </div>
               </q-card-section>
               <q-card-actions>
-<!--                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>-->
+                <!--                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>-->
                 <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente;"></q-btn>
                 <q-btn flat icon="edit" @click="fullWidth = true; add_status = false; devis_get_by(item.id_vente)"></q-btn>
                 <q-btn flat icon="receipt" @click="facture_status2 = true; devis_get_by(item.id_vente)"></q-btn>
@@ -195,6 +187,7 @@ export default {
       fileTitre: '',
       files: [],
       date: '',
+      dateposted: '',
       devisId: 1,
       myclient: {},
       client: 1,
@@ -233,6 +226,7 @@ export default {
     this.clients_get();
     this.products_get();
     this.sales_get();
+    this.dateposted = date.toISOString().slice(0, 16);
   },
   computed: {
     total() {
@@ -257,7 +251,7 @@ export default {
       const val1 = this.sales_init.filter((x) => {
         return x.id_vente.toLowerCase().includes(this.search.toLowerCase())
           || x.fullname.toLowerCase().includes(this.search.toLowerCase())
-          // || x.last_name.toLowerCase().toString().includes(this.search.toLowerCase());
+        // || x.last_name.toLowerCase().toString().includes(this.search.toLowerCase());
       });
       this.sales_list = val1;
     },
@@ -284,14 +278,6 @@ export default {
       this.myclient.telephone_code = client.telephone_code;
       this.products_get();
     },
-    // assign2 (product, index) { },
-    // assign_client (client) {
-    //   this.client2.id = client.id;
-    //   this.client2.fullname = client.fullname;
-    //   this.client2.email = client.email;
-    //   this.client2.telephone = client.telephone;
-    //   this.client2.telephone_code = client.telephone_code;
-    // },
     qr_get(dataUrl) {
       this.image = dataUrl;
     },
@@ -299,7 +285,7 @@ export default {
     clients_get () {
       $httpService.getWithParams('/my/get/client')
         .then((response) => {
-          this.clients = response;
+          this.clients = [{id: 0, name: 'selectionner un client', fullname: 'selectionner un client'}, ...response];
           this.client = this.clients[0];
           this.client2 = this.clients[0];
         })
@@ -406,10 +392,11 @@ export default {
                 arr1Item.sales_price = arr2Item.prix_vente
               }
             });
-            this.appro_list = products;
-            this.appro_list2 = products;
-            this.products_list = products;
-            this.products_list2 = products;
+            this.appro_list = [{}, ...products];
+            this.appro_list2 = [{}, ...products];
+            this.products_list = [{}, ...products];
+            this.products_list2 = [{}, ...products];
+            console.log(this.products_list);
           })
       })
     },

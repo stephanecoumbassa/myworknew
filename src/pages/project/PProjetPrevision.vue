@@ -25,29 +25,27 @@
     <div class="row justify-center q-pa-md">
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
 
-        <q-table title="Produits" :rows="p_projections" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" dense>
+        <q-table id="printMe" title="Produits" :rows="p_projections" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" dense>
           <template v-slot:top="props">
             <div class="col-7 q-table__title">Liste des projets
             </div>
-            <div class="row">
+            <div class="row q-pa-lg">
               <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+              <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(p_projections, 'projection')"/>
+              <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
+              <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
             </div>
+            <br>
           </template>
           <template v-slot:body="props">
             <q-tr :props="props" :key="props.row.id" v-bind="props.row.qty = 0">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
-              <q-td key="titre" :props="props" style="min-width: 200px" >
+              <q-td key="titre" :props="props" style="min-width: 150px" >
                 {{props.row.titre}} <br>
                 Debut: {{props.row.datedebut}} <br>
                 Fin: {{props.row.datefin}} <br>
               </q-td>
-              <!--              <q-td key="datedebut" :props="props"> {{props.row.datedebut}} </q-td>-->
-              <!--              <q-td key="datefin" :props="props"> {{props.row.datefin}} </q-td>-->
               <q-td key="retard" :props="props">
-                <!--                <q-btn outline size="sm" v-if="props.row.datefin <= today" style="color: #FF0080" label="Retard" />-->
-                <!--                <q-btn outline size="sm" v-if="props.row.datefin > today" style="color: #31bd8c" label="Succès" />-->
-                <!--                {{props.row.date_prevision}}<br>-->
-                <!--                {{props.row.date_effective}}-->
                 <q-btn outline size="sm" v-if="props.row.date_prevision < props.row.date_effective"
                        style="color: #bd3156" label="Mauvais" />
                 <q-btn outline size="sm" v-if="props.row.date_prevision >= props.row.date_effective" style="color: #31bd8c" label="Bon" />
@@ -55,18 +53,17 @@
               <q-td key="prix_unitaire" :props="props"> {{props.row.prix_unitaire}} </q-td>
               <q-td key="montant_ht" :props="props"> {{props.row.montant_ht}} </q-td>
               <q-td key="qte" :props="props"> {{props.row.qte}} </q-td>
-              <!--              <q-td key="dejalivre" :props="props"> {{props.row.dejalivre}} </q-td>-->
               <q-td key="dejalivre" :props="props"> {{props.row.livree}} </q-td>
-              <!--              <q-td key="reste" :props="props"> {{props.row.reste}} </q-td>-->
               <q-td key="reste" :props="props"> {{props.row.qte - props.row.livree}} </q-td>
-
               <q-td key="qte_prevision" :props="props"> <q-input dense type="number" v-model="props.row.qte_prevision" style="width: 70px" /> </q-td>
-              <q-td key="date_prevision" :props="props"> <q-input dense type="date" v-model="props.row.date_prevision" /> </q-td>
+              <q-td key="date_prevision" :props="props">
+                <q-input dense type="date" v-model="props.row.date_prevision" style="width:100px" />
+              </q-td>
               <q-td key="qte_effective" :props="props"> <q-input dense type="number" v-model="props.row.qte_effective" style="width: 70px"  /> </q-td>
-              <q-td key="date_effective" :props="props"> <q-input dense type="date" v-model="props.row.date_effective" /> </q-td>
-              <q-td key="status_effective" :props="props"> {{props.row.status_effective}} </q-td>
+              <q-td key="date_effective" :props="props" class="no-margin no-padding">
+                <q-input dense type="date" v-model="props.row.date_effective" style="width: 100px" />
+              </q-td>
               <q-td key="actions" :props="props">
-                <!--                <q-btn class="q-mr-xs" size="sm" color="secondary" v-on:click="stock_post(props.row)" icon="verified" />-->
                 <q-btn class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
                        v-on:click="p_projet_previson_remove(props.row.id)"  />
               </q-td>
@@ -98,7 +95,10 @@
       </div>
 
     </div>
+
+
     <br>
+
   </q-page>
 </template>
 
@@ -108,7 +108,7 @@ import basemixin from '../basemixin';
 import { v4 as uuidv4 } from 'uuid';
 import {p_task_get} from "src/services/api/rh.api";
 export default {
-  name: 'ProduitStockPage',
+  name: 'PProjetPrevisionPage',
   data () {
     return {
       tab: 'mails',
@@ -138,13 +138,13 @@ export default {
         { name: 'prix_unitaire', field: 'prix_unitaire', label: 'P.Unit' },
         { name: 'montant_ht', field: 'montant_ht', label: 'HT' },
         { name: 'qte', align: 'left', label: 'Qté', field: 'qte', sortable: true },
-        { name: 'dejalivre', field: 'dejalivre', label: 'Deja Livre' },
+        { name: 'dejalivre', field: 'dejalivre', label: 'Deja Liv' },
         { name: 'reste', field: 'reste', label: 'Reste' },
-        { name: 'qte_prevision', field: 'qte_prevision', label: 'Qté prévision' },
-        { name: 'date_prevision', field: 'dateprevision', label: 'Dte prévision' },
+        { name: 'qte_prevision', field: 'qte_prevision', label: 'Qté prév' },
+        { name: 'date_prevision', field: 'dateprevision', label: 'Dte prév' },
         { name: 'qte_effective', field: 'qte_effective', label: 'Qté Eff.' },
         { name: 'date_effective', field: 'date_effective', label: 'Date Eff.' },
-        { name: 'status_effective', field: 'status_effective', label: 'Status Eff.' },
+        // { name: 'status_effective', field: 'status_effective', label: 'Status Eff.' },
         // { name: 'difference', label: 'Diff' },
         { name: 'actions', label: 'Actions' }
       ],
@@ -169,7 +169,7 @@ export default {
   },
   methods: {
     p_projet_get () {
-      $httpService.getApi('/api/get/p_projet')
+      $httpService.getApi('/my/get/p_projet')
         .then((response) => {
           this.p_projets = response
         })

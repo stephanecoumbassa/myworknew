@@ -1,7 +1,7 @@
 <template>
   <!--  <q-page padding>-->
 
-  <div>
+  <div style="margin: auto;">
 
     <vue3-html2pdf
       :show-layout="true"
@@ -16,10 +16,10 @@
       pdf-orientation="portrait"
       pdf-content-width="800px"
       @beforeDownload="beforeDownload($event)"
-      ref="html2Pdf">
-
-      <!--      <section ref="pdf-content">-->
-      <template  v-slot:pdf-content>
+      ref="html2Pdf"
+      style="margin: 0 auto"
+    >
+      <template v-slot:pdf-content style="margin: 0 auto">
         <div id="a4" size="A4">
           <h1 v-if="typeselected==='proforma'" style="position: absolute;top: 20%;left: 0%;color: #FF00002A;
                     letter-spacing: 30px;transform: rotate(318deg);font-weight: bolder;z-index: 9;">PROFORMA</h1>
@@ -136,7 +136,6 @@
 
         </div>
       </template>
-      <!--      </section>-->
     </vue3-html2pdf>
 
 
@@ -256,6 +255,10 @@ export default {
 
 <style scoped>
 
+.content-wrapper {
+  margin: 0 auto !important;
+}
+
 .logo {
   text-align: right;
 }
@@ -338,9 +341,9 @@ body {
   position: relative;
   background: white;
   display: block;
-  /*margin: 0 auto;*/
+  margin: 0 auto;
   /*margin-bottom: 0.5cm;*/
-  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  box-shadow: 0 0 0.2cm rgba(0,0,0,0.2);
 }
 #a4[size="A4"] {
   width: 21cm;

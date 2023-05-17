@@ -1,7 +1,0 @@
-{
-    "require": {
-        "symfony/var-dumper": "^5.1",
-        "phpoffice/phpspreadsheet": "^1.14",
-        "shuchkin/simplexlsx": "^0.8.19"
-    }
-}

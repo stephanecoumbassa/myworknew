@@ -60,11 +60,6 @@ var basemixin = {
             list: 'no-icons',
             options: ['size-1','size-2','size-3','size-4','size-5','size-6', 'size-7']
           },
-          {
-            fixedIcon: true,
-            list: 'no-icons',
-            options: ['default_font','arial','arial_black','comic_sans','courier_new','impact','lucida_grande','times_new_roman','verdana']
-          },
           'removeFormat'
         ],
         ['quote', 'unordered', 'ordered', 'outdent', 'indent'],

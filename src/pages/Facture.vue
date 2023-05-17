@@ -55,7 +55,6 @@
                   <div>{{entreprise.email}}</div>
                 </div>
                 <div class="col-3 text-center">
-                  <!--                                    <div><q-input stack-label v-model="dateposted" type="datetime-local" label="Date"></q-input></div>-->
                   <q-input bottom-slots stack-label v-model="dateposted" type="datetime-local" :dense="true">
                     <template v-slot:after>
                       <q-btn round dense flat icon="send" @click="sales_dateposted(products[0])" />
@@ -109,7 +108,7 @@
                     <h6 class="text-right no-padding">{{numerique(Math.round(total)) }} CFA </h6>
                   </div>
                 </div>
-                <div v-if="status_download" class="print-hide">
+                <div class="print-hide">
                   <div class="col-12">
                     <div class="text-h6">Gestion des versements</div>
                     &nbsp;<q-btn outline color="grey" size="xs" v-on:click="versements.pop()">-</q-btn>
@@ -143,10 +142,8 @@
               </q-form>
             </q-card-section>
 
-            <q-card-actions align="right" class="bg-white text-teal print-hide q-ma-lg q-pa-lg" v-if="status_download">
+            <q-card-actions align="right" class="bg-white text-teal print-hide q-ma-lg q-pa-lg">
               <q-btn color="red-4" label="Supprimer la facture" v-on:click="factures_delete()" />
-              <!--              <q-btn color="dark" flat label="Telecharger" v-on:click="download()" />-->
-              <!--              <q-btn color="dark" flat label="Imprimer" v-on:click="imprimer()" />-->
               <q-btn color="dark" flat label="Fermer" v-close-popup />
             </q-card-actions>
           </q-card>
@@ -331,7 +328,6 @@ export default {
           for (let i = 0; i < response.length; i++) {
             response[i].price = response[i].prix_unitaire;
             response[i].quantity = response[i].quantite_vendu;
-            // response[i].total = response[i].montant_vendu;
           }
         })
     },
