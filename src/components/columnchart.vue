@@ -9,6 +9,7 @@
 <script>
 import VueApexCharts from 'vue3-apexcharts';
 export default {
+  name: 'ColumnChart',
   components: {
     apexchart: VueApexCharts,
   },
@@ -16,7 +17,7 @@ export default {
     series: {
       type: Array,
       required: false,
-      default:  [{
+      default: () => [{
         name: 'Net Profit',
         data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
       }, {
@@ -27,7 +28,7 @@ export default {
     categories: {
       type: Array,
       required: false,
-      default: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
+      default: () => ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct']
     },
   },
   data() {

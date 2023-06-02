@@ -5,41 +5,42 @@
         <!-- content -->
         <br>
 
-        <div class="row">
-          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm" style="max-width: 300px">
-            <router-link class="item item-link" :to="'/clients'">
-              <q-card class="my-card q-pa-sm" square clickable style="cursor: pointer">
+        <div class="row text-center">
+          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm">
+              <q-card class="q-pa-sm" square clickable style="cursor: pointer" @click="$router.push('/clients')">
                 <q-card-section>
-                  Clients: <span class="text-h5">{{clients_count}}</span>
+                  Clients: <br><br><span class="text-h5">{{clients_count}}</span>
                 </q-card-section>
-                <q-card-section><span class="text-h5">&nbsp;</span></q-card-section>
               </q-card>
-            </router-link>
           </div>
-          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm" style="max-width: 300px">
-            <router-link class="item item-link" :to="'/users'">
-              <q-card class="my-card q-pa-sm" square clickable style="cursor: pointer">
-                <q-card-section>Utilisateurs: <span class="text-h5">{{users_count}}</span>
+          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm">
+              <q-card
+class="q-pa-sm" square clickable style="cursor: pointer"
+                      @click="$router.push('/users')">
+                <q-card-section>
+                  Utilisateurs: <br><br>
+                  <span class="text-h5">{{users_count}}</span>
                 </q-card-section>
-                <q-card-section><span class="text-h5">&nbsp;</span></q-card-section>
               </q-card>
-            </router-link>
           </div>
-          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm" style="max-width: 300px">
-            <router-link class="item item-link" :to="'/fournisseurs'">
-              <q-card class="my-card q-pa-sm" square clickable style="cursor: pointer">
-                <q-card-section>Fournisseurs: <span class="text-h5">{{fournisseurs_count}}</span></q-card-section>
-                <q-card-section><span class="text-h5">&nbsp;</span></q-card-section>
+          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm">
+              <q-card
+class="q-pa-sm" square clickable style="cursor: pointer"
+                      @click="$router.push('/fournisseurs')">
+                <q-card-section>Fournisseurs: <br><br>
+                  <span class="text-h5">{{fournisseurs_count}}</span>
+                </q-card-section>
               </q-card>
-            </router-link>
           </div>
-          <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm" style="max-width: 300px">
-            <router-link class="item item-link" :to="'/ventes/new'">
-              <q-card class="my-card q-pa-sm" square style="cursor: pointer" clickable>
-                <q-card-section>Vente Jour : <span class="text-h5">{{numerique(jour_stat.quantite)}}</span> </q-card-section>
-                <q-card-section> <span class="text-h5">{{numerique(jour_stat.somme)}}</span> CFA </q-card-section>
+          <div
+class="col-md-3 col-sm-6 col-xs-12 q-pa-sm"
+                         @click="$router.push('/ventes/new')">
+              <q-card class="q-pa-sm" square style="cursor: pointer" clickable>
+                <q-card-section>Vente Jour: <br><br>
+                  <span class="text-h5">{{numerique(jour_stat.quantite ?? 0)}}</span>
+                </q-card-section>
+<!--                <q-card-section> <span class="text-h5">{{numerique(jour_stat.somme)}}</span> CFA </q-card-section>-->
               </q-card>
-            </router-link>
           </div>
         </div>
 
@@ -77,41 +78,46 @@
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm">
             <q-table :rows="sales_stats" :columns="columns" row-key="id" :pagination="pagination" square>
-              <template v-slot:top-left>
+              <template #top-left>
                 <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
               </template>
-              <template v-slot:top-right="props">
+              <template #top-right="props">
                 <q-btn size="sm" :label="'Nbre de produits vendus: '+ numerique(nbre_vendus)" /><br>
                 <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_vendus)+' FCFA'" />
-                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       @click="props.toggleFullscreen" class="q-ml-md float-right" />
+                <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                       class="q-ml-md float-right" @click="props.toggleFullscreen" />
               </template>
             </q-table>
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm">
             <q-table :rows="appro_stats" :columns="appro_columns" row-key="id" :pagination="pagination" square>
-              <template v-slot:top-left>
+              <template #top-left>
                 <span>{{'Appro du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
               </template>
-              <template v-slot:top-right="props">
+              <template #top-right="props">
                 <q-btn size="sm" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
                 <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
-                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       @click="props.toggleFullscreen" class="q-ml-md float-right" />
+                <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                       class="q-ml-md float-right" @click="props.toggleFullscreen" />
               </template>
             </q-table>
           </div>
           <div class="col-md-12 col-sm-12 col-xs-12  q-pa-sm">
-            <q-table title="Produits" :rows="products" :columns="products_columns" square
+            <q-table
+title="Produits" :rows="products" :columns="products_columns" square
                      :pagination="pagination" :filter="filter" row-key="name">
-              <template v-slot:top="props">
+              <template #top="props">
                 <div class="col-7 q-table__title">Liste des produits</div>
-                <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+                <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+                <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                       class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
               </template>
-              <template v-slot:body="props">
-                <q-tr :props="props" :class="alerte(props.row)">
+              <template #body="props">
+<!--                <q-tr :props="props" :class="alerte(props.row)">-->
+                <q-tr :props="props">
                   <q-td key="id" :props="props"> {{props.row.id}} </q-td>
                   <q-td key="name" :props="props"> {{props.row.name}} </q-td>
                   <q-td key="amount" :props="props"> {{props.row.reste}} </q-td>
@@ -137,11 +143,13 @@ import {salesColumnsHome, approColumnsHome, productColumnsHome} from '../service
 import AreachartComponent from '../components/areachart.vue';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
-// import {ref, onMounted, watch} from 'vue'
-// import {useCounterStore} from "stores/example-store";
-import {useCounterStore} from "stores/base-store";
+// import {useCounterStore} from "stores/base-store";
 
 export default {
+  components: {
+    areachart: AreachartComponent
+  },
+  mixins: [basemixin],
   // name: 'PageName',
   data () {
     return {
@@ -186,16 +194,12 @@ export default {
       slide: 'style'
     }
   },
-  mixins: [basemixin],
-  components: {
-    areachart: AreachartComponent
-  },
   mounted () {
     this.sales_stats_get();
     this.appro_stats_get();
     this.appro_stats_global();
     this.products_get();
-    const store = useCounterStore()
+    // const store = useCounterStore()
     // console.log(store.increment())
     // console.log(store.counter)
     // console.log(store.doubleCount)
@@ -267,11 +271,11 @@ export default {
           this.products = response;
         })
     },
-    alerte(item) {
+    // alerte(item) {
       // if (item.amount <= item.alert_threshold) {
       //   return 'bg-red-2';
       // }
-    }
+    // }
   }
 }
 </script>

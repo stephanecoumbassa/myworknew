@@ -17,18 +17,20 @@
 
     <div class="row justify-center q-pa-md">
       <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md q-pa-md">
-        <q-input type="date" v-model="date" v-on:change="products_get()" />
+        <q-input v-model="date" type="date" @change="products_get()" />
         <br>
-        <q-table dense title="Produits" :rows="products" :columns="columns"
+        <q-table
+dense title="Produits" :rows="products" :columns="columns"
                  :pagination="pagination" :filter="filter" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des produits - <small>{{dateformat(date, 4)}} au {{dateformat(end_date)}}</small> </div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
-            <q-tr :props="props" :class="alerte(props.row)+ 'text-center'" :key="props.row.id">
+          <template #body="props">
+            <q-tr :key="props.row.id" :props="props" :class="alerte(props.row)+ 'text-center'">
               <q-td key="id" :props="props" class="no-padding no-margin"> {{props.row.id}} </q-td>
               <q-td key="name" :props="props" class="text-wrap no-padding no-margin" style="width: 20px"> {{props.row.name}} </q-td>
               <q-td key="stock" :props="props" class="no-padding no-margin"> {{props.row.stock}} </q-td>
@@ -88,6 +90,9 @@
 import $httpService from '../boot/httpService.js';
 import basemixin from './basemixin.js';
 export default {
+  components: {
+  },
+  mixins: [basemixin],
   data () {
     return {
       product_id: 1,
@@ -128,9 +133,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 }
     }
   },
-  components: {
-  },
-  mixins: [basemixin],
   created () {
     let date = new Date();
     this.date = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));

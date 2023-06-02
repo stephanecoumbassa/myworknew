@@ -6,13 +6,14 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de devis"
+            <facture
+name="Facture de devis"
                      :entreprise="entreprise" :client="fournisseur" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
 
         <q-dialog v-model="fullWidth" position="top">
-          <q-card class="q-ma-sm q-pa-sm" :flat="true" id="facture" style="width: 1000px; max-width: 100%;">
+          <q-card id="facture" class="q-ma-sm q-pa-sm" :flat="true" style="width: 1000px; max-width: 100%;">
             <q-card-section>
               <div class="row">
                 <div class="col-6 alignleft">
@@ -24,9 +25,11 @@
                 </div>
                 <div class="col-6 text-right float-right">
                   <div class="row">
-                    <q-input stack-label v-model="dateposted" type="datetime-local"
+                    <q-input
+v-model="dateposted" stack-label type="datetime-local"
                              class="col-md-7 col-12 q-pa-sm offset-md-2" label="Date" :dense="true"></q-input>
-                    <q-btn class="col-md-3 col-6" size="sm" color="grey-5" :dense="true" style="height: 40px"
+                    <q-btn
+class="col-md-3 col-6" size="sm" color="grey-5" :dense="true" style="height: 40px"
                            @click="sales_dateposted(products[0])">Modifier la date</q-btn>
                   </div>
                   <br>
@@ -41,20 +44,21 @@
             </q-card-section>
 
             <q-card-section>
-              <q-form  @submit="onSubmit" class="">
+              <q-form  class="" @submit="onSubmit">
                 <br>
-                <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
-                  <q-select class="col-3 row q-pl-sm" v-model="product.product_id" map-options emit-value
+                <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
+                  <q-select
+v-model="product.product_id" class="col-3 row q-pl-sm" map-options emit-value
                             option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.amount" label="Quantité" />
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.buying_price" label="Prix Achat" />
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.sell_price" label="Prix Vente" />
+                  <q-input v-model="product.amount" class="col-2 row q-pl-sm" autocomplete type="number" label="Quantité" />
+                  <q-input v-model="product.buying_price" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix Achat" />
+                  <q-input v-model="product.sell_price" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix Vente" />
                   <!-- <q-input class="col-2 no-margin" autocomplete type="number" v-model="product.montant_vendu" label="Prix de Vente" />-->
                   <q-input class="col-2 row q-pl-sm" autocomplete type="number" :value="product.amount * product.buying_price" label="total" />
                   <div class="col-1 row q-pl-xs">
                     <br>
-                    <q-btn flat size="sm" class="print-hide" color="secondary" v-on:click="sales_update(product)" icon="edit" />
-                    <q-btn flat size="sm" class="print-hide" color="negative" v-on:click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" icon="remove" />
+                    <q-btn flat size="sm" class="print-hide" color="secondary" icon="edit" @click="sales_update(product)" />
+                    <q-btn flat size="sm" class="print-hide" color="negative" icon="remove" @click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" />
                   </div>
                 </div>
 
@@ -64,40 +68,42 @@
                 </div>
 
                 Liste des versement
-                &nbsp;<q-btn size="xs" v-on:click="versements.pop()">-</q-btn>
-                &nbsp;<q-btn size="xs" v-on:click="versements.push({montant: 0})">+</q-btn>
-                <div class="row" v-for="fac in versements" :key="fac.id">
-                  <q-input class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label v-model="fac.date"  />
-                  <q-input class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" v-model="fac.montant" />
-                  <q-btn size="xs" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-                  <q-btn size="xs" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+                &nbsp;<q-btn size="xs" @click="versements.pop()">-</q-btn>
+                &nbsp;<q-btn size="xs" @click="versements.push({montant: 0})">+</q-btn>
+                <div v-for="fac in versements" :key="fac.id" class="row">
+                  <q-input v-model="fac.date" class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label  />
+                  <q-input v-model="fac.montant" class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" />
+                  <q-btn v-if="fac.id" size="xs" @click="credit_update(fac)">✎</q-btn>
+                  <q-btn v-if="!fac.id" size="xs" @click="credit_add(fac)">✅</q-btn>
                 </div>
                 <!--                                <q-btn class="print-hide" label="Valider" icon="save" type="submit" color="secondary"/>-->
               </q-form>
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal print-hide">
-              <q-btn color="red-4" label="Supprimer la facture" v-on:click="factures_delete()" />
-              <q-btn flat label="Fermer" v-close-popup />
+              <q-btn color="red-4" label="Supprimer la facture" @click="factures_delete()" />
+              <q-btn v-close-popup flat label="Fermer" />
             </q-card-actions>
           </q-card>
         </q-dialog>
 
         <div class="row q-mt-lg">
           <div class="col-12 q-pa-lg">
-            <q-input class="row" autocomplete type="search" v-model="search"
-                     v-on:keyup="facture_filter_get(search)" label="Rechercher" />
+            <q-input
+v-model="search" class="row" autocomplete type="search"
+                     label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div class="col-12">
-            <q-table title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
+            <q-table
+title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
                      :pagination="pagination" :filter="filter">
-              <template v-slot:top="props">
+              <template #top="props">
                 <div class="col-4 q-table__title">Liste des factures</div>&nbsp;&nbsp;&nbsp;
-                <q-input dense debounce="300" type="search" icon="search" v-model="filter" placeholder="Rechercher" />
-                <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />
-                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
+                <q-input v-model="filter" dense debounce="300" type="search" icon="search" placeholder="Rechercher" />
+                <q-btn flat round dense icon="grid_on" class="q-ml-md" @click="grid = !grid" />
+                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" class="q-ml-md" @click="props.toggleFullscreen" />
               </template>
-              <template v-slot:body="props">
+              <template #body="props">
                 <q-tr :props="props">
                   <q-td key="facture" :props="props">{{ props.row.facture }}</q-td>
                   <q-td key="dateposted" :props="props">{{ props.row.date }}</q-td>
@@ -131,6 +137,10 @@ import FactureComponent from '../components/facture_component.vue';
 const data = [{ 'name': 'Facebook' }, { 'name': 'Google' }, { 'name': 'Twitter' }];
 import $httpService from '../boot/httpService';
 export default {
+  components: {
+    'facture': FactureComponent
+  },
+  mixins: [basemixin],
   data () {
     return {
       items: data,
@@ -191,9 +201,13 @@ export default {
       data: []
     }
   },
-  mixins: [basemixin],
-  components: {
-    'facture': FactureComponent
+  computed: {
+    total() {
+      // return this.products.reduce((product, item) => product + (item.p.sell_price * item.quantity), 0);
+      // return this.products.reduce((product, item) => product + (item.quantite_vendu * item.prix_unitaire), 0);
+      // return this.products.reduce((product, item) => product + (item.amount * item.buying_price), 0);
+      return this.products.reduce((product, item) => product + (item.buying_price * item.amount + (item.tva * item.buying_price * item.amount)), 0);
+    }
   },
   created () {
     var date = new Date();
@@ -202,14 +216,6 @@ export default {
     this.factures_get();
     this.shop_get();
     this.dateposted = date.toISOString().slice(0, 16);
-  },
-  computed: {
-    total() {
-      // return this.products.reduce((product, item) => product + (item.p.sell_price * item.quantity), 0);
-      // return this.products.reduce((product, item) => product + (item.quantite_vendu * item.prix_unitaire), 0);
-      // return this.products.reduce((product, item) => product + (item.amount * item.buying_price), 0);
-      return this.products.reduce((product, item) => product + (item.buying_price * item.amount + (item.tva * item.buying_price * item.amount)), 0);
-    }
   },
   methods: {
     onSubmit () {

@@ -2,13 +2,14 @@
   <q-page padding>
     <!-- content -->
     <q-table title="Produits" :rows="command_list" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-      <template v-slot:top="props">
+      <template #top="props">
         <div class="col-7 q-table__title">Liste des commandes clients (Ecommerce)</div>
-        <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-        <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-               @click="props.toggleFullscreen" class="q-ml-md" />
+        <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+        <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+               class="q-ml-md" @click="props.toggleFullscreen" />
       </template>
-      <template v-slot:body="props">
+      <template #body="props">
         <q-tr :props="props" :class="alerte(props.row)">
           <q-td key="id" :props="props"> {{props.row.id}} </q-td>
           <q-td key="status" :props="props"> {{status_smg(props.row.status)}} </q-td>
@@ -19,8 +20,8 @@
           <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
           <q-td key="date_posted" :props="props"> {{props.row.date_posted}} </q-td>
           <q-td key="actions" :props="props">
-            <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="check(props.row)" icon="check_circle" />
-            <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="cancel(props.row)" icon="cancel" />
+            <q-btn class="q-mr-xs" size="xs" color="primary" icon="check_circle" @click="check(props.row)" />
+            <q-btn class="q-mr-xs" size="xs" color="red" icon="cancel" @click="cancel(props.row)" />
           </q-td>
         </q-tr>
       </template>
@@ -32,6 +33,7 @@
 import $httpService from '../boot/httpService';
 import basemixin from './basemixin'
 export default {
+    mixins: [basemixin],
     // name: 'PageName',
     data () {
         return {
@@ -58,7 +60,6 @@ export default {
             }
         }
     },
-    mixins: [basemixin],
     created() {
         this.command_get();
     },

@@ -7,14 +7,15 @@
         <form enctype="multipart/form-data">
           <q-input v-model="titre" label="titre (optionnel)" />
           <br>
-          <input type="file" name="image" v-on:change="handleInput" />
+          <input type="file" name="image" @change="handleInput" />
         </form>
       </div>
     </div>
 
     <div class="row">
-      <div class="col" v-for="item in photos" :key="item.id">
-        <img :src="baseurl+item.url" :alt="baseurl+item.name"
+      <div v-for="item in photos" :key="item.id" class="col">
+        <img
+:src="baseurl+item.url" :alt="baseurl+item.name"
              width="200" height="200" style="object-fit: cover" />
 <!--        {{item.url}}-->
         <br>
@@ -30,21 +31,25 @@ import basemixin from "pages/basemixin";
 import {LocalStorage} from "quasar";
 
 export default {
-  name: 'photoscomponent',
+  name: 'PhotosComponent',
+  components: {
+    // 'croppa': Croppa.component
+  },
+  mixins: [basemixin],
+  model: {
+    event: 'blur'
+  },
+  props: {
+    type: String,
+    typeid: Number,
+    folder: String
+  },
   data: function () {
     return {
       titre: '',
       photo: {},
       photos: [],
     }
-  },
-  components: {
-    // 'croppa': Croppa.component
-  },
-  props: {
-    type: String,
-    typeid: Number,
-    folder: String
   },
   watch: {
     typeid: {
@@ -54,13 +59,9 @@ export default {
       }
     }
   },
-  mixins: [basemixin],
   created: function () {
     this.photos_get();
     // this.medias_type_get()
-  },
-  model: {
-    event: 'blur'
   },
   methods: {
     handleInput ($event) {
@@ -95,7 +96,7 @@ export default {
     photos_delete(_id) {
       axios.get(this.apiurl+'/my/delete/photos/'+_id,{
         headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
-      }).then((data)=> {
+      }).then(()=> {
         this.photos_get();
       })
     }

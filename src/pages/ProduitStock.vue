@@ -10,7 +10,8 @@
               <div class="text-center text-h5">Rubrique: Produits - Stock Inital par année</div>
               <br>
               <span>
-                <q-input type="number" v-model="date" placeholder="N°Inventaire" :dense="true"
+                <q-input
+v-model="date" type="number" placeholder="N°Inventaire" :dense="true"
                          @change="stock_get()" />
               </span>
             </q-card-section>
@@ -25,24 +26,24 @@
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
 
         <q-table title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-          <template v-slot:top="props">
+          <template #top>
             <div class="col-7 q-table__title">Liste des produits
             </div>
             <div class="row">
-              <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+              <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             </div>
           </template>
-          <template v-slot:body="props">
-            <q-tr :props="props" :key="props.row.id" v-bind="props.row.qty = 0">
+          <template #body="props">
+            <q-tr :key="props.row.id" :props="props" v-bind="props.row.qty = 0">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
               <q-td key="name" :props="props"> {{props.row.name}} </q-td>
               <q-td key="quantite" :props="props" class="float-right text-right">
-                <q-input class="float-right text-right" type="number" dense v-model="props.row.quantite" style="width: 100px" />
+                <q-input v-model="props.row.quantite" class="float-right text-right" type="number" dense style="width: 100px" />
 <!--                {{props.row.quantite}} -->
               </q-td>
               <q-td key="date" :props="props"> {{props.row.date}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="sm" color="secondary" v-on:click="stock_post(props.row)" icon="verified" />
+                <q-btn class="q-mr-xs" size="sm" color="secondary" icon="verified" @click="stock_post(props.row)" />
               </q-td>
             </q-tr>
           </template>
@@ -59,6 +60,7 @@ import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
 export default {
   name: 'ProduitStockPage',
+  mixins: [basemixin],
   data () {
     return {
       tab: 'mails',
@@ -93,7 +95,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
   },
-  mixins: [basemixin],
   mounted () {
     this.stock_get();
     // this.inventaires_get();

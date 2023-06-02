@@ -4,7 +4,7 @@
 
     <div class="row q-pa-xs q-ma-xs">
       <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
-        <q-btn label="Ajouter une depense" class="offset-lg-1 offset-md-1" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
+        <q-btn label="Ajouter une depense" class="offset-lg-1 offset-md-1" size="sm" icon="add" color="secondary" @click="medium = true" />
         <br>
       </div>
     </div>
@@ -13,16 +13,17 @@
 
       <div class="col-md-12 col-sm-12 col-xs-12">
 
-        <q-table id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
+        <q-table
+id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
                  :pagination="pagination" :filter="filter" :grid="grid" dense flat>
-          <template v-slot:top="props">
+          <template #top>
             <div class="print-hide col-4 q-table__title">Depenses</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md print-hide" @click="json2csv(data, 'vente')"/>
-            <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md print-hide" />
+            <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md print-hide" />
             <br>
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
               <q-td key="name" :props="props"> {{props.row.name}} </q-td>
@@ -32,8 +33,8 @@
               <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
               <q-td key="date" :props="props"> {{props.row.date}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>
-                <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>
+                <q-btn size="xs" icon="edit" @click="btn_update(props.row); medium = true"></q-btn>
+                <q-btn color="red-4" size="xs" icon="delete" @click="btn_delete()"></q-btn>
               </q-td>
             </q-tr>
           </template>
@@ -87,11 +88,16 @@
 
 <script>
 import $httpService from '../boot/httpService';
-import vue3JsonExcel from 'vue3-json-excel';
+// import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin'
 import DepenseAdd from "components/DepenseAdd.vue";
 export default {
   name: 'DepensePage',
+  components: {
+    DepenseAdd,
+    // 'downloadExcel': vue3JsonExcel
+  },
+  mixins: [basemixin],
   data () {
     return {
       selected: [],
@@ -135,17 +141,12 @@ export default {
       data: []
     }
   },
-  components: {
-    DepenseAdd,
-    'downloadExcel': vue3JsonExcel
-  },
   created () {
     this.loadData();
     var today = new Date();
     this.depense.date = this.formatDate(today);
     this.date = this.formatDate(today);
   },
-  mixins: [basemixin],
   methods: {
     loadData () {
       $httpService.getWithParams('/my/get/depenses')

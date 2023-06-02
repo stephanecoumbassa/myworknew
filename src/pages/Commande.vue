@@ -8,7 +8,7 @@
           v-model="tab" dense class="text-dark"
           active-color="secondary" indicator-color="secondary" align="justify" narrow-indicator>
           <q-tab name="mails" label="Listes des achats" />
-          <q-tab name="alarms" label="Nouvel achat" v-on:click="products = [{ p: { sell_price: 0, id: null, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0 }, quantity: 1, buy: 0, sell: 0, tva: 0}]" />
+          <q-tab name="alarms" label="Nouvel achat" @click="products = [{ p: { sell_price: 0, id: null, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0 }, quantity: 1, buy: 0, sell: 0, tva: 0}]" />
         </q-tabs>
         <q-separator />
 
@@ -19,21 +19,23 @@
             <div class="row q-pa-xs">
               <div class="col q-pa-sm"><q-input v-model="first" type="date" hint="date ddebut" /></div>
               <div class="col q-pa-sm"><q-input v-model="last" type="date" hint="date fin" /></div>
-              <div class="col q-pa-sm"><br><q-btn color="secondary" label="filtrer" v-on:click="appro_stats_get()" /></div>
+              <div class="col q-pa-sm"><br><q-btn color="secondary" label="filtrer" @click="appro_stats_get()" /></div>
             </div>
 
-            <q-table title="Liste de commandes"
+            <q-table
+title="Liste de commandes"
                      :rows="commands_list" :columns="columns" :pagination="pagination" :filter="filter">
-              <template v-slot:top="props">
+              <template #top="props">
                 <div class="col-6 q-table__title">Liste des approvisionnements</div>
-                <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+                <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
                 <download-excel name="achats.xls" :json-data="commands_list">
                   <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
                 </download-excel>
-                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       @click="props.toggleFullscreen" class="q-ml-md" />
+                <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                       class="q-ml-md" @click="props.toggleFullscreen" />
               </template>
-              <template v-slot:body="props">
+              <template #body="props">
                 <q-tr :props="props">
                   <q-td key="id" :props="props">{{ props.row.id }}</q-td>
                   <q-td key="p_name" :props="props">{{ props.row.p_name }}</q-td>
@@ -47,7 +49,7 @@
                   <q-td key="f_last_name" :props="props"> {{ props.row.f_last_name }}</q-td>
 <!--                  <q-td key="total_achat" :props="props"> {{ numerique(props.row.total_achat) }}</q-td>-->
                   <q-td key="actions" :props="props">
-                    <q-btn class="q-ma-xs" size="xs" color="dark" icon="receipt" v-on:click=" get_facture_id(props.row.id_ap); facture_number = props.row.id_ap; facture_status2 = true" />
+                    <q-btn class="q-ma-xs" size="xs" color="dark" icon="receipt" @click=" get_facture_id(props.row.id_ap); facture_number = props.row.id_ap; facture_status2 = true" />
                     <!--                          <q-btn class="q-ma-sm" size="xs" color="secondary" v-on:click="update_show(props.row)" icon="edit" />-->
                     <!--                          <q-btn class="q-ma-sm" size="xs" color="red" v-on:click="command_delete(props.row.id, '', props.row.id_ap)" icon="delete" />-->
                   </q-td>
@@ -59,18 +61,20 @@
 
           <q-tab-panel name="alarms">
 
-            <q-card style="width: 1300px; max-width: 100%;" id="facture" :flat="true">
+            <q-card id="facture" style="width: 1300px; max-width: 100%;" :flat="true">
 
               <q-card-section>
-                <q-form  @submit="onSubmit" class="q-gutter-md">
+                <q-form  class="q-gutter-md" @submit="onSubmit">
                   <div class="row print-hide q-mb-lg">
                     <div class="col-md-4 col-12 q-ma-md">
-                      <q-input stack-label v-model="dateposted" v-on:change="change_dateposted()"
-                               type="datetime-local" label="Date de la facture" :dense="true"></q-input>
+                      <q-input
+v-model="dateposted" stack-label type="datetime-local"
+                               label="Date de la facture" :dense="true" @change="change_dateposted()"></q-input>
                     </div>
                     <div class="col-md-4 col-12 q-ma-md" style="margin-top: 10px">
-                      <q-select v-if="users" filled map-options emit-value v-model="fournisseur" :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)" input-debounce="0"
-                                option-label="name" :dense="true" @input="assign_fournisseur(fournisseur)" :rules="[val => !!val || 'Ce champs est requis']" />
+                      <q-select
+v-if="users" v-model="fournisseur" filled map-options emit-value :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)" input-debounce="0"
+                                option-label="name" :dense="true" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_fournisseur(fournisseur)" />
                     </div>
                   </div>
                   <div class="row mobile-hide hidden-sm hidden-xs">
@@ -99,21 +103,22 @@
                     <div class="col-2 q-pa-smt">Tva</div>
                     <div class="col-2 q-pa-sm text-right">Total</div>
                   </div>
-                  <div class="row" v-for="(product, index) in products" :key="index">
-                    <q-select class="col-md-3 col-12 q-pa-sm truncate text-wrap" v-model="product.p" :options="products_list" :dense="true" stack-label
+                  <div v-for="(product, index) in products" :key="index" class="row">
+                    <q-select
+v-model="product.p" class="col-md-3 col-12 q-pa-sm truncate text-wrap" :options="products_list" :dense="true" stack-label
                               option-value="id" input-debounce="0"
-                              @input="assign(index, product.p)" @update:model-value="assign(index, product.p)"
-                              use-input @filter="filterFn" @input-value="assign(index, product.p)"
-                              option-label="name" :set="product.id = product.p.id"  :rules="[val => !!val || 'Field is required']" />
-                    <q-input :dense="true" class="col-md-2 col-2 q-pa-sm" type="number" v-model="product.quantity" :rules="[val => !!val || 'Field is required']"/>
-                    <q-input :dense="true" class="col-md-2 col-3 q-pa-sm" type="number" v-model="product.buy" :rules="[val => !!val || 'Field is required']"/>
-                    <q-input :dense="true" class="col-md-2 col-2 q-pa-sm" type="number" v-model="product.tva" />
+                              use-input option-label="name"
+                              :set="product.id = product.p.id" :rules="[val => !!val || 'Field is required']" @input="assign(index, product.p)"
+                              @update:model-value="assign(index, product.p)" @filter="filterFn"  @input-value="assign(index, product.p)" />
+                    <q-input v-model="product.quantity" :dense="true" class="col-md-2 col-2 q-pa-sm" type="number" :rules="[val => !!val || 'Field is required']"/>
+                    <q-input v-model="product.buy" :dense="true" class="col-md-2 col-3 q-pa-sm" type="number" :rules="[val => !!val || 'Field is required']"/>
+                    <q-input v-model="product.tva" :dense="true" class="col-md-2 col-2 q-pa-sm" type="number" />
                     <div class="col-md-2 text-right">
                       <br>
                       <span class="text-h6">{{(product.buy * product.quantity)+((product.buy * product.quantity) * product.tva/100)}}</span>
                     </div>
                     <div class="col-1 text-right"><br>
-                      <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-on:click="delete_product(index)" />
+                      <q-btn round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                     </div>
                   </div>
                   <div class="row no-padding q-mt-xs q-mb-lg">
@@ -121,15 +126,15 @@
                       <q-checkbox v-model="credit" label="Credit" color="red" />
                     </div>
                     <div class="offset-md-5 col-md-3 col-12 q-pa-sx" style="text-align: right">
-                      <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>
+                      <q-input v-if="credit" v-model="avance" :dense="true" type="number" label="Avance"/><br>
                       <div class="text-h6 no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</div>
                     </div>
                   </div>
 
                   <div class="row">
-                    <q-btn v-if="validate_status" size="xs" round color="positive" icon="add" class="print-hide" v-on:click="specialities_add" />&nbsp;&nbsp;
+                    <q-btn v-if="validate_status" size="xs" round color="positive" icon="add" class="print-hide" @click="specialities_add" />&nbsp;&nbsp;
                     <q-btn v-if="validate_status" size="xs" class="print-hide" label="Valider" icon="save" type="submit" color="secondary"/>&nbsp;&nbsp;
-                    <q-btn icon="receipt" size="xs" color="grey-10" outline label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" />
+                    <q-btn icon="receipt" size="xs" color="grey-10" outline label="Facture" @click="get_facture_id(facture_number); facture_status2 = true" />
 
                   </div>
 
@@ -144,7 +149,8 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture-component name="Facture d'approvisionnement"
+            <facture-component
+name="Facture d'approvisionnement"
                                :myentreprise="entreprise" :client="fournisseur" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
@@ -166,6 +172,11 @@ import * as _ from 'lodash';
 
 export default {
   name: 'CommandePage',
+  components: {
+    'downloadExcel': vue3JsonExcel,
+    FactureComponent
+  },
+  mixins: [basemixin],
   data () {
     return {
       tab: 'mails',
@@ -223,10 +234,10 @@ export default {
       }
     }
   },
-  mixins: [basemixin],
-  components: {
-    'downloadExcel': vue3JsonExcel,
-    FactureComponent
+  computed: {
+    total() {
+      return this.products.reduce((product, item) => product + (item.buy * item.quantity + (item.buy * item.quantity * item.tva / 100)), 0);
+    }
   },
   mounted () {
     this.products = [{ p: { sell_price: 0, id: null, name: 'Selectionner un produit', tva: this.tva }, quantity: 1, buy: 0, sell: 0, tva: this.tva }];
@@ -239,11 +250,6 @@ export default {
     this.commands_get();
     this.shop_get();
     this.dateposted = this.get_dateposted();
-  },
-  computed: {
-    total() {
-      return this.products.reduce((product, item) => product + (item.buy * item.quantity + (item.buy * item.quantity * item.tva / 100)), 0);
-    }
   },
   methods: {
     change_dateposted() {
@@ -291,8 +297,7 @@ export default {
             let params2 = response.data;
             params2.factureid = response.factureid
             $httpService.postWithParams('/my/put/commands_credit', params2)
-              .then((res) => {
-                // console.log(res)
+              .then(() => {
                 window.location.reload()
               })
 

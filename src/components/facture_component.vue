@@ -4,6 +4,7 @@
   <div style="margin: auto;">
 
     <vue3-html2pdf
+      ref="html2Pdf"
       :show-layout="true"
       :float-layout="false"
       :enable-download="false"
@@ -15,41 +16,44 @@
       pdf-format="a4"
       pdf-orientation="portrait"
       pdf-content-width="800px"
-      @beforeDownload="beforeDownload($event)"
-      ref="html2Pdf"
       style="margin: 0 auto"
+      @beforeDownload="beforeDownload($event)"
     >
-      <template v-slot:pdf-content style="margin: 0 auto">
-        <div id="a4" size="A4">
-          <h1 v-if="typeselected==='proforma'" style="position: absolute;top: 20%;left: 0%;color: #FF00002A;
-                    letter-spacing: 30px;transform: rotate(318deg);font-weight: bolder;z-index: 9;">PROFORMA</h1>
-          <h1 v-if="typeselected==='devis'" style="position: absolute;top: 20%;left: 10%;color: #FF00002A;
+      <template #pdf-content>
+        <div id="a4" size="A4" style="margin: 0 auto">
+          <h1
+            v-if="typeselected==='proforma'" style="position: absolute;top: 35%;left: -5%;color: #FF00002A;
+                    letter-spacing: 30px;transform: rotate(318deg); font-size: 110px; font-weight: bolder;z-index: 9;">PROFORMA</h1>
+          <h1
+            v-if="typeselected==='devis'" style="position: absolute;top: 20%;left: 10%;color: #FF00002A;
                     letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
-                        font-size: 150px; ;z-index: 9">DEVIS</h1>
-          <h1 v-if="typeselected==='facture'" style="position: absolute;top: 25%;left: 0%;color: #FF00002A;
+                        font-size: 150px; z-index: 9">DEVIS</h1>
+          <h1
+            v-if="typeselected==='facture'" style="position: absolute;top: 25%;left: 0%;color: #FF00002A;
                   letter-spacing: 40px;transform: rotate(318deg);font-weight: bolder;
                       font-size: 120px;z-index: 9">FACTURE</h1>
-          <h1 v-if="typeselected==='bl'" style="position: absolute;top: 20%;left: 0%;color: #FF00002A;
+          <h1
+            v-if="typeselected==='bl'" style="position: absolute;top: 20%;left: 0%;color: #FF00002A;
                        transform: rotate(318deg);font-weight: bolder;font-size: 90px;z-index: 9;">BON DE LIVRAISON</h1>
           <header>
             <div class="row no-padding no-margin print-hide title">
-              <div class="col-2" v-if="!printStatus">
+              <div v-if="!printStatus" class="col-2">
                 <!-- <img src="~assets/fmmi-logo.jpeg" style="height: 70px; object-fit: cover"/>-->
               </div>
-              <div class="col-4" v-if="!printStatus">
+              <div v-if="!printStatus" class="col-4">
                 <div class="q-pa-md">
-                <q-checkbox
-                  v-model="showCachet"
-                  color="green"
-                  label="cachet"
-                />
+                  <q-checkbox
+                    v-model="showCachet"
+                    color="green"
+                    label="cachet"
+                  />
                 </div>
               </div>
-              <div class="col-3" v-if="!printStatus">
-                  <q-select dense v-model="typeselected" :options="['bl', 'facture', 'devis', 'proforma']" />
+              <div v-if="!printStatus" class="col-3">
+                <q-select v-model="typeselected" dense :options="['bl', 'facture', 'devis', 'proforma']" />
               </div>
-              <div class="col-3 text-right" v-if="!printStatus">
-                <q-btn size="xs" color="grey" v-on:click="generateReport()">PDF</q-btn>
+              <div v-if="!printStatus" class="col-3 text-right">
+                <q-btn size="xs" color="grey" @click="generateReport()">PDF</q-btn>
               </div>
             </div>
           </header>
@@ -67,14 +71,15 @@
                       <!--                      <p>Email: {{myentreprise.email}}</p>-->
                       <!--                      <p>CC N°:</p>-->
                       <!--                      <p>RCCM:</p>-->
-                      <p>BL: <input class="no-border" :value="products[0]?.bl" /> </p>
-                      <p>BC: <input class="no-border" :value="products[0]?.bc" /> </p>
+                      <p v-if="typeselected==='proforma'">DA: <input class="no-border" :value="products[0]?.bl" /> </p>
+                      <p v-if="typeselected!=='proforma'">BL: <input class="no-border" :value="products[0]?.bl" /> </p>
+                      <p v-if="typeselected!=='proforma'">BC: <input class="no-border" :value="products[0]?.bc" /> </p>
                     </div>
                   </div>
                 </div>
 
                 <div class="info-right" contenteditable="true">
-                  <div class="title h4">Facture #: <input class="no-border" v-model="facturenumero" /></div>
+                  <div class="title h4">Facture #: <input v-model="facturenumero" class="no-border" /></div>
                   <div class="title h4">{{client?.fullname}}</div>
                   <div class="title h4">{{client?.telephone_code}} {{client?.telephone}}</div>
                   <div class="title h4">{{client?.email}}</div>
@@ -116,8 +121,8 @@
                   <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(totalHt)}} </div>
                   <div class="reduc">TVA</div> <div class="montant"> 18%</div>
                   <!--              <div class="tva">Tva</div> <div class="montant">0</div>-->
-                  <div class="reduc" v-if="remise">Remise</div> <div v-if="remise" class="montant"> {{numerique(remise)}}</div>
-                  <div class="avance" v-if="acompte"> Acompte</div> <div v-if="acompte" class="montant">0</div>
+                  <div v-if="remise" class="reduc">Remise</div> <div v-if="remise" class="montant"> {{numerique(remise)}}</div>
+                  <div v-if="acompte" class="avance"> Acompte</div> <div v-if="acompte" class="montant">0</div>
                   <div class="total-ttc text-r">Total TTC</div> <div class="montant fin text-right">{{numerique(total)}} <span>CFA</span></div>
                 </div>
                 <p class="nb">Condition de paiement: <span class="nb-text">30 % à la commande, paiement à reception de facture</span></p>
@@ -126,8 +131,9 @@
             </div>
 
           </div>
-          <img class="float-right" src="~assets/cachet.png" v-if="showCachet"
-               style="height: 120px; object-fit: cover; position: absolute; bottom: 200px; right: 50px"/>
+          <img
+            v-if="showCachet" class="float-right" src="~assets/cachet.png"
+            style="height: 120px; object-fit: cover; position: absolute; bottom: 200px; right: 50px"/>
 
           <!--          <footer contenteditable="true" class="text-center">-->
           <!--            SARL au capital de 5 000 000 Fcfa- Yopougon quartier maroc- 10 bp 1022 abj 10 <br>-->
@@ -147,7 +153,6 @@
 <script>
 import basemixin from '../pages/basemixin';
 import Vue3Html2pdf from 'vue3-html2pdf'
-import jspdf from 'jspdf'
 export default {
   name: 'FactureComponent',
   components: {
@@ -155,6 +160,12 @@ export default {
     Vue3Html2pdf
   },
   mixins: [basemixin],
+  props: {
+    products: { type: Array, default () { return [{ name: 'Nbre Dons.', dateposted: '', data: [ ] }] } },
+    client: { type: Object },
+    facturenum: { type: String },
+    type: { type: String, default: null},
+  },
   data () {
     return {
       date: '',
@@ -162,21 +173,7 @@ export default {
       printStatus: false,
       showCachet: true,
       facturenumero: ''
-      // series: [{
-      //     name: 'Nbre Dons.', data: [14, 45, 12, 47, 44, 32, 74, 12, 12]
-      // }],
     }
-  },
-  props: {
-    products: { type: Array, default () { return [{ name: 'Nbre Dons.', dateposted: '', data: [ ] }] } },
-    myentreprise: { type: Object, default () { return { name: 'Fmmi' } } },
-    client: { type: Object },
-    fournisseur: { type: Object },
-    color: { type: String, default: '#26a69a' },
-    name: { type: String, default: 'Facture' },
-    facturename: { type: String },
-    facturenum: { type: String },
-    type: { type: String, default: null},
   },
   computed: {
     total() {
@@ -200,6 +197,8 @@ export default {
       return this.products.reduce((product, item) => product + (item.remise_totale * 1), 0);
     }
   },
+  watch: {
+  },
   created () {
     let date = new Date();
     this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth(), date.getDate()), 4);
@@ -210,8 +209,6 @@ export default {
       console.log(this.type)
       console.log(this.typeselected)
     }, 3000)
-  },
-  watch: {
   },
   methods: {
     // imprimer() {

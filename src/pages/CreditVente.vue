@@ -7,17 +7,18 @@
 
         <br><br>
         <q-table title="Produits" :rows="credits" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des ventes et des credits<br>
               <q-btn color="red"> Impayés
                 {{ numerique( array_somme(credits, 'total') - array_somme(credits, 'credit') ) }}
               </q-btn>
             </div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id"> {{props.row.id_vente}} </q-td>
               <q-td key="name"> {{props.row.client_id}} </q-td>
@@ -26,8 +27,9 @@
               <q-td key="reste"> {{ numerique(props.row.total - props.row.credit) }} </q-td>
               <q-td key="actions">
                 <!--                <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="visibility" />-->
-                <q-btn class="q-mr-xs" size="xs" color="primary" icon="visibility"
-                       v-on:click="get_facture_id(props.row.id_vente); factures_get_credit(props.row.id_vente)" />
+                <q-btn
+class="q-mr-xs" size="xs" color="primary" icon="visibility"
+                       @click="get_facture_id(props.row.id_vente); factures_get_credit(props.row.id_vente)" />
               </q-td>
             </q-tr>
           </template>
@@ -35,7 +37,7 @@
       </div>
 
       <q-dialog v-model="fullWidth" position="top">
-        <q-card style="width: 1200px; max-width: 100%;" id="facture" :flat="true">
+        <q-card id="facture" style="width: 1200px; max-width: 100%;" :flat="true">
           <q-card-section contenteditable="true">
             <div class="row">
               <div class="col-6 alignleft mobile-hide">
@@ -57,12 +59,13 @@
           </q-card-section>
 
           <q-card-section>
-            <q-form  @submit="onSubmit" class="">
+            <q-form  class="" @submit="onSubmit">
               <br>
 <!--              {{products}}-->
-              <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
+              <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
 <!--                {{product.total}}-->
-                <q-select class="col-sm-4 col-xs-12 col-3 no-margin" v-model="product.product_id" use-input map-options emit-value readonly
+                <q-select
+v-model="product.product_id" class="col-sm-4 col-xs-12 col-3 no-margin" use-input map-options emit-value readonly
                           option-value="id" option-label="name" stack-label input-debounce="0" label="produits" :options="products_list" />
                 <q-input class="col-sm-2 col-xs-3 col-2 row q-pl-sm" readonly :model-value="numerique(product.quantite_vendu)" label="Quantité" />
                 <q-input class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly :model-value="numerique(product.prix_unitaire)" label="Prix" />
@@ -79,23 +82,23 @@
                 <h6 class="offset-5 text-right col-4 no-padding">{{numerique(Math.round(total)) }} FCFA </h6>
               </div>
               Liste des versement
-              &nbsp;<q-btn size="xs" v-on:click="versements.pop()">-</q-btn>
-              &nbsp;<q-btn size="xs" v-on:click="versements.push({montant: 0})">+</q-btn>
-              <div class="row" v-for="fac in versements" v-bind:key="fac.id">
-                <q-input class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label v-model="fac.date"  />
-                <q-input class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" v-model="fac.montant" />
+              &nbsp;<q-btn size="xs" @click="versements.pop()">-</q-btn>
+              &nbsp;<q-btn size="xs" @click="versements.push({montant: 0})">+</q-btn>
+              <div v-for="fac in versements" :key="fac.id" class="row">
+                <q-input v-model="fac.date" class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label  />
+                <q-input v-model="fac.montant" class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" />
                 <div class="col-3">
                   <br>
-                  <q-btn size="xs" color="teal" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-                  <q-btn size="xs" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+                  <q-btn v-if="fac.id" size="xs" color="teal" @click="credit_update(fac)">✎</q-btn>
+                  <q-btn v-if="!fac.id" size="xs" @click="credit_add(fac)">✅</q-btn>
                 </div>
               </div>
             </q-form>
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="Fermer" v-close-popup />
-            <q-btn flat label="Imprimer" v-on:click="imprimer()" />
+            <q-btn v-close-popup flat label="Fermer" />
+            <q-btn flat label="Imprimer" @click="imprimer()" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -110,6 +113,11 @@ import $httpService from '../boot/httpService';
 import basemixin from './basemixin'
 
 export default {
+  components: {
+    // areachart: AreachartComponent,
+    // VueQr
+  },
+  mixins: [basemixin],
   data () {
     return {
       product_id: 1,
@@ -155,11 +163,6 @@ export default {
       return this.products.reduce((product, item) => product + (item.total), 0);
     }
   },
-  components: {
-    // areachart: AreachartComponent,
-    // VueQr
-  },
-  mixins: [basemixin],
   created () {
     this.products_get();
     this.credit_get();

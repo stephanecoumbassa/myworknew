@@ -4,7 +4,7 @@
     <br>
 
     <div class="row q-mb-lg">
-      <q-btn label="Ajouter une marque" class="offset-lg-1" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
+      <q-btn label="Ajouter une marque" class="offset-lg-1" size="sm" icon="add" color="secondary" @click="medium = true" />
       <br>
     </div>
 
@@ -12,25 +12,27 @@
     <div class="row justify-center text-center">
 
       <div class="col-lg-11 col-12">
-        <q-table title="Treats" :rows="data" :columns="columns" row-key="name"
+        <q-table
+title="Treats" :rows="data" :columns="columns" row-key="name"
                  :pagination="pagination">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-4 q-table__title">Marques</div>
             <download-excel name="marques.xls" :json-data="data">
               <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
             </download-excel>
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
               <q-td key="nom" :props="props"> {{props.row.nom}} </q-td>
               <q-td key="description" :props="props"> {{props.row.description}} </q-td>
               <q-td key="photo" :props="props"> {{props.row.photo}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true" />&nbsp;
-                <q-btn color="red-4" size="xs" icon="delete" v-on:click="marque_delete(props.row.id)" />
+                <q-btn size="xs" icon="edit" @click="btn_update(props.row); medium = true" />&nbsp;
+                <q-btn color="red-4" size="xs" icon="delete" @click="marque_delete(props.row.id)" />
               </q-td>
             </q-tr>
           </template>
@@ -49,13 +51,13 @@
             <div class="row justify-center">
               <div class="col-11">
 
-                <q-form  @submit="onSubmit" class="q-gutter-md"  >
-                  <q-input autocomplete  v-model="marque.nom" label="Nom *" />
-                  <q-input autocomplet outlined type="textarea" v-model="marque.description" label="Description *" />
-                  <q-input autocomplete  type="file" v-model="marque.photo" stack-label label="Photo *" />
+                <q-form  class="q-gutter-md" @submit="onSubmit"  >
+                  <q-input v-model="marque.nom"  autocomplete label="Nom *" />
+                  <q-input v-model="marque.description" autocomplet outlined type="textarea" label="Description *" />
+                  <q-input v-model="marque.photo"  autocomplete type="file" stack-label label="Photo *" />
                   <div>
-                    <q-btn label="Modifier" v-if="status_update" v-on:click="marque_update()" type="button" color="secondary"/>&nbsp;&nbsp;
-                    <q-btn label="Valider" v-if="!status_update" type="submit" color="secondary"/>
+                    <q-btn v-if="status_update" label="Modifier" type="button" color="secondary" @click="marque_update()"/>&nbsp;&nbsp;
+                    <q-btn v-if="!status_update" label="Valider" type="submit" color="secondary"/>
                   </div>
                 </q-form>
 
@@ -64,7 +66,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="Fermer" v-close-popup v-on:click="marque = {}" />
+            <q-btn v-close-popup flat label="Fermer" @click="marque = {}" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -80,6 +82,10 @@ import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin'
 export default {
   name: 'MarquePage',
+  components: {
+    'downloadExcel': vue3JsonExcel
+  },
+  mixins: [basemixin],
   data () {
     return {
       selected: [],
@@ -128,10 +134,6 @@ export default {
   created () {
     this.loadData();
   },
-  components: {
-    'downloadExcel': vue3JsonExcel
-  },
-  mixins: [basemixin],
   methods: {
     loadData () {
       $httpService.getWithParams('/my/get/marques')

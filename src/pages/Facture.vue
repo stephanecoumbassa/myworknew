@@ -7,22 +7,24 @@
 
         <div class="row">
           <div class="col-12 q-pa-lg">
-            <q-input class="row" autocomplete type="search" v-model="search"
-                     v-on:keyup="facture_filter_get(search)" label="Rechercher" />
+            <q-input
+v-model="search" class="row" autocomplete type="search"
+                     label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div class="col-12">
 
-            <q-table id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
+            <q-table
+id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
                      :pagination="pagination" :filter="filter" dense>
-              <template v-slot:top="props">
+              <template #top="props">
                 <div class="col-4 q-table__title">Liste des factures</div>&nbsp;&nbsp;&nbsp;
 <!--                <q-input dense debounce="300" type="search" icon="search" v-model="filter" placeholder="Rechercher" />-->
                 <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(factures, 'vente')"/>
-                <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
-                <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />
-                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
+                <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
+                <q-btn flat round dense icon="grid_on" class="q-ml-md" @click="grid = !grid" />
+                <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" class="q-ml-md" @click="props.toggleFullscreen" />
               </template>
-              <template v-slot:body="props">
+              <template #body="props">
                  <q-tr :props="props">
                   <q-td key="facture" :props="props">{{ props.row.facture }}</q-td>
                   <q-td key="dateposted" :props="props">{{ props.row.dateposted }}</q-td>
@@ -43,7 +45,7 @@
         </div>
 
         <q-dialog v-model="fullWidth" position="top">
-          <q-card style="width: 1200px; max-width: 100%;" id="facture" :flat="true">
+          <q-card id="facture" style="width: 1200px; max-width: 100%;" :flat="true">
             <q-card-section>
               <div class="row">
                 <div class="col-5 alignleft">
@@ -55,8 +57,8 @@
                   <div>{{entreprise.email}}</div>
                 </div>
                 <div class="col-3 text-center">
-                  <q-input bottom-slots stack-label v-model="dateposted" type="datetime-local" :dense="true">
-                    <template v-slot:after>
+                  <q-input v-model="dateposted" bottom-slots stack-label type="datetime-local" :dense="true">
+                    <template #after>
                       <q-btn round dense flat icon="send" @click="sales_dateposted(products[0])" />
                     </template>
                   </q-input>
@@ -73,7 +75,7 @@
             </q-card-section>
 
             <q-card-section>
-              <q-form  @submit="onSubmit" class="">
+              <q-form  class="" @submit="onSubmit">
                 <br>
                 <div class="row no-margin no-padding" style="height: 47px">
                   <div class="col-4 q-pa-sm">Nom</div>
@@ -82,25 +84,27 @@
                   <div class="col-2 q-pa-sm">TVA</div>
                   <div class="col-2 q-pa-sm">Total</div>
                 </div>
-                <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
-                  <q-select outlined class="col-4 no-margin text-no-wrap truncate" v-model="product.product_id" use-input map-options emit-value
+                <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
+                  <q-select
+v-model="product.product_id" outlined class="col-4 no-margin text-no-wrap truncate" use-input map-options emit-value
                             dense option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
-                  <q-input dense class="col-1 row q-pl-sm" autocomplete type="number" v-model="product.quantite_vendu" label="Quantité" />
-                  <q-input dense class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix" />
-                  <q-input dense class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.tva" label="tva" />
-                  <q-input dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="product.total = (product.quantite_vendu*product.prix_unitaire) + (product.quantite_vendu*product.prix_unitaire * product.tva) /100"
+                  <q-input v-model="product.quantite_vendu" dense class="col-1 row q-pl-sm" autocomplete type="number" label="Quantité" />
+                  <q-input v-model="product.prix_unitaire" dense class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" />
+                  <q-input v-model="product.tva" dense class="col-2 row q-pl-sm" autocomplete type="number" label="tva" />
+                  <q-input
+dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="product.total = (product.quantite_vendu*product.prix_unitaire) + (product.quantite_vendu*product.prix_unitaire * product.tva) /100"
                            :model-value="product.total" />
                   <div class="col-1 row q-pl-xs print-hide">
-                    <q-btn flat size="sm" color="secondary" v-on:click="sales_update(product)" icon="edit" />
-                    <q-btn flat size="sm" color="negative" v-on:click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" icon="remove" />
+                    <q-btn flat size="sm" color="secondary" icon="edit" @click="sales_update(product)" />
+                    <q-btn flat size="sm" color="negative" icon="remove" @click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" />
                   </div>
                 </div>
-                <div class="row q-pa-sm print-hide" v-if="status_download">
+                <div v-if="status_download" class="row q-pa-sm print-hide">
                   <div class="col-3 row q-pa-sm">
-                    <h6 class="bg-red-1 q-pa-sm" v-if="total - array_somme(versements, 'montant') >= 0">
+                    <h6 v-if="total - array_somme(versements, 'montant') >= 0" class="bg-red-1 q-pa-sm">
                       <small>Reste=</small> {{numerique( total - parseInt(array_somme(versements, "montant")) ) }} FCFA
                     </h6>
-                    <h6 class="no-padding bg-red-1" v-if="total - array_somme(versements, 'montant') < 0">
+                    <h6 v-if="total - array_somme(versements, 'montant') < 0" class="no-padding bg-red-1">
                       <small>Vous devez</small> - {{numerique( total - parseInt(array_somme(versements, "montant")) ) }} FCFA
                     </h6>
                   </div>
@@ -111,30 +115,31 @@
                 <div class="print-hide">
                   <div class="col-12">
                     <div class="text-h6">Gestion des versements</div>
-                    &nbsp;<q-btn outline color="grey" size="xs" v-on:click="versements.pop()">-</q-btn>
-                    &nbsp;<q-btn outline color="primary" size="xs" v-on:click="versements.push({montant: 0})" icon="add">
+                    &nbsp;<q-btn outline color="grey" size="xs" @click="versements.pop()">-</q-btn>
+                    &nbsp;<q-btn outline color="primary" size="xs" icon="add" @click="versements.push({montant: 0})">
                       <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
                     </q-btn>
                   </div>
-                  <div class="row" v-for="fac in versements" v-bind:key="fac.id">
+                  <div v-for="fac in versements" :key="fac.id" class="row">
 
-                    <q-input filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label v-model="fac.pourcentage"  />
-                    <q-input filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
-                    <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />
+                    <q-input v-model="fac.pourcentage" filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label  />
+                    <q-input v-model="fac.echeance" filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label  />
+                    <q-input v-model="fac.montant_echeance" filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number" />
                     &nbsp;
                     &nbsp;
-                    <q-select class="col-1 q-ma-sm" dense label="Type paiement" stack-label v-model="fac.paiement"
+                    <q-select
+v-model="fac.paiement" class="col-1 q-ma-sm" dense label="Type paiement" stack-label
                               :options="['virement', 'cheque', 'espece']" />
-                    <q-input class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label v-model="fac.date"  />
-                    <q-input class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" v-model="fac.montant" />
-                    <q-input class="col-1 q-ma-sm" dense label="N°Chèque/Virement" v-model="fac.numero" />
-                    <q-input class="col-1 q-ma-sm" dense label="Banque" v-model="fac.banque" />
-                    <q-input class="col-1 q-ma-sm" dense label="Date Emission" type="date" stack-label v-model="fac.emission"  />
+                    <q-input v-model="fac.date" class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label  />
+                    <q-input v-model="fac.montant" class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" />
+                    <q-input v-model="fac.numero" class="col-1 q-ma-sm" dense label="N°Chèque/Virement" />
+                    <q-input v-model="fac.banque" class="col-1 q-ma-sm" dense label="Banque" />
+                    <q-input v-model="fac.emission" class="col-1 q-ma-sm" dense label="Date Emission" type="date" stack-label  />
 
                     <div class="col-1">
                       <br>
-                      <q-btn outline color="secondary" size="sm" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-                      <q-btn outline size="sm" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+                      <q-btn v-if="fac.id" outline color="secondary" size="sm" @click="credit_update(fac)">✎</q-btn>
+                      <q-btn v-if="!fac.id" outline size="sm" @click="credit_add(fac)">✅</q-btn>
                     </div>
                   </div>
                 </div>
@@ -143,15 +148,16 @@
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal print-hide q-ma-lg q-pa-lg">
-              <q-btn color="red-4" label="Supprimer la facture" v-on:click="factures_delete()" />
-              <q-btn color="dark" flat label="Fermer" v-close-popup />
+              <q-btn color="red-4" label="Supprimer la facture" @click="factures_delete()" />
+              <q-btn v-close-popup color="dark" flat label="Fermer" />
             </q-card-actions>
           </q-card>
         </q-dialog>
 
         <q-dialog v-model="facture_status2" position="top" facture_filter_getstyle="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de devis"
+            <facture
+name="Facture de devis"
                      :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
@@ -170,6 +176,9 @@ import $httpService from '../boot/httpService';
 import FactureComponent from '../components/facture_component.vue';
 export default {
   name: 'FacturePage',
+  components: {
+    'facture': FactureComponent
+  },
   mixins: [basemixin],
   data () {
     return {
@@ -233,22 +242,19 @@ export default {
       data: []
     }
   },
-  created () {
-    var date = new Date();
-    this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
-    this.products_get();
-    this.factures_get();
-    this.shop_get();
-  },
-  components: {
-    'facture': FactureComponent
-  },
   computed: {
     total() {
       // return this.products.reduce((product, item) => product + (item.montant_vendu - item.remise_totale), 0);
       // return this.products.reduce((product, item) => product + (item.total ), 0);
       return this.products.reduce((product, item) => product + (item.total ), 0);
     }
+  },
+  created () {
+    var date = new Date();
+    this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
+    this.products_get();
+    this.factures_get();
+    this.shop_get();
   },
   methods: {
     onSubmit () {

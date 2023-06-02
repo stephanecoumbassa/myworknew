@@ -5,24 +5,25 @@
     <div class="row justify-center q-ma-md">
       <div class="col-lg-11 col-12">
 
-        <q-btn color="dark" label="Listes des locations" v-on:click="listes_status = true; add_status = false; update_status = false" /> &nbsp;&nbsp;
-        <q-btn color="dark" label="Ajouter" v-on:click="listes_status = false; add_status = true; update_status = false; products_list = [{price: 0, tva: 0, quantity: 1}]" />
+        <q-btn color="dark" label="Listes des locations" @click="listes_status = true; add_status = false; update_status = false" /> &nbsp;&nbsp;
+        <q-btn color="dark" label="Ajouter" @click="listes_status = false; add_status = true; update_status = false; products_list = [{price: 0, tva: 0, quantity: 1}]" />
 
         <!--    AJOUTER    -->
-        <q-card style="width: 1200px; max-width: 100%;" id="facture" :flat="true" v-if="add_status">
+        <q-card v-if="add_status" id="facture" style="width: 1200px; max-width: 100%;" :flat="true">
           <br>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
 
             <div class="row q-ma-md">
               <div class="col-6 q-pa-md">
-                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download"
-                          v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                          input-debounce="0" :option-label="'fullname'" @input="assign_client(client)" :rules="[val => !!val || 'Ce champs est requis']" />
-                <q-input filled type="number" label="Caution en Francs CFA" v-model="caution" />
+                <q-select
+v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options
+                          emit-value :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                          input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
+                <q-input v-model="caution" filled type="number" label="Caution en Francs CFA" />
               </div>
               <div class="col-6 q-pa-md">
-                <q-input filled stack-label type="date" label="Date de début" v-model="date_start" /><br>
-                <q-input filled stack-label type="date" label="Date de fin" v-model="date_end" />
+                <q-input v-model="date_start" filled stack-label type="date" label="Date de début" /><br>
+                <q-input v-model="date_end" filled stack-label type="date" label="Date de fin" />
               </div>
             </div>
 
@@ -34,23 +35,24 @@
                 <div class="col-3 q-pa-sm">Prix Uni</div>
                 <div class="col-3 q-pa-sm">Total</div>
               </div>
-              <div class="row q-mb-lg" v-for="(product, index) in products_list" :key="index">
-                <q-select class="col-sm-12 col-xs-12 col-3 q-pa-sm text-wrap" v-model="product.product_id" :options="products" option-value="id"
+              <div v-for="(product, index) in products_list" :key="index" class="row q-mb-lg">
+                <q-select
+v-model="product.product_id" class="col-sm-12 col-xs-12 col-3 q-pa-sm text-wrap" :options="products" option-value="id"
                           hint="nom" emit-value map-options option-label="name" :dense="true" />
-                <q-input hint="qte" class="col-sm-2 col-xs-2 col-1 q-pa-sm" :dense="true" type="number" v-model="product.quantity" />
-                <q-input hint="tva" class="col-sm-2 col-xs-2 col-2 q-pa-sm" :dense="true" type="number" v-model="product.tva" />
-                <q-input hint="pu" class="col-sm-3 col-xs-3 col-2 q-pa-sm" :dense="true" type="number" v-model="product.price" />
+                <q-input v-model="product.quantity" hint="qte" class="col-sm-2 col-xs-2 col-1 q-pa-sm" :dense="true" type="number" />
+                <q-input v-model="product.tva" hint="tva" class="col-sm-2 col-xs-2 col-2 q-pa-sm" :dense="true" type="number" />
+                <q-input v-model="product.price" hint="pu" class="col-sm-3 col-xs-3 col-2 q-pa-sm" :dense="true" type="number" />
                 <q-input hint="total" class="col-sm-4 col-xs-4 col-3 q-pa-sm" :dense="true" type="number" :value="product.price * product.quantity" />
                 <div class="col-1"><br>
-                  <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-if="status_download" v-on:click="delete_product(index)" />
+                  <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                 </div>
               </div>
               <div class="row no-padding q-mt-xs q-mb-lg" style="height: 70px">
-                <div class="col-3 q-pa-lg" v-if="status_download">
+                <div v-if="status_download" class="col-3 q-pa-lg">
                   <q-checkbox v-model="credit" label="Credit" color="red" />
                 </div>
                 <div class="offset-6 col-3 q-pa-sm">
-                  <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>
+                  <q-input v-if="credit" v-model="avance" :dense="true" type="number" label="Avance"/><br>
                   <h6 class="no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</h6>
                 </div>
               </div>
@@ -58,22 +60,23 @@
               <div v-if="medium2 && status_download" class="print-hide q-pa-lg">
                 <div class="col-12">
                   Liste des versement
-                  &nbsp;<q-btn size="xs" v-on:click="versements.pop()">-</q-btn>
-                  &nbsp;<q-btn size="xs" v-on:click="versements.push({montant: 0})">+</q-btn>
+                  &nbsp;<q-btn size="xs" @click="versements.pop()">-</q-btn>
+                  &nbsp;<q-btn size="xs" @click="versements.push({montant: 0})">+</q-btn>
                 </div>
-                <div class="row" v-for="fac in versements" v-bind:key="fac.id">
-                  <q-input class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label v-model="fac.date"  />
-                  <q-input class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" v-model="fac.montant" />
-                  <q-btn class="no-padding" size="xs" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-                  <q-btn size="xs" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+                <div v-for="fac in versements" :key="fac.id" class="row">
+                  <q-input v-model="fac.date" class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label  />
+                  <q-input v-model="fac.montant" class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" />
+                  <q-btn v-if="fac.id" class="no-padding" size="xs" @click="credit_update(fac)">✎</q-btn>
+                  <q-btn v-if="!fac.id" size="xs" @click="credit_add(fac)">✅</q-btn>
                 </div>
               </div>
-              <div class="row q-pa-lg" v-if="status_download">
-                <q-btn class="print-hide" round color="positive" size="sm" icon="add" v-on:click="specialities_add" />&nbsp;&nbsp;
-                <q-btn class="print-hide" label="Valider" size="sm" icon="save" type="submit" color="secondary" v-if="!products_list[0].id" />&nbsp;&nbsp;
-                <q-btn class="print-hide" label="Modifier" size="sm" icon="save" type="button" color="secondary"
-                       v-if="products_list[0].id" v-on:click="location_update()" />&nbsp;&nbsp;
-                <q-btn icon="receipt" color="grey-10" outline label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" />
+              <div v-if="status_download" class="row q-pa-lg">
+                <q-btn class="print-hide" round color="positive" size="sm" icon="add" @click="specialities_add" />&nbsp;&nbsp;
+                <q-btn v-if="!products_list[0].id" class="print-hide" label="Valider" size="sm" icon="save" type="submit" color="secondary" />&nbsp;&nbsp;
+                <q-btn
+v-if="products_list[0].id" class="print-hide" label="Modifier" size="sm" icon="save" type="button"
+                       color="secondary" @click="location_update()" />&nbsp;&nbsp;
+                <q-btn icon="receipt" color="grey-10" outline label="Facture" @click="get_facture_id(facture_number); facture_status2 = true" />
 
               </div>
             </q-card-section>
@@ -82,25 +85,26 @@
         </q-card>
 
         <!--    MODIFIER    -->
-        <q-card style="width: 1200px; max-width: 100%;" :flat="true" v-if="update_status">
+        <q-card v-if="update_status" style="width: 1200px; max-width: 100%;" :flat="true">
           <br>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
 
             <div class="row q-ma-md">
               <div class="col-11 q-pa-md">
                 <div class="text-h6">Modifier la facture</div>
               </div>
               <div class="col-6 q-pa-md">
-                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download"
-                          v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                          input-debounce="0" :option-label="'fullname'" @input="assign_client(client)" :rules="[val => !!val || 'Ce champs est requis']" />
-                <q-input filled type="number" label="Caution en Francs CFA" v-model="caution" />
+                <q-select
+v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options
+                          emit-value :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                          input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
+                <q-input v-model="caution" filled type="number" label="Caution en Francs CFA" />
                 <br>
                 <!--                                <q-input filled type="textarea" label="Description" v-model="caution" />-->
               </div>
               <div class="col-6 q-pa-md">
-                <q-input filled stack-label type="date" label="Date de début" v-model="date_start" /><br>
-                <q-input filled stack-label type="date" label="Date de fin" v-model="date_end" />
+                <q-input v-model="date_start" filled stack-label type="date" label="Date de début" /><br>
+                <q-input v-model="date_end" filled stack-label type="date" label="Date de fin" />
               </div>
             </div>
 
@@ -114,47 +118,49 @@
                 <div class="col-1 q-pa-sm">Qte Retour</div>
                 <div class="col-1 q-pa-sm">Actions</div>
               </div>
-              <div class="row q-mb-lg" v-for="(product, index) in products_list" :key="index" style="height: 47px">
-                <q-select class="col-3 q-pa-sm text-wrap" v-model="product.product_id" :options="products" option-value="id"
+              <div v-for="(product, index) in products_list" :key="index" class="row q-mb-lg" style="height: 47px">
+                <q-select
+v-model="product.product_id" class="col-3 q-pa-sm text-wrap" :options="products" option-value="id"
                           emit-value map-options option-label="name" :dense="true" />
-                <q-input class="col-1 q-pa-sm" :dense="true" type="number" v-model="product.quantity" />
+                <q-input v-model="product.quantity" class="col-1 q-pa-sm" :dense="true" type="number" />
                 <!--                <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.tva" />-->
-                <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.price" />
+                <q-input v-model="product.price" class="col-2 q-pa-sm" :dense="true" type="number" />
                 <q-input class="col-3 q-pa-sm" :dense="true" type="number" :value="product.price * product.quantity" />
-                <q-input class="col-1 q-pa-sm" :dense="true" type="number" v-model="product.quantity_back" />
+                <q-input v-model="product.quantity_back" class="col-1 q-pa-sm" :dense="true" type="number" />
                 <div class="col-1"><br>
-                  <q-btn round class="print-hide" size="xs" icon="edit" type="button" color="secondary" v-on:click="location_update(product)" /> &nbsp;
-                  <q-btn round class="print-hide" color="negative" size="xs" icon="remove" v-if="status_download" v-on:click="delete_product(index)" />
+                  <q-btn round class="print-hide" size="xs" icon="edit" type="button" color="secondary" @click="location_update(product)" /> &nbsp;
+                  <q-btn v-if="status_download" round class="print-hide" color="negative" size="xs" icon="remove" @click="delete_product(index)" />
                 </div>
               </div>
 
-              <div class="row q-pa-lg" v-if="status_download">
+              <div v-if="status_download" class="row q-pa-lg">
                 <!--                <q-btn class="print-hide" round color="positive" size="xs" icon="add" v-on:click="specialities_add" />&nbsp;&nbsp;-->
-                <q-btn icon="receipt" color="grey-10" outline label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" />
+                <q-btn icon="receipt" color="grey-10" outline label="Facture" @click="get_facture_id(facture_number); facture_status2 = true" />
               </div>
             </q-card-section>
 
           </q-form>
         </q-card>
 
-        <div class="row q-pa-sm print-hide" v-if="listes_status">
+        <div v-if="listes_status" class="row q-pa-sm print-hide">
           <div class="col q-pa-sm"><q-input v-model="first" type="date" hint="date ddebut" /></div>
           <div class="col q-pa-sm"><q-input v-model="last" type="date" hint="date fin" /></div>
-          <div class="col q-pa-sm"><br><q-btn color="dark" label="filtrer" v-on:click="sales_stats_get()" /></div>
+          <div class="col q-pa-sm"><br><q-btn color="dark" label="filtrer" @click="sales_stats_get()" /></div>
         </div>
 
-        <q-table title="Listes de locations" :grid="grid" :rows="sales_list" :columns="columns"
-                 :pagination="pagination" :filter="filter" v-if="listes_status">
-          <template v-slot:top="props">
+        <q-table
+v-if="listes_status" title="Listes de locations" :grid="grid" :rows="sales_list"
+                 :columns="columns" :pagination="pagination" :filter="filter">
+          <template #top="props">
             <div class="col-4 q-table__title">Liste des locations</div>&nbsp;&nbsp;&nbsp;
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             <download-excel name="vente.xls" :data="sales_list">
               <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
             </download-excel>
-            <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />
-            <q-btn flat r ound dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-btn flat round dense icon="grid_on" class="q-ml-md" @click="grid = !grid" />
+            <q-btn flat r ound dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props">{{ props.row.id }}</q-td>
               <q-td key="p_name" :props="props">{{ props.row.name }}</q-td>
@@ -165,16 +171,16 @@
               <q-td key="a_name" :props="props"> {{ props.row.a_name }} {{ props.row.a_last_name }}</q-td>
               <q-td key="id_vente" :props="props"> {{ props.row.id_location }} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-ma-xs" size="xs" color="dark" icon="edit" v-on:click="get_facture_update(props.row.id_location); facture_number = props.row.id_location;" />
-                <q-btn class="q-ma-xs" size="xs" color="dark" icon="receipt" v-on:click=" get_facture_id(props.row.id_location); facture_number = props.row.id_location; facture_status2 = true" />
-                <q-btn class="q-ma-xs" size="xs" color="dark" label="Retour" icon="reply" v-on:click=" get_facture_id(props.row.id_location); facture_number = props.row.id_location; facture_status2 = true" />
+                <q-btn class="q-ma-xs" size="xs" color="dark" icon="edit" @click="get_facture_update(props.row.id_location); facture_number = props.row.id_location;" />
+                <q-btn class="q-ma-xs" size="xs" color="dark" icon="receipt" @click=" get_facture_id(props.row.id_location); facture_number = props.row.id_location; facture_status2 = true" />
+                <q-btn class="q-ma-xs" size="xs" color="dark" label="Retour" icon="reply" @click=" get_facture_id(props.row.id_location); facture_number = props.row.id_location; facture_status2 = true" />
               </q-td>
             </q-tr>
           </template>
-          <template v-slot:item="props">
+          <template #item="props">
             <div class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition">
               <q-card :class="props.selected ? 'bg-grey-2' : ''">
-                <q-list dense v-for="col in props.cols.filter(col => col.name !== 'desc')" :key="col.name">
+                <q-list v-for="col in props.cols.filter(col => col.name !== 'desc')" :key="col.name" dense>
                   <q-item v-if="col.status !== false">
                     <q-item-section>
                       <q-item-label caption>{{ col.label }}</q-item-label>
@@ -182,7 +188,7 @@
                     <q-item-section side>
                       <q-item-label >{{ col.value }}</q-item-label>
                       <q-item-label v-if="col.label == 'Actions'">
-                        <q-btn class="q-ma-xs" size="xs" color="secondary" v-on:click="get_facture_id(props.id_location); factures_get_credit(props.id_location)" icon="visibility" />
+                        <q-btn class="q-ma-xs" size="xs" color="secondary" icon="visibility" @click="get_facture_id(props.id_location); factures_get_credit(props.id_location)" />
                         <q-btn class="q-ma-xs" size="xs" color="red" icon="delete" />
                       </q-item-label>
                     </q-item-section>
@@ -196,7 +202,8 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de location"
+            <facture
+name="Facture de location"
                      :myentreprise="entreprise" :client="client" :facturenum="facture_number" :products="products_list" />
           </q-card>
         </q-dialog>
@@ -217,7 +224,12 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 import FactureComponent from '../components/facture_component.vue';
 export default {
-  name: 'locationPage',
+  name: 'LocationPage',
+  components: {
+    'downloadExcel': vue3JsonExcel,
+    'facture': FactureComponent
+  },
+  mixins: [basemixin],
   data () {
     return {
       tab: 'mails',
@@ -287,11 +299,11 @@ export default {
       }
     }
   },
-  components: {
-    'downloadExcel': vue3JsonExcel,
-    'facture': FactureComponent
+  computed: {
+    total() {
+      return this.products_list.reduce((product, item) => product + (item.price * item.quantity + (item.tva * item.price * item.quantity)), 0);
+    }
   },
-  mixins: [basemixin],
   created () {
     let date = new Date();
     this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
@@ -301,11 +313,6 @@ export default {
     this.clients_get();
     this.products_get();
     this.sales_get();
-  },
-  computed: {
-    total() {
-      return this.products_list.reduce((product, item) => product + (item.price * item.quantity + (item.tva * item.price * item.quantity)), 0);
-    }
   },
   methods: {
     onSubmit () {

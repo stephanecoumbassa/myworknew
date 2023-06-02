@@ -4,26 +4,28 @@
       <div class="col-11"><br>
         <span class="text-h6">Bon de commande</span><br>
         <q-dialog v-model="fullWidth" position="top">
-          <q-card style="width: 1000px; max-width: 100%;" id="facture" :flat="true">
+          <q-card id="facture" style="width: 1000px; max-width: 100%;" :flat="true">
 
             <q-card-section>
-              <q-form  @submit="onSubmit" class="q-gutter-md">
+              <q-form  class="q-gutter-md" @submit="onSubmit">
                 <div class="row print-hide q-mb-lg">
 
                   <div class="col-3 q-ma-md">
-                    <q-checkbox :dense="true" color="teal" v-model="tva_checked" label="Tva Pour tous les champs" />
+                    <q-checkbox v-model="tva_checked" :dense="true" color="teal" label="Tva Pour tous les champs" />
                   </div>
                   <div class="col-2">
-                    <q-input :dense="true" type="number" v-model="tva" label="TVA en décimal" />
+                    <q-input v-model="tva" :dense="true" type="number" label="TVA en décimal" />
                   </div>
                   <div class="col-4">
-                    <q-select filled map-options emit-value v-model="fournisseur"  :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)" stack-label input-debounce="0"
-                              option-label="name" :dense="true" @input="assign_fournisseur(fournisseur)" :rules="[val => !!val || 'Ce champs est requis']" />
+                    <q-select
+v-model="fournisseur" filled map-options emit-value  :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)" stack-label input-debounce="0"
+                              option-label="name" :dense="true" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_fournisseur(fournisseur)" />
                   </div>
                 </div>
                 <div class="row" >
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alignleft">
-                    <img :src="'https://www.affairez.com/apistock/public/assets/uploads/magasin/'+entreprise.logo"
+                    <img
+:src="'https://www.affairez.com/apistock/public/assets/uploads/magasin/'+entreprise.logo"
                          style="width: 100px; height: 100px; object-fit: cover"/>
                     <div>{{entreprise.name}}</div>
                     <div>{{entreprise.telephone}}</div>
@@ -41,15 +43,16 @@
                   </div>
                 </div>
 
-                <div class="row" v-for="(product, index) in products" :key="index">
-                  <q-select class="col-4 q-pa-sm" v-model="product.product_id"  :options="products_list" label="Produits" :dense="true"
-                            option-value="id" input-debounce="0" @input="assign(index, product.p)" use-input @filter="filterFn" map-options
-                            option-label="prodcat" :rules="[val => !!val || 'Field is required']" />
-                  <q-input padding :dense="true" class="col-2 q-pa-sm" type="number" v-model="product.amount" label="Quantité" :rules="[val => !!val || 'Field is required']"/>
-                  <q-input padding :dense="true" class="col-2 q-pa-sm" type="number" v-model="product.buying_price" label="Prix d'achat"  :rules="[val => !!val || 'Field is required']"/>
+                <div v-for="(product, index) in products" :key="index" class="row">
+                  <q-select
+v-model="product.product_id" class="col-4 q-pa-sm"  :options="products_list" label="Produits" :dense="true"
+                            option-value="id" input-debounce="0" use-input map-options option-label="prodcat" :rules="[val => !!val || 'Field is required']"
+                            @input="assign(index, product.p)" @filter="filterFn" />
+                  <q-input v-model="product.amount" padding :dense="true" class="col-2 q-pa-sm" type="number" label="Quantité" :rules="[val => !!val || 'Field is required']"/>
+                  <q-input v-model="product.buying_price" padding :dense="true" class="col-2 q-pa-sm" type="number" label="Prix d'achat"  :rules="[val => !!val || 'Field is required']"/>
                   <q-input padding :dense="true" class="col-3 q-pa-sm" type="number" :value="(product.buying_price * product.amount)+((product.buying_price * product.amount) * product.tva/100)" label="total"  :rules="[val => !!val || 'Field is required']"/>
                   <div class="col-1"><br>
-                    <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-on:click="delete_product(index)" />
+                    <q-btn round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                   </div>
                 </div>
                 <div class="row no-padding q-mt-xs q-mb-lg" style="height: 70px">
@@ -57,13 +60,13 @@
                     <q-checkbox v-model="credit" label="Credit" color="red" />
                   </div>
                   <div class="offset-6 col-3 q-pa-sm">
-                    <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>
+                    <q-input v-if="credit" v-model="avance" :dense="true" type="number" label="Avance"/><br>
                     <h6 class="no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</h6>
                   </div>
                 </div>
 
-                <div class="row" v-if="validate_status">
-                  <q-btn round color="positive" size="sm" icon="add" class="print-hide" v-on:click="specialities_add" />&nbsp;&nbsp;
+                <div v-if="validate_status" class="row">
+                  <q-btn round color="positive" size="sm" icon="add" class="print-hide" @click="specialities_add" />&nbsp;&nbsp;
                   <q-btn class="print-hide" size="sm" label="Valider" icon="save" type="submit" color="secondary"/>
                 </div>
 
@@ -71,9 +74,9 @@
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Fermer" v-close-popup />
-              <q-btn flat label="Telecharger" v-on:click="download()" />
-              <q-btn class="print-hide" flat label="Imprimer" v-on:click="imprimer()" />
+              <q-btn v-close-popup flat label="Fermer" />
+              <q-btn flat label="Telecharger" @click="download()" />
+              <q-btn class="print-hide" flat label="Imprimer" @click="imprimer()" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -85,19 +88,19 @@
             </q-card-section>
 
             <q-card-section>
-              <q-form  @submit="onSubmit" class="q-gutter-md">
-                <q-select filled map-options emit-value v-model="product.f_id"  :options="users" label="Fournisseur" option-value="id" option-label="name"  :rules="[val => !!val || 'Field is required']" />
-                <q-select class="col-2 row q-pl-sm"  v-model="product.p_id" map-options emit-value option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
-                <q-input padding class="col-2 q-pa-sm" type="number" v-model="product.amount" label="Quantité" :rules="[val => !!val || 'Field is required']" />
-                <q-input padding class="col-2 q-pa-sm" type="number" v-model="product.p_buying_price" label="Prix d'achat" :rules="[val => !!val || 'Field is required']" />
-                <q-input padding class="col-2 q-pa-sm" type="number" v-model="product.tva" label="tva" />
-                <q-input padding class="col-2 q-pa-sm" type="number" v-model="product.p_sell_price" label="Prix de vente" />
+              <q-form  class="q-gutter-md" @submit="onSubmit">
+                <q-select v-model="product.f_id" filled map-options emit-value  :options="users" label="Fournisseur" option-value="id" option-label="name"  :rules="[val => !!val || 'Field is required']" />
+                <q-select v-model="product.p_id"  class="col-2 row q-pl-sm" map-options emit-value option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
+                <q-input v-model="product.amount" padding class="col-2 q-pa-sm" type="number" label="Quantité" :rules="[val => !!val || 'Field is required']" />
+                <q-input v-model="product.p_buying_price" padding class="col-2 q-pa-sm" type="number" label="Prix d'achat" :rules="[val => !!val || 'Field is required']" />
+                <q-input v-model="product.tva" padding class="col-2 q-pa-sm" type="number" label="tva" />
+                <q-input v-model="product.p_sell_price" padding class="col-2 q-pa-sm" type="number" label="Prix de vente" />
               </q-form>
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn label="Modifier" icon="edit" type="submit" color="secondary" v-on:click="command_update(product)" />
-              <q-btn flat label="Fermer" v-close-popup />
+              <q-btn label="Modifier" icon="edit" type="submit" color="secondary" @click="command_update(product)" />
+              <q-btn v-close-popup flat label="Fermer" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -106,20 +109,22 @@
         <div class="row q-pa-xs">
           <div class="col q-pa-sm"><q-input v-model="first" type="date" hint="date ddebut" /></div>
           <div class="col q-pa-sm"><q-input v-model="last" type="date" hint="date fin" /></div>
-          <div class="col q-pa-sm"><br><q-btn color="primary" label="filtrer" v-on:click="appro_stats_get()" /></div>
+          <div class="col q-pa-sm"><br><q-btn color="primary" label="filtrer" @click="appro_stats_get()" /></div>
         </div>
 
         <div class="row">
           <div class="col-12 q-pa-lg">
-            <q-input class="row" autocomplete type="search" v-model="search"
-                     v-on:keyup="facture_filter_get(search)" label="Rechercher" />
+            <q-input
+v-model="search" class="row" autocomplete type="search"
+                     label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
-          <div class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md"
-               v-for="item in bons" :key="item.id_vente" @click="fullWidth = true; add_status = false; bon_get_by(item.id_ap)">
+          <div
+v-for="item in bons"
+               :key="item.id_vente" class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md" @click="fullWidth = true; add_status = false; bon_get_by(item.id_ap)">
             <q-card class="q-pa-lg">
               Devis N°
               {{item.id_ap}}<br><br>
-              <span class="float-right" v-if="item.name">
+              <span v-if="item.name" class="float-right">
                 {{item.name}} {{item.last_name}}<br>
                 <!--                {{dateformat(item.date_posted, 2)}}-->
               </span>
@@ -140,6 +145,10 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 export default {
   name: 'BonPage',
+  components: {
+    // 'downloadExcel': JsonExcel
+  },
+  mixins: [basemixin],
   data () {
     return {
       status: '',
@@ -177,9 +186,10 @@ export default {
       data: []
     }
   },
-  mixins: [basemixin],
-  components: {
-    // 'downloadExcel': JsonExcel
+  computed: {
+    total() {
+      return this.products.reduce((product, item) => product + (item.buying_price * item.amount + (item.buying_price * item.amount * item.tva / 100)), 0);
+    }
   },
   created () {
     this.products = [{ p: { sell_price: 0, id: null, name: 'Selectionner un produit', tva: this.tva, quantity: 1, buying_price: 0 }, quantity: 1, buying_price: 0, sell: 0, tva: this.tva }];
@@ -191,11 +201,6 @@ export default {
     this.products_get();
     this.commands_get();
     this.shop_get();
-  },
-  computed: {
-    total() {
-      return this.products.reduce((product, item) => product + (item.buying_price * item.amount + (item.buying_price * item.amount * item.tva / 100)), 0);
-    }
   },
   methods: {
     onSubmit () {

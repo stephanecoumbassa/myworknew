@@ -1,6 +1,6 @@
 import {getApi, postApi} from "src/services/apiService";
 
-export async function p_task_get (id=null) {
+export async function p_task_get () {
   return new Promise(resolve => {
     getApi('/api/get/p_task')
       .then(response => resolve(response) )
@@ -29,7 +29,7 @@ export async function p_task_post () {
     .then(response => response).catch(error => error)
 }
 
-export async function employeGetService (id=null) {
+export async function employeGetService () {
   return new Promise(resolve => {
     getApi('/api/get/p_employe')
       .then(response => resolve(response) )

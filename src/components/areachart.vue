@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="chart" v-if="categories.length >0">
+    <div v-if="categories.length >0" id="chart">
       <!--      {{categories}}-->
       <apexchart :type="type" height="350" :options="chartOptions" :series="series"></apexchart>
     </div>
@@ -32,26 +32,14 @@ export default {
     percent: { type: Number, default: 35 },
     type: { type: String, default: 'area' },
     title: { type: String, default: 'Nombre items' },
-    titletooltip: { type: String, default: 'Nombre items' },
     color: { type: String, default: '#26a69a' },
     horizontal: { type: Boolean, default: false }
   },
-  watch: {
-    categories(newQuestion, oldQuestion) {
-      console.log("new", JSON.parse(JSON.stringify(newQuestion)))
-      console.log("old", JSON.parse(JSON.stringify(oldQuestion)))
-      this.chartOptions.xaxis.categories = JSON.parse(JSON.stringify(newQuestion))
-    }
-  },
   data () {
     return {
-      // series: [{
-      //     name: 'Nbre Dons.', data: [14, 45, 12, 47, 44, 32, 74, 12, 12]
-      // }],
       chartOptions: {
         colors: [this.color, '#E91E63', '#9C27B0'],
         chart: { type: 'area', height: 10 },
-        // plotOptions: { bar: { horizontal: this.horizontal, columnWidth: '38%' } },
         dataLabels: { enabled: false },
         plotOptions: {
           bar: {
@@ -76,6 +64,13 @@ export default {
         fill: { opacity: 1 },
         tooltip: { y: { formatter: function (val) { return val } } }
       }
+    }
+  },
+  watch: {
+    categories(newQuestion, oldQuestion) {
+      console.log("new", JSON.parse(JSON.stringify(newQuestion)))
+      console.log("old", JSON.parse(JSON.stringify(oldQuestion)))
+      this.chartOptions.xaxis.categories = JSON.parse(JSON.stringify(newQuestion))
     }
   }
 }

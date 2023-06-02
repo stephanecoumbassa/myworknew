@@ -1,7 +1,7 @@
 <template>
 
-  <q-card style="width: 1300px; max-width: 100%;" id="facture" :flat="true">
-    <q-form  @submit="onSubmit" class="q-gutter-md">
+  <q-card id="facture" style="width: 1300px; max-width: 100%;" :flat="true">
+    <q-form  class="q-gutter-md" @submit="onSubmit">
 
       <q-card-section class="no-margin q-pt-lg q-mt-lg">
         <div class="row q-pt-lg">
@@ -15,14 +15,16 @@
           </div>
           <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 text-right float-right" style="min-width: 300px">
             <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
-              <q-input stack-label v-model="dateposted" type="datetime-local" label="Date" :dense="true"></q-input>
-              <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
-                        v-model="projetid" :options="p_projets" label="Projets" :option-value="'id'" :option-label="'titre'"
-                        input-debounce="0" />
-              <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
-                        v-model="client" :options="clients" label="Clients" :option-value="'id'" :option-label="'fullname'"
-                        input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" @update:model-value="assign_client(client)" />
-
+              <q-input v-model="dateposted" stack-label type="datetime-local" label="Date" :dense="true"></q-input>
+              <q-select
+                v-if="status_download" v-model="projetid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                :dense="true" :options="p_projets" label="Projets" :option-value="'id'" :option-label="'titre'"
+                input-debounce="0" />
+              <q-select
+                v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" :dense="true" filled map-options
+                emit-value :options="clients" label="Clients" option-value="id" option-label="fullname"
+                :rules="[val => !!val || 'Ce champs est requis']"
+                @update:model-value="assign_client(client)" />
             </div>
             <div class="row float-right q-mt-sm hidden-sm hidden-xs mobile-hide">
             </div>
@@ -41,61 +43,70 @@
           <div class="col-2 q-pa-sm">Prix Uni</div>
           <div class="col-2 q-pa-sm">Total</div>
         </div>
-        <div class="row q-mb-lg" v-for="(product, index) in products" :key="index">
-          <q-select class="col-md-4 col-12 q-pa-sm truncate text-wrap" v-model="product.p" :options="appro_list" option-value="id" use-input @filter="filterFn"
-                    option-label="name" @focusout="assign(index)" @input="assign(index)" :dense="true" />
-          <q-input class="col-md-1 col-2 q-pa-sm" :dense="true" type="number" v-model="product.quantity" minlength="1"
-                   @input="assign(index)" @focusout="getVal(index, product.quantity)" aria-valuemin="0" hint="qty" />
-<!--          <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.p.tva" hint="tva" />-->
-          <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="tva" hint="tva" />
-          <q-input class="col-md-2 col-3 q-pa-sm" :dense="true" type="number" v-model="product.p.sales_price" hint="prix" />
-          <q-input class="col-md-2 col-4 q-pa-sm" :dense="true" type="number"
-                   :model-value="(product.p.sales_price * product.quantity) + (product.p.sales_price * product.quantity * tva)/100" />
+        <div v-for="(prod, index) in products" :key="index" class="row q-mb-lg">
+          <q-select
+            v-model="prod.product_id" class="col-md-4 col-12 q-pa-sm truncate text-wrap" :options="appro_list"
+            option-value="id" option-label="name" use-input :dense="true"
+            @filter="filterFn" @update:model-value="assign(index)" />
+          <q-input
+            v-model="prod.quantity" class="col-md-1 col-2 q-pa-sm" :dense="true" type="number" minlength="1"
+            aria-valuemin="0" hint="qty" @input="assign(index)" @focusout="getVal(index, prod.quantity)" />
+          <q-input v-model="tva" class="col-2 q-pa-sm" :dense="true" type="number" hint="tva" />
+          <q-input v-model="prod.p.sales_price" class="col-md-2 col-3 q-pa-sm" :dense="true" type="number" hint="prix" />
+          <q-input
+            class="col-md-2 col-4 q-pa-sm" :dense="true" type="number"
+            :model-value="(prod.p.sales_price * product.quantity) + (prod.p.sales_price * prod.quantity * tva)/100" />
           <div class="col-1"><br>
-            <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-if="status_download" v-on:click="delete_product(index)" />
+            <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
             &nbsp;
-            <q-btn round color="dark" size="xs" icon="description" class="print-hide"  v-on:click="product.showdesc = !product.showdesc" />
+            <q-btn round color="dark" size="xs" icon="description" class="print-hide"  @click="prod.showdesc = !prod.showdesc" />
           </div>
-          <div class="col-12 q-pa-sm bg-grey-2" v-if="product.showdesc">
-            <q-input v-model="product.details" filled autogrow />
+          <div v-if="prod.showdesc" class="col-12 q-pa-sm bg-grey-2">
+            <q-input v-model="prod.details" filled autogrow />
           </div>
         </div>
         <div class="row no-padding q-mt-xs q-mb-lg">
-          <div class="col-2" v-if="status_download">
+          <div v-if="status_download" class="col-2">
             <q-checkbox v-model="credit" label="Payé par échéance" color="primary" />
           </div>
-          <div class="col-2" v-if="status_download">
-            <q-input type="number" v-model="creditNumber" label="Nombre d'échéances" color="primary" dense
-             @change="changeNumber(creditNumber)" />
+          <div v-if="status_download" class="col-2">
+            <q-input
+              v-model="creditNumber" type="number" label="Nombre d'échéances" color="primary" dense
+              @change="changeNumber(creditNumber)" />
           </div>
         </div>
 
-        <div class="row" v-for="fac in versements" v-bind:key="fac.id" v-if="credit">
-          <q-input filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
-          <q-input filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number" stack-label
-                   v-model="fac.pourcentage"
-                   @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
-          <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number"
-                   v-model="fac.montant_echeance" />
-<!--          <q-input filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />-->
-          &nbsp;
-          &nbsp;
-          <q-select class="col-1 q-ma-sm" dense label="Type paiement" stack-label v-model="fac.paiement"
-                    :options="['virement', 'cheque', 'espece']" />
-          <q-input class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label v-model="fac.date"  />
-          <q-input class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" v-model="fac.montant" />
-          <q-input class="col-1 q-ma-sm" dense label="N°Chèque/Virement" v-model="fac.numero" />
-          <q-input class="col-1 q-ma-sm" dense label="Banque" v-model="fac.banque" />
-          <q-input class="col-1 q-ma-sm" dense label="Date Emission" type="date" stack-label v-model="fac.emission"  />
+        <div v-if="credit">
+          <div v-for="fac in versements" :key="fac.id" class="row">
+            <q-input v-model="fac.echeance" filled class="col-1 q-ma-sm" dense label="Date Echéance" type="date" stack-label  />
+            <q-input
+              v-model="fac.pourcentage" filled class="col-1 q-ma-sm" dense label="Pourcentage" type="number"
+              stack-label
+              @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
+            <q-input
+              v-model="fac.montant_echeance" filled class="col-1 q-ma-sm" dense label="Montant Echéance" stack-label
+              type="number" />
+            &nbsp;
+            &nbsp;
+            <q-select
+              v-model="fac.paiement" class="col-1 q-ma-sm" dense label="Type paiement" stack-label
+              :options="['virement', 'cheque', 'espece']" />
+            <q-input v-model="fac.date" class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label  />
+            <q-input v-model="fac.montant" class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" />
+            <q-input v-model="fac.numero" class="col-1 q-ma-sm" dense label="N°Chèque/Virement" />
+            <q-input v-model="fac.banque" class="col-1 q-ma-sm" dense label="Banque" />
+            <q-input v-model="fac.emission" class="col-1 q-ma-sm" dense label="Date Emission" type="date" stack-label  />
+          </div>
+
         </div>
 
         <br>
         <br>
         <br>
-        <div class="row q-pa-sm q-mt-4" v-if="status_download" style="margin-top: 30px">
-          <q-btn class="print-hide" round color="positive" size="sm" icon="add" v-on:click="specialities_add" />&nbsp;&nbsp;
+        <div v-if="status_download" class="row q-pa-sm q-mt-4" style="margin-top: 30px">
+          <q-btn class="print-hide" round color="positive" size="sm" icon="add" @click="specialities_add" />&nbsp;&nbsp;
           <q-btn class="print-hide" color="secondary" label="Valider" size="sm" icon="save" type="submit"  />&nbsp;&nbsp;
-          <q-btn icon="receipt" color="grey-10" outline label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" />
+          <q-btn icon="receipt" color="grey-10" outline label="Facture" @click="get_facture_id(facture_number); facture_status2 = true" />
         </div>
       </q-card-section>
 
@@ -105,8 +116,8 @@
 </template>
 
 <script>
-import vue3JsonExcel from "vue3-json-excel";
-import FactureComponent from "components/facture_component.vue";
+// import vue3JsonExcel from "vue3-json-excel";
+// import FactureComponent from "components/facture_component.vue";
 import basemixin from "pages/basemixin";
 import apimixin from "src/services/apimixin";
 import * as _ from "lodash";
@@ -114,21 +125,20 @@ import $httpService from "boot/httpService";
 
 export default {
   name: 'VenteNewComponent',
+  components: {
+    // 'downloadExcel': vue3JsonExcel,
+    // 'facture': FactureComponent
+  },
+  mixins: [basemixin, apimixin],
   emits: ['reload'],
   data () {
     return {
-      tab: 'mails',
-      filter: '',
-      fitst: 1,
       last: 30,
       tva: 18,
-      name: null,
-      grid: false,
       facture_status2: false,
       status_download: true,
       validate_status: true,
       fullWidth: false,
-      medium: false,
       medium2: false,
       credit: false,
       creditNumber: 0,
@@ -169,11 +179,11 @@ export default {
       entreprise: {}
     }
   },
-  components: {
-    'downloadExcel': vue3JsonExcel,
-    'facture': FactureComponent
+  computed: {
+    total() {
+      return this.products.reduce((product, item) => product + (item.p.sales_price * item.quantity + (this.tva * item.p.sales_price * item.quantity /100)), 0);
+    }
   },
-  mixins: [basemixin, apimixin],
   created () {
     let date = new Date();
     this.date = this.dateformat(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(), 4);
@@ -187,11 +197,6 @@ export default {
     this.factures_number_get();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     this.dateposted = date.toISOString().slice(0, 16);
-  },
-  computed: {
-    total() {
-      return this.products.reduce((product, item) => product + (item.p.sales_price * item.quantity + (this.tva * item.p.sales_price * item.quantity /100)), 0);
-    }
   },
 
   methods: {
@@ -220,23 +225,26 @@ export default {
         })
     },
     assign (index) {
-      if (this.products[index].p.reste <= 0) {
-        this.products.splice(index, 1);
-        this.$q.notify({ color: 'dark', position: 'top', message: 'Le produit est en rupture de stock' });
-      } else if (this.products[index].p.reste < this.products[index].quantity) {
-        this.products[index].quantity = this.products[index].p.reste;
-        this.$q.notify({ color: 'dark', position: 'top', message: 'il reste ' + this.products[index].p.reste + ' en stock, Veuillez ne pas depasser la quantité en stock' });
-      } else if (this.products[index].quantity <= 0) {
-        this.products[index].quantity = 1;
-        this.$q.notify({ color: 'dark', position: 'top', message: 'Veuillez rentrer un nombre positif' });
-      }
-      this.products[index].p.tva = 0;
+      this.products[index].p = this.products[index].product_id
+      this.products[index].p.sales_price = this.products[index].product_id.price
+      this.products[index].productid = this.products[index].product_id.id
+      // this.products[index].product_id = this.products[index].product_id.id
+      // if (this.products[index].p.reste <= 0) {
+      //   this.products.splice(index, 1);
+      //   this.$q.notify({ color: 'dark', position: 'top', message: 'Le produit est en rupture de stock' });
+      // } else if (this.products[index].p.reste < this.products[index].quantity) {
+      //   this.products[index].quantity = this.products[index].p.reste;
+      //   this.$q.notify({ color: 'dark', position: 'top', message: 'il reste ' + this.products[index].p.reste + ' en stock, Veuillez ne pas depasser la quantité en stock' });
+      // } else if (this.products[index].quantity <= 0) {
+      //   this.products[index].quantity = 1;
+      //   this.$q.notify({ color: 'dark', position: 'top', message: 'Veuillez rentrer un nombre positif' });
+      // }
+      // this.products[index].p.tva = 0;
     },
     assign_client (client) {
       this.clientId = this.client;
-      this.myclient = this.clients.filter(x => x.id == client )[0]
+      this.myclient = this.clients.filter(x => x.id === client )[0]
       this.tva = 18;
-      console.log(this.myclient.exonere);
       if(this.myclient.exonere === 1) {
         this.tva = 0;
       }
@@ -255,20 +263,15 @@ export default {
       this.getApi('/my/get/client')
         .then((response) => {
           this.clients = response;
-          this.client = this.clients[0];
-          this.myclient = this.clients[0];
         })
         .catch(() => {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
     },
     update_show(item) {
-      this.medium2 = true;
       this.product = item;
     },
     sales_post() {
-      // this.$emit('reload', true);
-      // return false
       let params = { agent: this.agent,
         products: this.products,
         id_vente: this.facture_number,
@@ -347,6 +350,7 @@ export default {
         })
     },
     specialities_add () {
+      // this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
       this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
     },
     specialities_delete () {
@@ -362,9 +366,7 @@ export default {
       })
     },
     delete_product(i) {
-      this.products = this.products.filter((x) => {
-        return x.p.id !== this.products[i].p.id;
-      });
+      this.products.splice(i, 1);
     },
     filterFn (val, update) {
       update(() => {
@@ -389,17 +391,16 @@ export default {
     factures_get_id (factureid) {
       this.getApi('/my/get/sales_by_idvente?id_vente=' + factureid, { })
         .then((response) => {
-          for (let i = 0; i < response.length; i++) {
-            response[i].p = {};
-            response[i].p.id = response[i].p_id;
-            response[i].p.tva = response[i].tva;
-            response[i].p.sales_price = response[i].prix_unitaire;
-            response[i].price = response[i].prix_unitaire;
-            response[i].p.quantity = response[i].quantite_vendu;
-            response[i].quantity = response[i].quantite_vendu;
-            response[i].p.name = response[i].p_name;
-            response[i].name = response[i].p_name;
-            // response[i].total = response[i].montant_vendu;
+          for (const element of response) {
+            element.p = {};
+            element.p.id = element.p_id;
+            element.p.tva = element.tva;
+            element.p.sales_price = element.prix_unitaire;
+            element.price = element.prix_unitaire;
+            element.p.quantity = element.quantite_vendu;
+            element.quantity = element.quantite_vendu;
+            element.p.name = element.p_name;
+            element.name = element.p_name;
           }
           this.factures_details = response;
           this.products = response;
@@ -407,29 +408,7 @@ export default {
           this.client = response[0]['client'] == null ? {} : JSON.parse(response[0]['client']);
           this.status_download = true;
         })
-    },
-    credit_add(facture) {
-      facture.factureid = this.facture_id;
-      facture.vente = 'vente';
-      facture.type = 'vente';
-      $httpService.postWithParams('/my/post/credit', facture)
-        .then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.factures_get_credit();
-        })
-    },
-    credit_update(facture) {
-      facture.factureid = this.facture_id;
-      facture.vente = 'vente';
-      $httpService.postWithParams('/my/put/credit', facture)
-        .then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.factures_get_credit();
-        })
-    },
+    }
   }
-  // setup () {
-  //   return {}
-  // }
 }
 </script>

@@ -1,14 +1,21 @@
 <template>
   <div>
-    <q-select v-model="country" :options="countries" label="Pays" map-options emit-value @input="this.handleInput"
-              option-value="alpha3" stack-label input-debounce="0" option-label="name">
-      <template v-slot:prepend> <q-icon name="tour" /> </template>
+    <q-select
+v-model="country" :options="countries" label="Pays" map-options emit-value option-value="alpha3"
+              stack-label input-debounce="0" option-label="name" @input="handleInput">
+      <template #prepend> <q-icon name="tour" /> </template>
     </q-select>
   </div>
 </template>
 <script>
 export default {
     name: 'CountryComponent',
+    model: {
+        event: 'blur'
+    },
+    props: {
+        code: String
+    },
     data: function() {
         return {
             count: 0,
@@ -208,15 +215,6 @@ export default {
                         { 'id': 716, 'name': 'Zimbabwe', 'alpha2': 'zw', 'alpha3': 'zwe' }]
         }
     },
-    created: function () {
-
-    },
-    model: {
-        event: 'blur'
-    },
-    props: {
-        code: String
-    },
     watch: {
         code: {
             immediate: true,
@@ -225,6 +223,9 @@ export default {
                 this.handleInput();
             }
         }
+    },
+    created: function () {
+
     },
     methods: {
         handleInput () {

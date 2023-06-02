@@ -13,9 +13,9 @@
             <q-tab-panel name="inscription">
 
               <div class="text-h6">Veuillez rentrer le code renitialisation</div>
-              <q-input type="text" label="Email" v-model="email" />
-              <q-input class="col-3" type="text" label="code" v-model="code" />
-              <q-input type="password" label="Mot de passe"  v-model="password" />
+              <q-input v-model="email" type="text" label="Email" />
+              <q-input v-model="code" class="col-3" type="text" label="code" />
+              <q-input v-model="password" type="password"  label="Mot de passe" />
               <br>
 
               <q-btn class="bg-secondary" @click="changer()">Valider</q-btn>
@@ -25,9 +25,9 @@
             <q-tab-panel name="connexion">
 
               <div class="text-h6">Veuillez rentrer votre email</div>
-              <q-input aria-autocomplete autocomplete type="text" label="Email" v-model="myemail" />
+              <q-input v-model="myemail" aria-autocomplete autocomplete type="text" label="Email" />
               <br>
-              <q-btn size="full" block full class="bg-secondary full-width" v-on:click="reset()">Valider</q-btn>
+              <q-btn size="full" block full class="bg-secondary full-width" @click="reset()">Valider</q-btn>
             </q-tab-panel>
 
           </q-tab-panels>
@@ -77,14 +77,14 @@ export default {
         }
     },
     mixin: [basemixin],
-    created () {
-        // this.users_type_get();
-        // console.log(this.state);
-    },
     computed: {
         total() {
             return this.products.reduce((product, item) => product + (item.buy * item.quantity), 0);
         }
+    },
+    created () {
+        // this.users_type_get();
+        // console.log(this.state);
     },
     methods: {
         onSubmit () {

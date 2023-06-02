@@ -7,7 +7,7 @@
         <form enctype="multipart/form-data" @submit.prevent="post()">
           <q-input v-model="titre" label="titre (optionnel)" />
           <br>
-          <input type="file" name="image" v-on:change="handleInput" />
+          <input type="file" name="image" @change="handleInput" />
 
           <cropper
             class="cropper"
@@ -32,14 +32,14 @@
 
       <div class="col-12">
         <q-list bordered padding class="rounded-borders">
-          <q-item clickable v-ripple v-for="item in photos" :key="item.id">
+          <q-item v-for="item in photos" :key="item.id" v-ripple clickable>
             <q-item-section avatar top>
               <q-avatar color="primary" text-color="white">{{item.extension}}</q-avatar>
             </q-item-section>
 
             <q-item-section>
-              <q-item-label lines="1" v-if="item.titre">{{item.titre}}</q-item-label>
-              <q-item-label lines="1" v-if="!item.titre">{{item.name}}</q-item-label>
+              <q-item-label v-if="item.titre" lines="1">{{item.titre}}</q-item-label>
+              <q-item-label v-if="!item.titre" lines="1">{{item.name}}</q-item-label>
               <q-item-label caption>{{item.date}}</q-item-label>
             </q-item-section>
 
@@ -63,26 +63,28 @@ import { Cropper } from 'vue-advanced-cropper'
 import 'vue-advanced-cropper/dist/style.css';
 
 export default {
-  name: 'filescomponent',
+  name: 'FilesComponent',
+  components: {
+    Cropper
+  },
+  emits: ['input', 'blur'],
+  mixins: [basemixin],
+  model: {
+    event: 'blur'
+  },
+  props: {
+    type: {type: String, default: null},
+    typeid: {type: Number, default: null},
+    folder: {type: String, default: null}
+  },
   data: function () {
     return {
       titre: null,
       previewImage: null,
       extension: null,
       file: {},
-      photo: {},
       photos: [],
-      img: 'https://images.unsplash.com/photo-1600984575359-310ae7b6bdf2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=80'
     }
-  },
-  components: {
-    Cropper
-    // 'croppa': Croppa.component
-  },
-  props: {
-    type: String,
-    typeid: Number,
-    folder: String
   },
   watch: {
     typeid: {
@@ -92,12 +94,8 @@ export default {
       }
     }
   },
-  mixins: [basemixin],
   created: function () {
     this.photos_get();
-  },
-  model: {
-    event: 'blur'
   },
   methods: {
     post() {
@@ -112,7 +110,7 @@ export default {
         {
           headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
         }
-      ).then((data)=> {
+      ).then(()=> {
         this.photos_get();
       })
       this.$emit('blur', {
@@ -127,19 +125,16 @@ export default {
       datacropper.canvas.toBlob((blob) => {
         this.file = new File([blob], "file");
       });
-      // this.file = await this.urltoFile(datacropper.image.src, 'file');
     },
     handleInput ($event) {
       this.extension = $event.target.files[0].name.split('.')[1];
       if ($event.target.files[0]) {
-        console.log($event.target.files[0])
         if($event.target.files[0].type === 'image/png' ||
           $event.target.files[0].type === 'image/jpeg' ||
           $event.target.files[0].type === 'image/gif') {
           let reader = new FileReader
           reader.onload = e => {
             this.previewImage = e.target.result;
-            const file = this.urltoFile(this.previewImage, 'newfile');
           }
           reader.readAsDataURL($event.target.files[0]);
           this.$emit('input', $event.target.files[0]);
@@ -149,20 +144,19 @@ export default {
       }
     },
     photos_get() {
-      // axios.get(this.apiurl+'/my/get/photos/'+this.typeid,{
       axios.get(this.apiurl+'/my/get/photos/'+this.type+'/'+this.typeid,{
         headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
       }).then((data)=> {
         this.photos = data['data'];
       })
     },
-    photos_delete(_id) {
-      axios.get(this.apiurl+'/my/delete/photos/'+_id,{
-        headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
-      }).then((data)=> {
-        this.photos_get();
-      })
-    }
+    // photos_delete(_id) {
+    //   axios.get(this.apiurl+'/my/delete/photos/'+_id,{
+    //     headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
+    //   }).then(()=> {
+    //     this.photos_get();
+    //   })
+    // }
   }
 }
 </script>

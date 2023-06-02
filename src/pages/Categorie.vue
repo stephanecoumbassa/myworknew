@@ -4,20 +4,24 @@
     <div class="row justify-center">
 
       <div class="col-10 col-xs-12 q-pa-sm" style="background-color: white">
-        <h6>Mouvelle Categorie &nbsp;&nbsp;&nbsp;&nbsp;<a href="https://material.io/resources/icons/?style=baseline"
+        <h6>Mouvelle Categorie &nbsp;&nbsp;&nbsp;&nbsp;<a
+href="https://material.io/resources/icons/?style=baseline"
                                                           target="_blank">Voir les toutes icons</a></h6>
-        <q-form @submit="onSubmit" class="q-gutter-md">
+        <q-form class="q-gutter-md" @submit="onSubmit">
 
-          <q-select filled v-model="domainid" :options="domains" label="Domaine" map-options emit-value
-                    @input="parent_filter_get(domainid)" option-value="id" stack-label input-debounce="0" option-label="name"  :dense="true" />
+          <q-select
+v-model="domainid" filled :options="domains" label="Domaine" map-options emit-value
+                    option-value="id" stack-label input-debounce="0" option-label="name" :dense="true"  @input="parent_filter_get(domainid)" />
 
-          <q-select filled v-model="parentid" :options="parents" label="Parent" map-options emit-value
+          <q-select
+v-model="parentid" filled :options="parents" label="Parent" map-options emit-value
                     option-value="id" stack-label input-debounce="0" option-label="name" :dense="true" />
 
-          <q-input filled v-model="name" label="Categories *" hint="Nom de Categorie" :dense="true"
+          <q-input
+v-model="name" filled label="Categories *" hint="Nom de Categorie" :dense="true"
                    lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />
 
-          <q-input filled v-model="icon" label="Icon *" hint="Icon" :dense="true" />
+          <q-input v-model="icon" filled label="Icon *" hint="Icon" :dense="true" />
 
           <div>
             <q-btn label="Valider" type="submit" color="secondary"/>
@@ -29,21 +33,24 @@
       <div class="col-10 col-xs-12 q-pa-sm">
         <br><br>
 
-        <q-table title="Treats" class="q-pa-sm"
+        <q-table
+title="Treats" class="q-pa-sm"
                  :rows="categories" :columns="columns" :pagination="pagination" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-11 q-table__title">Liste des categories</div>
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props">{{ props.row.id }}</q-td>
               <q-td key="name" :props="props">
-                <q-input filled type="text" v-model="props.row.name" dense autofocus />
+                <q-input v-model="props.row.name" filled type="text" dense autofocus />
               </q-td>
               <q-td key="parentid" :props="props">
-                <q-select filled v-model="props.row.parentid" :options="parents" label="" map-options emit-value use-input
+                <q-select
+v-model="props.row.parentid" filled :options="parents" label="" map-options emit-value use-input
                           option-value="id" stack-label option-label="fullname" :dense="true" @filter="filterFn" />
               </q-td>
             </q-tr>

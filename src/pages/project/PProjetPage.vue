@@ -7,13 +7,15 @@
         <span class="text-h6">Projets</span>
       </div>
       <div class="col q-pa-lg float-right text-right">
-        <q-btn color="primary" icon="add" size="sm" @click="medium2=true">Créer</q-btn>
+        <q-btn
+color="primary" icon="add" size="sm"
+               @click="projectModal=true; p_projet={status: 'ENCOURS'}">Créer</q-btn>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4 col-6 q-pa-lg">
-        <q-card class="q-pa-md">
+        <q-card class="q-pa-md" flat>
           <span class="text-h5">237</span>
           <p class="text-h6 text-grey">Projets courants</p>
           <div class="row">
@@ -29,13 +31,13 @@
             </div>
             <div class="col-6 q-pa-md">
               <q-list dense>
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                   <q-item-label><span class="text-grey text-weight-bold">-</span> ({{stats.cours}}) En cours</q-item-label>
                 </q-item>
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                     <q-item-label><span class="text-green text-weight-bold">-</span> ({{stats.termine}}) Terminé(s)</q-item-label>
                 </q-item>
-                <q-item clickable v-ripple>
+                <q-item v-ripple clickable>
                     <q-item-label><span class="text-red text-weight-bold">-</span> ({{stats.attente}}) Attente(s)</q-item-label>
                 </q-item>
               </q-list>
@@ -44,11 +46,11 @@
         </q-card>
       </div>
       <div class="col-md-4 col-6 q-pa-lg">
-        <q-card class="q-pa-md">
+        <q-card class="q-pa-md" flat>
           <span class="text-h5">{{numerique(array_somme(p_projections, 'montant_ht'))}} CFA</span>
           <p class="text-h6 text-grey">Projets finance</p>
           <q-list bordered>
-            <q-item class="q-pa-md" dense v-for="projection in p_projections.slice(0, 3)" border>
+            <q-item v-for="(projection, index) in p_projections.slice(0, 3)" :key="index" class="q-pa-md" dense border>
               <q-item-section>
                 <q-item-label>{{ projection.titre }}</q-item-label>
               </q-item-section>
@@ -60,7 +62,7 @@
         </q-card>
       </div>
       <div class="col-md-4 col-6 q-pa-lg">
-        <q-card class="q-pa-md">
+        <q-card class="q-pa-md" flat>
           <span class="text-h5">49</span>
           <p class="text-h6 text-grey">Clients</p>
           <div class="row" style="height: 145px;">
@@ -79,35 +81,35 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-12 q-pa-lg">
-        <span class="text-h6">Projets</span>
-        <span class="text-right float-right">
-          <q-icon size="md" name="list" @click="isGrid=false" />
-          <q-icon size="md" name="grid_view" @click="isGrid=true"  />
-        </span>
-      </div>
-    </div>
+<!--    <div class="row">-->
+<!--      <div class="col-12 q-pa-lg">-->
+<!--        <span class="text-h6">Projets</span>-->
+<!--      </div>-->
+<!--    </div>-->
 
-    <div class="row justify-center" v-if="!isGrid">
+    <div class="row justify-center">
       <div class="col-12 q-pa-lg">
-<!--        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />-->
-<!--        <br><br>-->
-        <q-table title="p_projets" :rows="p_projets" :columns="columns" :filter="filter"
-                 :pagination="pagination" row-key="name">
-          <template v-slot:top="props">
+        <q-table
+title="p_projets" :rows="p_projets" :columns="columns" :filter="filter"
+                 :pagination="pagination" row-key="name" flat>
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des projets</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key='client' :props='props'> {{props.row.client}} </q-td>
               <q-td key='titre' :props='props'> {{props.row.titre}} </q-td>
               <q-td key='description' :props='props'> {{props.row.description}} </q-td>
               <q-td key='status' :props='props'>
                 <q-btn outline color="grey" size="sm">{{props.row.status}} </q-btn>
+              </q-td>
+              <q-td key='ponctualite' :props='props'>
+                <q-btn v-if="props.row.ponctualite === 'RETARD'" outline color="red" size="sm">{{props.row.ponctualite}} </q-btn>
+                <q-btn v-if="props.row.ponctualite === 'OK'" outline color="green" size="sm">{{props.row.ponctualite}} </q-btn>
               </q-td>
               <q-td key='qte' :props='props'> {{props.row.qte}} </q-td>
               <q-td key='prix_unitaire' :props='props'> {{props.row.prix_unitaire}} </q-td>
@@ -120,15 +122,13 @@
               <q-td key='priorite' :props='props'> {{props.row.priorite}} </q-td>
               <q-td key='cout' :props='props'> {{props.row.cout}} </q-td>
               <q-td key='clientid' :props='props'> {{props.row.clientid}} </q-td>
-              <q-td key='porteur' :props='props'> {{props.row.porteur}} </q-td>
               <q-td key='execucants' :props='props'> {{props.row.execucants}} </q-td>
               <q-td key='puuid' :props='props'> {{props.row.puuid}} </q-td>
-              <q-td key='photo' :props='props'> <img v-if='props.row.photo' width='80' height='80' :src="uploadurl+'/p_projet/'+props.row.photo" :alt='props.row.photo' /> </q-td>
 
               <q-td key="actions" :props="props">
                 <q-btn class="q-mr-xs" outline size="xs" color="dark" icon="visibility" @click="navigate('/projet/'+props.row.id)" />
-                <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit" />
-                <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_projet_delete(props.row.id)" icon="delete" />
+                <q-btn class="q-mr-xs" size="xs" color="primary" icon="edit" @click="update_get(props.row)" />
+                <q-btn class="q-mr-xs" size="xs" color="red" icon="delete" @click="p_projet_delete(props.row.id)" />
               </q-td>
             </q-tr>
           </template>
@@ -136,79 +136,43 @@
       </div>
     </div>
 
-    <div class="row" v-if="isGrid">
-      <div class="col-12 col-md-4 q-pa-lg" v-for="project in p_projets" key="project.id">
-        <q-card class="q-pa-lg" clickable @click="navigate('/projet/'+project.id)">
-          <div class="row">
-            <div class="col-6">
-              <q-avatar square size="40px" color="grey">J</q-avatar>
-            </div>
-            <div class="col float-right text-right">
-              <q-btn unelevated color="green-3" size="md">Terminé</q-btn>
-<!--              <q-btn color="green-1" size="md">En cours</q-btn>-->
-<!--              <q-btn color="red" size="md">Echecs</q-btn>-->
-            </div>
-          </div>
-          <br>
-          <span class="text-h6">{{project.titre}}</span>
-          <p class="text-subtitle1 text-grey">{{project.objectif}}</p>
-          <div class="row">
-            <div class="col-5 q-pa-sm q-mr-sm" style="border: 1px #e3e3e3 dashed">
-              <span class="text-weight-bold">20 Déc 2023</span><br>
-              <span>Echéance</span>
-            </div>
-            <div class="col-5 q-pa-sm q-ml-sm" style="border: 1px #e3e3e3 dashed">
-              <span class="text-weight-bold">10.000.000 CFA</span><br>
-              <span>Budget</span>
-            </div>
-          </div>
-          <q-linear-progress color="green" :value="0.7" class="q-mt-lg" />
-          <div class="row q-mt-lg">
-            <q-avatar color="grey" text-color="white" icon="directions" size="40px" />
-            &nbsp;
-            <q-avatar color="grey" text-color="white" icon="directions" size="40px" />
-            &nbsp;
-            <q-avatar color="grey" text-color="white" icon="directions" size="40px" />
-            &nbsp;
-            <q-avatar color="grey" text-color="white" icon="directions" size="40px" />
-          </div>
-        </q-card>
-<!--        </router-link>-->
-      </div>
-    </div>
 
-    <q-dialog v-model="medium2">
+    <q-dialog v-model="projectModal">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
           <div class="text-h6">Ajouter un projet</div>
         </q-card-section>
         <q-card-section>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
             <div class="row">
               <div class="col-12">
-                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
-                          v-model="p_projet.clientid" :options="clients" label="Clients" option-value="id" option-label="fullname"
+                <q-select
+v-model="p_projet.clientid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                          :dense="true" :options="clients" label="Clients" option-value="id" option-label="fullname"
                           input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
-                <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
-                          filled outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />
-                <q-input outlined class="q-mb-sm" dense v-model='p_projet.titre' label='titre' />
-                <q-input outlined class="q-mb-sm" dense type='textarea' v-model='p_projet.description' label='description' />
+                <q-select
+v-model='p_projet.status'
+                          :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE']" filled outlined class="q-mb-sm" dense label='status' />
+                <q-input v-model='p_projet.titre' outlined class="q-mb-sm" dense label='titre' />
+                <q-input v-model='p_projet.description' outlined class="q-mb-sm" dense type='textarea' label='description' />
 <!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />-->
-                <q-input outlined class="q-mb-sm" dense v-model='p_projet.objectif' label='objectif' />
-                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.progress' label='progress' />
-                <q-input stack-label outlined class="q-mb-sm" dense type='date' v-model='p_projet.datedebut' label='datedebut' />
-                <q-input stack-label outlined class="q-mb-sm" dense type='date' v-model='p_projet.datefin' label='datefin' />
-                <q-input stack-label outlined class="q-mb-sm" dense type='date' v-model='p_projet.livraison' label='livraison' />
-                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.createdby' label='createdby' />
-                <q-input outlined class="q-mb-sm" dense v-model='p_projet.priorite' label='priorite' />
-                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.cout' label='cout' />
-                <q-input outlined class="q-mb-sm" dense type='text' v-model='p_projet.bc' label='N°Bon de Cmde' />
-                <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
-                          v-model="p_projet.productid" :options="products" label="Produits" option-value="id" option-label="name"
+<!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.objectif' label='objectif' />-->
+                <q-input v-model='p_projet.progress' outlined class="q-mb-sm" dense type='number' label='progression' />
+                <q-input v-model='p_projet.datedebut' stack-label outlined class="q-mb-sm" dense type='date' label='datedebut' />
+                <q-input v-model='p_projet.datefin' stack-label outlined class="q-mb-sm" dense type='date' label='datefin' />
+                <q-input v-model='p_projet.datelivraison' stack-label outlined class="q-mb-sm" dense type='date' label='livraison' />
+                <q-input
+v-model='p_projet.priorite' outlined class="q-mb-sm" dense label='priorite'
+                type="number" min="0" max="5" />
+                <q-input v-model='p_projet.cout' outlined class="q-mb-sm" dense type='number' label='cout' />
+                <q-select
+v-model="p_projet.productid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                          :dense="true" :options="products" label="Produits" option-value="id" option-label="name"
                           input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
-                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.qte' label='Quantité' />
-                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.prix_unitaire' label='Prix unitaire' />
-                <q-input outlined class="q-mb-sm" dense type='number'
+                <q-input v-model='p_projet.qte' outlined class="q-mb-sm" dense type='number' label='Quantité' />
+                <q-input v-model='p_projet.prix_unitaire' outlined class="q-mb-sm" dense type='number' label='Prix unitaire' />
+                <q-input
+outlined class="q-mb-sm" dense type='number'
                          :model-value="p_projet.qte * p_projet.prix_unitaire" label='Montant' />
 
 <!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.clientid' label='clientid' />-->
@@ -225,7 +189,7 @@
           </q-form>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -240,19 +204,11 @@ import apimixin from "src/services/apimixin";
 import {ClientApi} from "src/services/api/client.api";
 import {PProjetApi} from "src/services/api/PProjetApi";
 export default {
+  mixins: [basemixin, apimixin],
   data () {
     return {
-      p_projet_id: 1,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
+      projectModal: false,
       medium2: false,
-      maximizedToggle: true,
-      name: null,
-      image: null,
-      isGrid: false,
       stats: {},
       p_projet: {},
       p_projets: [],
@@ -264,6 +220,7 @@ export default {
         { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
         { name: 'status', align: 'left', label: 'status', field: 'status', sortable: true },
+        { name: 'ponctualite', align: 'left', label: 'Ponctualite', field: 'ponctualite', sortable: true },
         { name: 'qte', align: 'left', label: 'Qté', field: 'qte', sortable: true },
         { name: 'prix_unitaire', align: 'left', label: 'P unit.', field: 'prix_unitaire', sortable: true },
         { name: 'montant_ht', align: 'left', label: 'HT', field: 'montant_ht', sortable: true },
@@ -273,28 +230,19 @@ export default {
         { name: 'datefin', align: 'left', label: 'datefin', field: 'datefin', sortable: true },
         { name: 'createdby', align: 'left', label: 'createdby', field: 'createdby', sortable: true },
         { name: 'priorite', align: 'left', label: 'priorite', field: 'priorite', sortable: true },
-        // { name: 'cout', align: 'left', label: 'cout', field: 'cout', sortable: true },
-        // { name: 'clientid', align: 'left', label: 'clientid', field: 'clientid', sortable: true },
-        // { name: 'porteur', align: 'left', label: 'porteur', field: 'porteur', sortable: true },
-        // { name: 'execucants', align: 'left', label: 'execucants', field: 'execucants', sortable: true },
-        // { name: 'puuid', align: 'left', label: 'puuid', field: 'puuid', sortable: true },
-        { name: 'photo', align: 'left', label: 'photo', field: 'photo', sortable: true },
-
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
   },
-  mixins: [basemixin, apimixin],
   created () {
     this.products_get()
-    this.p_projet_get()
     this.p_projet_stats()
     const date = new Date()
     ClientApi.get().then((res) => this.clients = res)
     this.p_projet_previson_get('2023-03')
-    PProjetApi.get().then((res) => this.projets = res)
+    PProjetApi.get().then((res) => this.p_projets = res)
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   },
@@ -320,18 +268,6 @@ export default {
       this.p_projet = props
       this.medium2 = true
     },
-    setEvent (payload, _name) {
-      this.p_projet[_name] = payload
-    },
-    handleFile (_name) {
-      this.p_projet[_name] = this.$refs[_name].files[0]
-    },
-    p_projet_get () {
-      $httpService.getApi('/my/get/p_projet')
-        .then((response) => {
-          this.p_projets = response
-        })
-    },
     p_projet_stats () {
       $httpService.getApi('/my/stats/p_projet')
         .then((response) => {
@@ -347,14 +283,16 @@ export default {
     },
     p_projet_post () {
       this.p_projet.montant_ht = this.p_projet.qte * this.p_projet.prix_unitaire
-      this.showLoading()
       this.p_projet.puuid = this.generateUuid();
+      this.p_projet.createdby = this.$q.localStorage.getItem('userid');
+      this.showLoading()
       $httpService.postWithParams('/my/post/p_projet', this.p_projet)
         .then((response) => {
           this.p_projet = {}
           this.p_projet_get()
           this.showAlert(response, 'secondary')
           this.hideLoading()
+          this.projectModal = false
         }).catch(() => { this.hideLoading() })
     },
     p_projet_update () {

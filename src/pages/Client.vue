@@ -5,21 +5,21 @@
     <div class="row justify-center text-center">
 
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md justify-left text-left">
-        <q-btn label="Ajouter" class="q-ma-sm" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
+        <q-btn label="Ajouter" class="q-ma-sm" size="sm" icon="add" color="secondary" @click="medium = true; client = {contacts: []}" />
       </div>
 
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
-        <!--grid-->
 
-        <q-table id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
+        <q-table
+id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
                  class="q-pa-md q-ma-md" :pagination="pagination" :filter="filter" flat>
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-4 q-table__title">Clients</div>
             <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(data, 'vente')"/>
-            <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
+            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
               <q-td key="name" :props="props"> {{props.row.name}} </q-td>
@@ -29,19 +29,19 @@
               <q-td key="actions" :props="props">
 
                 <q-btn-dropdown size="xs" color="dark">
-                  <q-item clickable v-close-popup>
-                    <q-item-label v-on:click="btn_update(props.row)"> Modifier</q-item-label>
+                  <q-item v-close-popup clickable>
+                    <q-item-label @click="btn_update(props.row)"> Modifier</q-item-label>
                   </q-item>
-<!--                  <q-item clickable @click="medium2 = true">-->
-<!--                    <q-item-label>Enoyer un email</q-item-label>-->
-<!--                  </q-item>-->
-<!--                  <q-item clickable v-close-popup @click="medium3 = true">-->
-<!--                    <q-item-label>Envoyer une proforma</q-item-label>-->
-<!--                  </q-item>-->
-                  <q-item clickable v-close-popup @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
+                  <!--                  <q-item clickable @click="medium2 = true">-->
+                  <!--                    <q-item-label>Enoyer un email</q-item-label>-->
+                  <!--                  </q-item>-->
+                  <!--                  <q-item clickable v-close-popup @click="medium3 = true">-->
+                  <!--                    <q-item-label>Envoyer une proforma</q-item-label>-->
+                  <!--                  </q-item>-->
+                  <q-item v-close-popup clickable @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
                     <q-item-label>Liste des achats</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="fileStatus = true; clientId = props.row.id">
+                  <q-item v-close-popup clickable @click="fileStatus = true; clientId = props.row.id">
                     <q-item-label>Photos</q-item-label>
                   </q-item>
                 </q-btn-dropdown>
@@ -51,7 +51,6 @@
           </template>
         </q-table>
 
-        <!--    <q-page-sticky position="bottom-right" :offset="[18, 18]">-->
         <q-dialog v-model="medium2">
           <div class="row" style="max-width: 100%; width: 800px; background: white">
             <div class="col-12 q-ma-md">
@@ -61,49 +60,60 @@
               <q-editor v-model="post.body" :dense="$q.screen.lt.md" :definitions="definitions" :toolbar="toolbar" />
             </div>
             <div class="col-12 q-ma-md">
-              <q-btn size="md" v-on:click="send_email()">Envoyer l'email</q-btn>
+              <q-btn size="md" @click="send_email()">Envoyer l'email</q-btn>
             </div>
           </div>
         </q-dialog>
-        <!--    </q-page-sticky>-->
 
         <q-dialog v-model="medium" position="top">
           <q-card style="width: 700px; max-width: 80vw;">
-            <q-card-section>
-              <div class="text-h6" v-if="!status_update">Ajouter un client</div>
-              <div class="text-h6" v-if="status_update">Modifier un client</div>
-            </q-card-section>
 
             <q-card-section>
               <div class="row justify-center">
                 <!--      <div class="col-2">1</div>-->
-                <div class="col-10">
+                <div v-if="!status_update" class="text-h6">Ajouter un client</div>
+                <div v-if="status_update" class="text-h6">Modifier un client</div>
+                <div class="col-12 q-pa-lg">
 
-                  <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md"  >
-                    <q-select dense outlined filled v-model="client.type" :options="options" label="Type de client"
+                  <q-form  class="q-gutter-md" @submit="onSubmit" @reset="onReset"  >
+                    <q-select
+v-model="client.type" dense outlined filled :options="options" label="Type de client"
                               map-options emit-value option-value="id" option-label="name" />
-                    <q-input dense outlined autocomplete v-model="client.name" label="Nom *"
+                    <q-input
+v-model="client.name" dense outlined autocomplete label="Nom *"
                              lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
-                    <q-input dense outlined autocomplete  v-model="client.last_name" label="Prenom *" />
-                    <q-input dense outlined type="number" v-model="client.telephone_code"  label="indicatif *" />
-                    <q-input dense outlined type="text" v-model="client.telephone" label="telephone *" />
-                    <q-input dense outlined type="email" v-model="client.email" label="Email *" />
+                    <q-input v-model="client.last_name" dense outlined  autocomplete label="Prenom *" />
+                    <q-input v-model="client.telephone_code" dense outlined type="number"  label="indicatif *" />
+                    <q-input v-model="client.telephone" dense outlined type="text" label="telephone *" />
+                    <q-input v-model="client.email" dense outlined type="email" label="Email *" />
                     <country-component v-model="client.country" code="civ"></country-component>
-                    <q-input dense outlined type="text" v-model="client.city" label="Ville" />
-                    <q-input dense outlined type="textarea" v-model="client.address" label="Adresse" />
+                    <q-input v-model="client.city" dense outlined type="text" label="Ville" />
+                    <q-input v-model="client.address" dense outlined type="textarea" label="Adresse" />
                     <br>
                     <div class="q-gutter-sm">
                       <q-radio v-model="client.exonere" :val="0" label="Pas exonere" color="grey" />
                       <q-radio v-model="client.exonere" :val="1" label="Exonere" color="green" />
                     </div>
-                    <!--                    </div>-->
-                    <!--                    <q-input type="email" v-model="client.compagnie" label="Compagnie" />-->
-                    <!--                <q-input type="password" v-model="client.password" label="Mot de passe *" />-->
+
+                    <div class="row">
+                      <div class="col q-pa-sm">
+                        <q-btn icon="add" label="Ajouter des contacts" size="sm" color="grey-8" @click="client.contacts.push({})" />
+                      </div>
+                    </div>
+                    <div v-for="(contact, index) in client.contacts" :key="index" class="row">
+                      <q-input v-model="contact.nom" class="col-4 q-pa-sm" dense outlined label="Nom"></q-input>
+                      <q-input v-model="contact.job" class="col-4 q-pa-sm" dense outlined label="Profession"></q-input>
+                      <q-input v-model="contact.tel" class="col-3 q-pa-sm" dense outlined label="Numero"></q-input>
+                      <div class="col-1 q-pa-sm">
+                        <q-btn label="-" color="red-3" @click="client.contacts.splice(index, 1)" />
+                      </div>
+                    </div>
 
                     <div>
                       <br>
-                      <q-btn label="Modifier" v-if="status_update" v-on:click="client_update()" type="button" color="secondary"/>
-                      <q-btn label="Valider" v-if="!status_update"  type="submit" color="secondary"/>
+                      <br>
+                      <q-btn v-if="status_update" label="Modifier" type="button" color="primary" @click="client_update()"/>
+                      <q-btn v-if="!status_update" label="Valider"  type="submit" color="primary"/>
                     </div>
                   </q-form>
 
@@ -112,35 +122,37 @@
               </div>
             </q-card-section>
 
-            <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Fermer" v-close-popup />
+            <q-card-actions align="right" class="bg-white text-dark">
+              <q-btn v-close-popup flat label="Fermer" />
             </q-card-actions>
           </q-card>
         </q-dialog>
 
-<!--        <q-dialog v-model="medium3">-->
-<!--          <facture-component style="width: 1000px; max-width: 100%;"></facture-component>-->
-<!--        </q-dialog>-->
+        <!--        <q-dialog v-model="medium3">-->
+        <!--          <facture-component style="width: 1000px; max-width: 100%;"></facture-component>-->
+        <!--        </q-dialog>-->
 
         <q-dialog v-model="vente_status" transition-show="slide-up" transition-hide="slide-down">
 
-          <q-table :rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
+          <q-table
+:rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
                    row-key="id" :pagination="pagination">
-            <template v-slot:top>
+            <template #top>
               <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
             </template>
-            <template v-slot:top-left>
+            <template #top-left>
               <div class="row">
-                <div class="col-5 "><q-input type="date"  v-model="first" label="debut" /></div>
-                <div class="col-5"><q-input type="date"  v-model="last" label="fin" /></div>
-                <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" v-on:click="sales_stats_get(product_id)"/></div>
+                <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
+                <div class="col-5"><q-input v-model="last"  type="date" label="fin" /></div>
+                <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="sales_stats_get(product_id)"/></div>
               </div>
             </template>
-            <template v-slot:top-right="props">
+            <template #top-right="props">
               <q-btn size="sm" :label="'Nb Produits vendus: '+ numerique(nbre_vendus)" /><br>
               <q-btn size="sm" class="q-ml-sm" :label="'total: '+numerique(montant_vendus)+' FCFA'" />
-              <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                     @click="props.toggleFullscreen" class="q-ml-md float-right" />
+              <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                     class="q-ml-md float-right" @click="props.toggleFullscreen" />
             </template>
           </q-table>
 
@@ -168,10 +180,10 @@
           <div class="grid">
             <div class="row">
               <div class="col-3 q-pa-sm">
-                <q-input type="date" v-model="datemin" placeholder="Mois" :dense="true" hint="Mois" />
+                <q-input v-model="datemin" type="date" placeholder="Mois" :dense="true" hint="Mois" />
               </div>
               <div class="col-3 q-pa-sm">
-                <q-input type="date" v-model="datemax" placeholder="Mois" :dense="true"  hint="Mois" />
+                <q-input v-model="datemax" type="date" placeholder="Mois" :dense="true"  hint="Mois" />
               </div>
               <div class="col-2 q-pa-sm">
                 <q-btn label="filtrer" @click="client_stat(datemin, datemax)" />
@@ -186,7 +198,8 @@
         <q-card class="my-card" square flat>
           <q-card-section>
             <!--            {{namedata}}-->
-            <areachart-component color="primary" type="bar" :horizontal="false" :percent="5"
+            <areachart-component
+color="primary" type="bar" :horizontal="false" :percent="5"
                                  :categories="namedata" :series="sumdata" title="Montant généré" titletooltip="depense" />
           </q-card-section>
         </q-card>
@@ -198,17 +211,21 @@
 
 </template>
 
-<script>
+<script lang="ts">
 import $httpService from '../boot/httpService';
-import FactureComponent from '../components/facture_component.vue';
 import CountryComponent from '../components/country.vue';
-import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
 import AreachartComponent from "components/areachart.vue";
 import Filescomponent from "components/filescomponent.vue";
 export default {
   name: 'ClientPage',
+  components: {
+    Filescomponent,
+    AreachartComponent,
+    CountryComponent,
+  },
+  mixins: [basemixin],
   data () {
     return {
       selected: [],
@@ -274,25 +291,17 @@ export default {
       }
     }
   },
-  components: {
-    Filescomponent,
-    AreachartComponent,
-    FactureComponent,
-    CountryComponent,
-    'downloadExcel': vue3JsonExcel
-  },
-  mixins: [basemixin],
-  created () {
-    this.loadData();
-    var date = new Date();
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    // this.loadData2();
-  },
   computed: {
     total() {
       return this.products.reduce((product, item) => product + (item.p.sales_price * item.quantity), 0);
     }
+  },
+  created () {
+    this.loadData();
+    // var date = new Date();
+    // this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
+    // this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
+    // this.loadData2();
   },
   methods: {
     client_stat (datemin, datemax) {
@@ -373,7 +382,7 @@ export default {
 
       const input = document.createElement('input')
       input.type = 'file'
-      input.accept = '.png, .jpg' // file extensions allowed
+      input.accept = '.png, .jpg'
       let file
       input.onchange = () => {
         const files = Array.from(input.files)

@@ -4,7 +4,7 @@
     <div class="row justify-center text-center">
 
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm text-center">
-        <q-card class="my-card text-center justify-center content-center">
+        <q-card class="my-card text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
               <h5 class="text-center">Rubrique: Ventes</h5>
@@ -15,7 +15,7 @@
 
       <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-lg">
         <router-link class="item item-link" to="/ventes/new">
-          <q-card clickable>
+          <q-card clickable flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Ventes</div>
@@ -27,7 +27,7 @@
 
       <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-lg">
         <router-link class="item item-link" to="/ventes/factures">
-          <q-card clickable>
+          <q-card clickable flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Factures</div>
@@ -39,7 +39,7 @@
 
       <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-lg">
         <router-link class="item item-link" to="/ventes/credit">
-          <q-card clickable>
+          <q-card clickable  flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Credits</div>
@@ -49,21 +49,10 @@
         </router-link>
       </div>
 
-      <!--      <div class="col-lg-2 col-md-4 col-sm-6 col-xs-6 q-pa-lg">-->
-      <!--        <router-link tag="div" class="item item-link" to="/ventes/devis">-->
-      <!--          <q-card class="my-card" clickable>-->
-      <!--            <q-item clickable>-->
-      <!--              <q-card-section>-->
-      <!--                <div class="text-h5">Devis</div>-->
-      <!--              </q-card-section>-->
-      <!--            </q-item>-->
-      <!--          </q-card>-->
-      <!--        </router-link>-->
-      <!--      </div>-->
 
       <div class="col-lg-3 col-md-3 col-sm-6 q-pa-lg">
         <router-link class="item item-link" to="/ventes/retour">
-          <q-card clickable>
+          <q-card clickable  flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Retour</div>
@@ -74,7 +63,7 @@
       </div>
 
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">
-        <q-card class="my-card">
+        <q-card class="my-card" flat>
           <q-card-section>
 <!--            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />-->
             <mixedchart :series="series_vente_sum" />
@@ -94,17 +83,18 @@
         <div class="row q-pa-sm print-hide">
           <div class="col-4 q-pa-sm"><q-input v-model="first" type="date" hint="date ddebut" /></div>
           <div class="col-4 q-pa-sm"><q-input v-model="last" type="date" hint="date fin" /></div>
-          <div class="col-2 q-pa-sm"><br><q-btn color="secondary" label="filtrer" v-on:click="sales_stats_get()" /></div>
+          <div class="col-2 q-pa-sm"><br><q-btn color="secondary" label="filtrer" @click="sales_stats_get()" /></div>
         </div>
-        <q-table :rows="sales_stats" :columns="columns" row-key="id" :pagination="pagination">
-          <template v-slot:top-left>
+        <q-table :rows="sales_stats" :columns="columns" row-key="id" :pagination="pagination" flat>
+          <template #top-left>
             <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
           </template>
-          <template v-slot:top-right="props">
+          <template #top-right="props">
             <q-btn size="md" :label="'Nbre de produits vendus: '+ numerique(nbre_vendus)" /><br>
             <q-btn size="md" class="q-ml-sm" :label="'Montant total: '+numerique(montant_vendus)+' FCFA'" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md float-right" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md float-right" @click="props.toggleFullscreen" />
           </template>
         </q-table>
       </div>
@@ -117,14 +107,31 @@
 <script>
 
 import $httpService from '../boot/httpService';
-import AreachartComponent from '../components/areachart.vue';
+// import AreachartComponent from '../components/areachart.vue';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
-import Columnchart from "components/columnchart.vue";
+// import Columnchart from "components/columnchart.vue";
 import Mixedchart from "components/mixedchart.vue";
 
 export default {
   name: 'VenteName',
+  components: {
+    Mixedchart,
+    // Columnchart,
+    // areachart: AreachartComponent
+  },
+  filters: {
+    capitalize: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    },
+    numerique: function (value) {
+      if (!value) return ''
+      return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+  },
+  mixins: [basemixin],
   data () {
     return {
       tab: '0',
@@ -160,23 +167,6 @@ export default {
       series_vente_count: [{ name: 'Montant Achete.', data: [] }],
       series_vente_sum: [{ name: 'Montant Vendu par mois', data: [] }],
       slide: 'style'
-    }
-  },
-  mixins: [basemixin],
-  components: {
-    Mixedchart,
-    Columnchart,
-    areachart: AreachartComponent
-  },
-  filters: {
-    capitalize: function (value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    },
-    numerique: function (value) {
-      if (!value) return ''
-      return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
   },
   mounted () {

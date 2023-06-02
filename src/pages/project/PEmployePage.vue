@@ -4,17 +4,19 @@
 
     <div class="row justify-center">
       <div class="col-12 q-mt-md">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true; p_employe= {}" />
+        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" @click="medium2 = true; p_employe= {}" />
         <br><br>
-        <q-table title="p_employes" :rows="p_employes" :columns="columns" :filter="filter"
+        <q-table
+title="p_employes" :rows="p_employes" :columns="columns" :filter="filter"
                  :pagination="pagination" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des employés</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props" @click="p_employe_id = props.row.id;">
               <q-td key='qrcode' :props='props'>
                 <vue-qr :size="128" :text="props.row.euuid" :qid="props.row.euuid" />
@@ -29,15 +31,16 @@
               <q-td key='genre' :props='props'> {{props.row.genre}} </q-td>
               <q-td key='fonction' :props='props'> {{props.row.fonction}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn title="photo" outline class="q-mr-xs" size="xs" color="dark" v-on:click="typeid=props.row.id;modalPhoto=true" icon="photo"></q-btn>
-                <q-btn title="modifier" outline class="q-mr-xs" size="xs" color="dark" v-on:click="update_get(props.row)" icon="edit"></q-btn>
-                <q-btn title="modifier" outline class="q-mr-xs" size="xs" color="dark" v-on:click="salaire_get(props.row.id)" icon="payments"></q-btn>
+                <q-btn title="photo" outline class="q-mr-xs" size="xs" color="dark" icon="photo" @click="typeid=props.row.id;modalPhoto=true"></q-btn>
+                <q-btn title="modifier" outline class="q-mr-xs" size="xs" color="dark" icon="edit" @click="update_get(props.row)"></q-btn>
+                <q-btn title="modifier" outline class="q-mr-xs" size="xs" color="dark" icon="payments" @click="salaire_get(props.row.id)"></q-btn>
                 <br>
                 <br>
-                <q-btn title="presence" class="q-mr-xs" size="xs" color="primary" outline icon="event_available"
+                <q-btn
+title="presence" class="q-mr-xs" size="xs" color="primary" outline icon="event_available"
                        @click="modalArrivee = true; p_arrivee_get(props.row.id)"></q-btn>
-                <q-btn title="absence" @click="modalAbsence = true; p_absence_get(props.row.id)" class="q-mr-xs" size="xs" color="red" outline icon="event_busy"></q-btn>
-                <q-btn title="supprimer" class="q-mr-xs" size="xs" color="red" v-on:click="p_employe_delete(props.row.id)" icon="delete"></q-btn>
+                <q-btn title="absence" class="q-mr-xs" size="xs" color="red" outline icon="event_busy" @click="modalAbsence = true; p_absence_get(props.row.id)"></q-btn>
+                <q-btn title="supprimer" class="q-mr-xs" size="xs" color="red" icon="delete" @click="p_employe_delete(props.row.id)"></q-btn>
               </q-td>
             </q-tr>
           </template>
@@ -48,13 +51,14 @@
     <q-dialog v-model="salaireModal">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
-          <div class="text-h6" v-if="!p_employe.id">Salaire par employé</div>
+          <div v-if="!p_employe.id" class="text-h6">Salaire par employé</div>
         </q-card-section>
         <q-card-section>
 
-          <div class="row q-ma-sm" v-for="salaire in salaires" >
+          <div v-for="(salaire, index) in salaires" :key="index" class="row q-ma-sm">
             <div class="col-8">
-              <q-input dense outlined v-model="salaire.montant" :label="salaire.name"
+              <q-input
+v-model="salaire.montant" dense outlined :label="salaire.name"
                        @focusout="p_salaire_prime_post(salaire)" />
             </div>
             <div class="col-4 q-pl-lg">
@@ -79,52 +83,52 @@
     <q-dialog v-model="medium2">
       <q-card style="width: 700px; max-width: 80vw;">
         <q-card-section>
-          <div class="text-h6" v-if="!p_employe.id">Ajouter un Employe</div>
-          <div class="text-h6" v-if="p_employe.id">Modifier un employe</div>
+          <div v-if="!p_employe.id" class="text-h6">Ajouter un Employe</div>
+          <div v-if="p_employe.id" class="text-h6">Modifier un employe</div>
         </q-card-section>
         <q-card-section>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
             <div class="row">
               <div class="col-12">
                 <vue-qr v-if="p_employe.id" :size="75" :text="p_employe.euuid" :qid="p_employe.euuid" />
                 <br>
-                <q-input outlined dense v-model='p_employe.nom' label='Nom' />
+                <q-input v-model='p_employe.nom' outlined dense label='Nom' />
                 <br>
-                <q-input outlined dense v-model='p_employe.prenom' label='Prénom' />
+                <q-input v-model='p_employe.prenom' outlined dense label='Prénom' />
                 <br>
-                <q-input outlined dense v-model='p_employe.telephone' label='Téléphone' />
+                <q-input v-model='p_employe.telephone' outlined dense label='Téléphone' />
                 <br>
-                <q-input outlined dense v-model='p_employe.email' label='Email' />
+                <q-input v-model='p_employe.email' outlined dense label='Email' />
                 <br>
-                <q-input outlined dense v-model='p_employe.cni' label='CNI' />
+                <q-input v-model='p_employe.cni' outlined dense label='CNI' />
                 <br>
-                <q-input outlined dense v-model='p_employe.cnps' label='CNPS' />
+                <q-input v-model='p_employe.cnps' outlined dense label='CNPS' />
                 <br>
-                <q-input outlined dense v-model='p_employe.matricule' label='Matricule' />
+                <q-input v-model='p_employe.matricule' outlined dense label='Matricule' />
                 <br>
-                <upload v-model='p_employe.photo' title='photo' @blurevent="setEvent($event, 'photo')" />
+<!--                <upload v-model='p_employe.photo' title='photo' @blurevent="setEvent($event, 'photo')" />-->
+<!--                <br>-->
+                <q-input v-model='p_employe.whatsapp' outlined dense label='Whatsapp' />
                 <br>
-                <q-input outlined dense v-model='p_employe.whatsapp' label='Whatsapp' />
+                <q-input v-model='p_employe.adresse' outlined dense type='textarea' label='Adresse' />
                 <br>
-                <q-input outlined dense type='textarea' v-model='p_employe.adresse' label='Adresse' />
+                <q-input v-model='p_employe.datenaissance' outlined dense type='date' label='Date de naissance' />
                 <br>
-                <q-input outlined dense type='date' v-model='p_employe.datenaissance' label='Date de naissance' />
+                <q-input v-model='p_employe.genre' outlined dense label='Genre' />
                 <br>
-                <q-input outlined dense v-model='p_employe.genre' label='Genre' />
+                <q-input v-model='p_employe.banquerib' outlined dense label='RIB' />
                 <br>
-                <q-input outlined dense v-model='p_employe.banquerib' label='RIB' />
+                <q-input v-model='p_employe.banquename' outlined dense label='Nom de la banque' />
                 <br>
-                <q-input outlined dense v-model='p_employe.banquename' label='Nom de la banque' />
+                <q-input v-model='p_employe.fonction' outlined dense label='Fonction' />
                 <br>
-                <q-input outlined dense v-model='p_employe.fonction' label='Fonction' />
+                <q-input v-model='p_employe.datearrivee' outlined dense type='date' label='Date arrivee' />
                 <br>
-                <q-input outlined dense type='date' v-model='p_employe.datearrivee' label='Date arrivee' />
+                <q-input v-model='p_employe.datefin' outlined dense type='date' label='Date Départ' />
                 <br>
-                <q-input outlined dense type='date' v-model='p_employe.datefin' label='Date Départ' />
+                <q-input v-model='p_employe.experience' outlined dense type='textarea' label='Experience' />
                 <br>
-                <q-input outlined dense type='textarea' v-model='p_employe.experience' label='Experience' />
-                <br>
-                <q-input outlined dense type='textarea' v-model='p_employe.education' label='Education' />
+                <q-input v-model='p_employe.education' outlined dense type='textarea' label='Education' />
                 <!--                <br>-->
                 <!--                <q-input dense v-model='p_employe.euuid' label='euuid' />-->
               </div>
@@ -137,7 +141,7 @@
           </q-form>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -152,13 +156,14 @@
       <q-card style="width: 1000px" class="q-pa-lg">
         <div class="row justify-center">
           <div class="col-12 q-mt-md">
-            <q-table title="p_arrivees" :rows="p_arrivees" :columns="columnsArrivees"
+            <q-table
+title="p_arrivees" :rows="p_arrivees" :columns="columnsArrivees"
                      :filter="filter" :pagination="pagination" row-key="name" dense>
-              <template v-slot:top="props">
+              <template #top>
                 <div class="col-7 q-table__title">Liste des arrivées</div>
-                <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+                <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
               </template>
-              <template v-slot:body="props">
+              <template #body="props">
                 <q-tr :props="props">
                   <q-td key='venue' :props='props'> {{props.row.venue}} </q-td>
                   <q-td key='depart' :props='props'> {{props.row.depart}} </q-td>
@@ -174,7 +179,7 @@
 
     <q-dialog v-model="modalAbsence" position="top" full-width>
       <q-card style="width: 1000px" class="q-pa-lg">
-        <q-form  @submit="p_absence_post()" class="q-gutter-md">
+        <q-form  class="q-gutter-md" @submit="p_absence_post()">
           <div class="row justify-center">
             <div class="col-2 q-pr-md">
               <q-input v-model="absence.date" type="date" label="Date" />
@@ -193,17 +198,18 @@
         <br>
         <div class="row justify-center">
           <div class="col-12 q-mt-md">
-            <q-table title="p_arrivees" :rows="p_absences" :columns="columnsAbsences"
+            <q-table
+title="p_arrivees" :rows="p_absences" :columns="columnsAbsences"
                      :filter="filter" :pagination="pagination" row-key="name" dense>
-              <template v-slot:top="props">
+              <template #top>
                 <div class="col-7 q-table__title">Liste des absences</div>
-                <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+                <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
               </template>
-              <template v-slot:body="props">
+              <template #body="props">
                 <q-tr :props="props">
                   <q-td key="actions" :props="props">
                     <q-btn class="q-mr-xs" size="xs" color="primary" icon="photo"></q-btn>
-                    <q-popup-edit v-model="props.row.id" v-slot="scope">
+                    <q-popup-edit v-model="props.row.id">
                       <filescomponent type="absence" :typeid="props.row.id" folder="absence" />
                     </q-popup-edit>
                   </q-td>
@@ -226,27 +232,22 @@
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import vueQr from 'vue-qr/src/packages/vue-qr.vue'
-import Photoscomponent from "components/photoscomponent.vue";
 import Filescomponent from "components/filescomponent.vue";
-import {postWithParams} from "assets/api_axios";
 
 export default {
+  components: {
+    Filescomponent,
+    vueQr
+  },
+  mixins: [basemixin],
   data () {
     return {
       typeid: 0,
       p_employe_id: 1,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
       medium2: false,
       salaireModal: false,
       modalArrivee: false,
       modalAbsence: false,
-      maximizedToggle: true,
-      name: null,
-      image: null,
       p_employe: {},
       absence: {heure: 24},
       p_employes: [],
@@ -295,12 +296,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 20 }
     }
   },
-  mixins: [basemixin],
-  components: {
-    Filescomponent,
-    Photoscomponent,
-    vueQr
-  },
   created () {
     this.p_employe_get()
     const date = new Date()
@@ -315,12 +310,6 @@ export default {
     update_get (props) {
       this.p_employe = props
       this.medium2 = true
-    },
-    setEvent (payload, _name) {
-      this.p_employe[_name] = payload
-    },
-    handleFile (_name) {
-      this.p_employe[_name] = this.$refs[_name].files[0]
     },
     p_arrivee_get (__id) {
       $httpService.getApi('/api/get/p_arrivee/'+__id)

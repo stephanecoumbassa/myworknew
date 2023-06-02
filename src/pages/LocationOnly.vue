@@ -8,7 +8,7 @@
         <q-tabs
           v-model="tab" dense class="text-dark"
           active-color="secondary" indicator-color="secondary" align="justify" narrow-indicator>
-          <q-tab name="alarms" label="Nouvelle location" v-on:click="products = [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }]" />
+          <q-tab name="alarms" label="Nouvelle location" @click="products = [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }]" />
         </q-tabs>
 
         <q-separator />
@@ -23,14 +23,15 @@
                 <div class="row">
 
                   <div class="col-12 q-pb-md">
-                    <q-input label="Rechercher" v-model="filter2" @input="filterFn"></q-input>
+                    <q-input v-model="filter2" label="Rechercher" @input="filterFn"></q-input>
                   </div>
 
-                  <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12 q-pa-sm" clickable v-for="(item, index) in appro_list" :key="index">
-                    <q-card class="my-card" clickable v-on:click="assign_product(item)">
+                  <div v-for="(item, index) in appro_list" :key="index" class="col-lg-4 col-md-6 col-sm-6 col-xs-12 q-pa-sm" clickable>
+                    <q-card class="my-card" clickable @click="assign_product(item)">
                       <q-item clickable class="no-padding no-margin">
                         <q-item-section avatar>
-                          <img v-if="item.photos" style="width: 70px; height: 70px; object-fit: cover" loading="lazy"
+                          <img
+v-if="item.photos" style="width: 70px; height: 70px; object-fit: cover" loading="lazy"
                                :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(item.photos)[0]['name']" />
                         </q-item-section>
                         <q-card-section>
@@ -54,33 +55,35 @@
                         <div class="col-12 text-h6">{{entreprise.name}}</div>
 
                         <div class="col-5 offset-1 q-ma-sm print-hide">
-                          <q-input stack-label v-model="dateposted" type="datetime-local" label="Date" :dense="true"></q-input>
+                          <q-input v-model="dateposted" stack-label type="datetime-local" label="Date" :dense="true"></q-input>
                           <br>
-                          <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value v-if="status_download" :dense="true"
-                                    v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                                    input-debounce="0" :option-label="'fullname'" @input="assign_client(client)" :rules="[val => !!val || 'Ce champs est requis']" />
+                          <q-select
+v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                                    :dense="true" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                                    input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
                         </div>
 
                         <div class="col-5 q-ma-sm print-hide">
-                          <q-input filled stack-label type="date" label="Date de début" v-model="date_start" :dense="true" /><br>
-                          <q-input filled stack-label type="date" label="Date de fin" v-model="date_end" :dense="true" />
+                          <q-input v-model="date_start" filled stack-label type="date" label="Date de début" :dense="true" /><br>
+                          <q-input v-model="date_end" filled stack-label type="date" label="Date de fin" :dense="true" />
                         </div>
                       </div>
                     </q-card>
                   </div>
 
-                  <q-card class="my-card q-mb-md" v-if="total">
+                  <q-card v-if="total" class="my-card q-mb-md">
                     <q-item>
                       <q-card-section>
-                        <div class="row q-mb-xs" v-for="(product, index) in products" :key="index">
-                          <q-input borderless readonly class="col-12 bold" :dense="true" type="text" v-model="product.name" />
-                          <q-input class="col-3 q-pr-sm" :dense="true" type="number" v-model="product.quantity"
+                        <div v-for="(product, index) in products" :key="index" class="row q-mb-xs">
+                          <q-input v-model="product.name" borderless readonly class="col-12 bold" :dense="true" type="text" />
+                          <q-input
+v-model="product.quantity" class="col-3 q-pr-sm" :dense="true" type="number"
                                    @input="getVal(index, product.quantity)" />
                           <q-input class="col-1 q-pr-sm" :dense="true" label="X"></q-input>
-                          <q-input class="col-3 q-pr-sm" :dense="true" type="number" v-model="product.price" />
+                          <q-input v-model="product.price" class="col-3 q-pr-sm" :dense="true" type="number" />
                           <q-input borderless readonly class="col-4 q-pr-sm" :dense="true" type="number" :value="product.sales_price * product.quantity" />
                           <div class="col-1"><br>
-                            <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-if="status_download" v-on:click="delete_product(index)" />
+                            <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                           </div>
                           <hr>
                         </div>
@@ -88,11 +91,11 @@
                     </q-item>
                   </q-card>
 
-                  <q-card class="my-card" v-if="total">
+                  <q-card v-if="total" class="my-card">
                     <q-item>
                       <q-card-section style="width: 100%">
                         <div class="row">
-                          <q-input class="col-6 q-ma-md" v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>
+                          <q-input v-if="credit" v-model="avance" class="col-6 q-ma-md" :dense="true" type="number" label="Avance"/><br>
                           <div class="text-h6 col-6">Total</div>
                           <div class="col-6 text-h6">{{ numerique(Math.round(total)) }} FCFA</div>
                           <br>
@@ -100,7 +103,7 @@
                             <q-btn color="secondary" icon="money" type="submit">&nbsp;Encaisser</q-btn> &nbsp;
                             <!--                                                        <q-btn v-on:click="credit = !credit">Credit</q-btn> &nbsp;-->
                             <q-btn>Notes</q-btn> &nbsp;
-                            <q-btn icon="receipt" label="Facture" v-on:click="get_facture_id(facture_number); facture_status2 = true" /> &nbsp;
+                            <q-btn icon="receipt" label="Facture" @click="get_facture_id(facture_number); facture_status2 = true" /> &nbsp;
                             <q-btn>Annuler</q-btn> &nbsp;
                             <q-checkbox v-model="credit" label="Vente à Credit" color="red" />
                           </div>
@@ -120,7 +123,8 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de vente" :myentreprise="entreprise"
+            <facture
+name="Facture de vente" :myentreprise="entreprise"
                      :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
@@ -144,6 +148,11 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 import FactureComponent from '../components/facture_component.vue';
 export default {
+  components: {
+    // 'downloadExcel': JsonExcel,
+    'facture': FactureComponent
+  },
+  mixins: [basemixin],
   data () {
     return {
       tab: 'alarms',
@@ -193,11 +202,16 @@ export default {
       entreprise: {}
     }
   },
-  components: {
-    // 'downloadExcel': JsonExcel,
-    'facture': FactureComponent
+  computed: {
+    total() {
+      return this.products.reduce((product, item) => product + (item.price * item.quantity), 0);
+    }
   },
-  mixins: [basemixin],
+  watch: {
+    // currentCity: function(newCity, oldCity) {
+    //   this.getWeather();
+    // }
+  },
   created () {
     let date = new Date();
 
@@ -213,16 +227,6 @@ export default {
     // this.factures_number_get();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     this.dateposted = date.toISOString().slice(0, 16);
-  },
-  computed: {
-    total() {
-      return this.products.reduce((product, item) => product + (item.price * item.quantity), 0);
-    }
-  },
-  watch: {
-    // currentCity: function(newCity, oldCity) {
-    //   this.getWeather();
-    // }
   },
   methods: {
     onSubmit () {

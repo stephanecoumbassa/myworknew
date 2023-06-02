@@ -1,4 +1,4 @@
-const { test, expect, chromium } = require("@playwright/test");
+const { test, expect } = require("@playwright/test");
 
 test.describe("navigation", () => {
   test.beforeEach(async ({ page }) => {
@@ -15,9 +15,9 @@ test.describe("navigation", () => {
     await expect(page).toHaveURL("http://localhost:9000/#/qstock");
   });
 
-  test("main navigation", async ({ page }) => {
+  // test("main navigation", async ({ page }) => {
     // Assertions use the expect API.
     // await page.goto('http://localhost:9000/#/qstock');
     // await expect(page).toHaveURL("http://localhost:9000/#/qstock");
-  });
+  // });
 });

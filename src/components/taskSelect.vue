@@ -13,7 +13,7 @@
 
 <script>
 export default {
-  name: 'taskSelect',
+  name: 'TaskSelect',
   data () {
     return {
       selectedTaskId: null,

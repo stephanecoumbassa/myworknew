@@ -1,7 +1,7 @@
 <template>
   <q-page padding>
     <!-- content -->
-    <div class="invoice-box" id="printMe">
+    <div id="printMe" class="invoice-box">
       <table cellpadding="0" cellspacing="0">
         <tr class="top">
           <td colspan="4">
@@ -52,11 +52,11 @@
           <td>Price</td>
         </tr>
 
-        <tr class="item" v-for="(item, index) in items" :key="index">
+        <tr v-for="(item, index) in items" :key="index" class="item">
           <td><input v-model="item.description" /></td>
-          <td>$<input type="number" v-model="item.price" /></td>
-          <td><input type="number" v-model="item.quantity" /></td>
-          <td>${{ item.price * item.quantity | currency }}</td>
+          <td>$<input v-model="item.price" type="number" /></td>
+          <td><input v-model="item.quantity" type="number" /></td>
+          <td>${{ item.price * item.quantity }}</td>
         </tr>
 
         <tr>
@@ -67,10 +67,10 @@
 
         <tr class="total">
           <td colspan="3"></td>
-          <td>Total: ${{ total | currency }}</td>
+          <td>Total: ${{ total }}</td>
         </tr>
       </table>
-      <q-btn v-on:click="print">Imprimer</q-btn>
+      <q-btn @click="print">Imprimer</q-btn>
 
     </div>
 
@@ -85,6 +85,14 @@
 
 export default {
   name: 'InvoicePage',
+  components: {
+    // VueHtmlToPaper
+  },
+  filters: {
+    currency (value) {
+      return value.toFixed(2);
+    }
+  },
   // el: "table",
   data () {
     return {
@@ -94,9 +102,6 @@ export default {
         { description: 'Website design', quantity: 1, price: 10 }
       ]
     }
-  },
-  components: {
-    // VueHtmlToPaper
   },
   computed: {
     total() {
@@ -111,11 +116,6 @@ export default {
       // console.log('ok');
       // Pass the element id here
       this.$htmlToPaper('printMe');
-    }
-  },
-  filters: {
-    currency (value) {
-      return value.toFixed(2);
     }
   }
 

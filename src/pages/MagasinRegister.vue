@@ -13,13 +13,13 @@
             <q-tab-panel name="connexion">
               <div class="row">
                 <div class="text-h6">Creation du magasin</div>
-                <q-input class="col-12" type="text" label="Nom du magasin" v-model="myname" />
-                <q-input class="col-12" type="text" label="Email" v-model="myemail" />
-                <q-input class="col-4 q-pa-xs" type="text" label="Indicatif" v-model="mycode" />
-                <q-input class="col-8 q-pa-xs" type="number" label="Telephone" v-model="myphone" />
-                <q-input class="col-12" type="password" label="Mot de passe" v-model="mypassword" /><br>
+                <q-input v-model="myname" class="col-12" type="text" label="Nom du magasin" />
+                <q-input v-model="myemail" class="col-12" type="text" label="Email" />
+                <q-input v-model="mycode" class="col-4 q-pa-xs" type="text" label="Indicatif" />
+                <q-input v-model="myphone" class="col-8 q-pa-xs" type="number" label="Telephone" />
+                <q-input v-model="mypassword" class="col-12" type="password" label="Mot de passe" /><br>
               </div>
-              <q-btn size="full" block full class="bg-blue-grey-14 full-width q-mt-lg" v-on:click="connexion()">Valider</q-btn>
+              <q-btn size="full" block full class="bg-blue-grey-14 full-width q-mt-lg" @click="connexion()">Valider</q-btn>
             </q-tab-panel>
 
           </q-tab-panels>
@@ -71,14 +71,14 @@ export default {
         }
     },
     mixin: [basemixin],
-    created () {
-        this.users_type_get();
-        // console.log(this.state);
-    },
     computed: {
         total() {
             return this.products.reduce((product, item) => product + (item.buy * item.quantity), 0);
         }
+    },
+    created () {
+        this.users_type_get();
+        // console.log(this.state);
     },
     methods: {
         onSubmit () {

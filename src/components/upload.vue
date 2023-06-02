@@ -2,20 +2,22 @@
 <!--  <div>-->
     <div class="row">
       <div v-if="show_crop">
-        <input type="hidden" name="image" v-on:change="handleInput" v-model="dataUrl" />
-        <input type="hidden" v-model="image_name" name="image_name" v-on:change="handleInput" value="images" />
-        <input type="hidden" v-model="image_extension" name="image_extension" value="jpg" />
+        <input v-model="dataUrl" type="hidden" name="image" @change="handleInput" />
+        <input v-model="image_name" type="hidden" name="image_name" value="images" @change="handleInput" />
+        <input v-model="image_extension" type="hidden" name="image_extension" value="jpg" />
         <input type="hidden" :value="type_id || 2"  name="type" />
-        <button type="button" class="btn btn-sm btn-secondary"
-                v-if="dimension" v-on:click="dimension_status = !dimension_status">
+        <button
+v-if="dimension" type="button"
+                class="btn btn-sm btn-secondary" @click="dimension_status = !dimension_status">
           changer la dimension
         </button>
         <div v-if="dimension">
-          <input v-if="dimension" type="number" v-model="mywidth" placeholder="largeur">
-          <input v-if="dimension" type="number" v-model="myheight" placeholder="hauteur">
+          <input v-if="dimension" v-model="mywidth" type="number" placeholder="largeur">
+          <input v-if="dimension" v-model="myheight" type="number" placeholder="hauteur">
         </div>
         <div v-if="show_crop">
-          <croppa v-model="myCroppa" :width="mywidth" :height="myheight" :quality="quality"
+          <croppa
+v-model="myCroppa" :width="mywidth" :height="myheight" :quality="quality"
                   initial-size="contain" placeholder="Ajouter votre image" :placeholder-font-size="14"
                   :placeholder-color="'default'" :prevent-white-space="true"
                   :file-size-limit="9024000" :show-remove-button="false"
@@ -26,22 +28,26 @@
             <!--                            <img v-if="!(src == null) && show_crop" slot="placeholder" :src="src" />-->
           </croppa>
           <br>
-          <input v-if="choose_status" type="range" @input="onSliderChange"
-                 :min="sliderMin" :max="sliderMax" step="0.00001" v-model="sliderVal" style="width: 200px; max-width: 100%">
+          <input
+v-if="choose_status" v-model="sliderVal" type="range"
+                 :min="sliderMin" :max="sliderMax" step="0.00001" style="width: 200px; max-width: 100%" @input="onSliderChange">
           <br>
           <!-- <button type="button" class="content-profil-add-photo" @click="croppa.remove()">Supprimer</button> -->
-          <button v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
+          <button
+v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
                   @click="sup()">Supprimer</button>
-          <button v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
+          <button
+v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
                   @click="uploadCroppedImage('image/jpeg')">Charger</button>
         </div>
       </div>
-      <div class="col-12" v-if="!show_crop">
+      <div v-if="!show_crop" class="col-12">
         <img style="width: 50%; height: auto" :src="dataUrl"><br><br>
-        <button type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
+        <button
+type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
                 @click="show_crop = !show_crop">Modifier</button>
       </div>
-      <div class="col-6" v-if="!(src == null) && show_crop">
+      <div v-if="!(src == null) && show_crop" class="col-6">
         <img :src="src" style="width: 90%; height: auto">
       </div>
     </div>
@@ -52,6 +58,23 @@
 import Croppa from 'vue-croppa'
 export default {
     name: 'UploadComponent',
+    components: {
+        'croppa': Croppa.component
+    },
+    model: {
+        event: 'blur'
+    },
+    props: {
+        // typerubrique: Number,
+        // idligne: Number,
+        src: { type: String, default: null },
+        // folder: String,
+        height: { type: Number, default: 250 },
+        width: { type: Number, default: 250 },
+        quality: { type: Number, default: 3 },
+        type_id: { type: Number, default: 1 },
+        dimension: { type: Boolean, default: false }
+    },
     data: function() {
         return {
             type: this.type_id,
@@ -75,20 +98,6 @@ export default {
             sliderMax: 0
         }
     },
-    props: {
-        // typerubrique: Number,
-        // idligne: Number,
-        src: { type: String, default: null },
-        // folder: String,
-        height: { type: Number, default: 250 },
-        width: { type: Number, default: 250 },
-        quality: { type: Number, default: 3 },
-        type_id: { type: Number, default: 1 },
-        dimension: { type: Boolean, default: false }
-    },
-    components: {
-        'croppa': Croppa.component
-    },
     watch: {
         // idligne: {
         //     immediate: true,
@@ -97,9 +106,6 @@ export default {
     },
     created: function () {
         // this.medias_get();
-    },
-    model: {
-        event: 'blur'
     },
     methods: {
         handleInput () {

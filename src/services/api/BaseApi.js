@@ -1,13 +1,12 @@
 import {deleteApi, getApi, postApi} from "src/services/apiService";
-import $httpService from "boot/httpService";
 
 class BaseApi {
 
   static async get (table) {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
       getApi('/my/get/'+ table )
         .then(response => resolve(response) )
-        .catch(error => error);
+        .catch(error => reject(error));
     });
   }
 
@@ -15,7 +14,7 @@ class BaseApi {
     return new Promise((resolve, reject) => {
       getApi('/my/get/'+ table+'/'+id )
         .then(response => resolve(response) )
-        .catch(error => error);
+        .catch(error => reject(error));
     });
   }
 
@@ -23,7 +22,7 @@ class BaseApi {
     return new Promise((resolve, reject) => {
       postApi('/my/search/'+ table, params )
         .then(response => resolve(response) )
-        .catch(error => error);
+        .catch(error => reject(error));
     });
   }
 

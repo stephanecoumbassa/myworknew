@@ -43,9 +43,6 @@ export function getApi(url, params = null) {
 }
 
 export function postWithParams(url, params) {
-	// if (!navigator.onLine) {
-	//   baseurl = baseurl2;
-	// }
 	const headers = {
 		headers: { Authorization: 'bearer ' + LocalStorage.getItem('token') }
 	};

@@ -5,7 +5,8 @@
       <header>
         <p class="title">Facture Proforma</p>
       </header>
-      <div class="container" style="position: relative; top: 100px; contenteditable: true;
+      <div
+class="container" style="position: relative; top: 100px; contenteditable: true;
       padding-right: 1.5cm; padding-left: 1.5cm;">
 
         <div class="facture" contenteditable="true">

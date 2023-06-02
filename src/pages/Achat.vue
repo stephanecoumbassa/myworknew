@@ -4,7 +4,7 @@
     <div class="row justify-center text-center">
 
       <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
-        <q-card class="my-card text-center justify-center content-center">
+        <q-card class="my-card text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
               <h5 class="text-center">Rubrique: Achats</h5>
@@ -15,7 +15,7 @@
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
         <router-link class="item item-link" to="/achats/commandes">
-          <q-card class="my-card" clickable>
+          <q-card class="my-card" clickable flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Achats</div>
@@ -27,7 +27,7 @@
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
         <router-link class="item item-link" to="/achats/factures">
-          <q-card class="my-card" clickable>
+          <q-card class="my-card" clickable flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Factures</div>
@@ -39,7 +39,7 @@
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
         <router-link class="item item-link" to="/achats/credit">
-          <q-card class="my-card" clickable>
+          <q-card class="my-card" clickable flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Impayés</div>
@@ -51,7 +51,7 @@
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
         <router-link class="item item-link" to="/achats/avoir">
-          <q-card class="my-card" clickable>
+          <q-card class="my-card" clickable flat>
             <q-item clickable>
               <q-card-section>
                 <div class="text-h5">Avoir</div>
@@ -62,7 +62,7 @@
       </div>
 
       <div class="col-md-12 col-12 col-xs-12 q-pa-lg" style="min-width: 400px">
-        <q-card class="my-card">
+        <q-card class="my-card" flat>
           <q-card-section>
             <areachart type="bar" color="#A66172" :series="series_appro_sum" title="Montants Achetes en FCFA" titletooltip="achat" />
           </q-card-section>
@@ -73,19 +73,20 @@
         <div class="row q-pa-sm print-hide">
           <div class="col-4 q-pa-sm"><q-input v-model="first" type="date" hint="date ddebut" /></div>
           <div class="col-4 q-pa-sm"><q-input v-model="last" type="date" hint="date fin" /></div>
-          <div class="col-2 q-pa-sm"><br><q-btn color="teal" label="filtrer" v-on:click="appro_stats_get()" /></div>
+          <div class="col-2 q-pa-sm"><br><q-btn color="teal" label="filtrer" @click="appro_stats_get()" /></div>
         </div>
 
         <div class="col-md-10 col-sm-12 col-xs-12 q-pa-sm">
-          <q-table :rows="appro_stats" :columns="appro_columns" row-key="id" :pagination="pagination">
-            <template v-slot:top-left>
+          <q-table :rows="appro_stats" :columns="appro_columns" row-key="id" :pagination="pagination" flat>
+            <template #top-left>
               <span>{{'Appro du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
             </template>
-            <template v-slot:top-right="props">
+            <template #top-right="props">
               <q-btn size="md" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
               <q-btn size="md" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
-              <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                     @click="props.toggleFullscreen" class="q-ml-md float-right" />
+              <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                     class="q-ml-md float-right" @click="props.toggleFullscreen" />
             </template>
           </q-table>
         </div>
@@ -106,6 +107,21 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 export default {
   name: 'AchatPage',
+  components: {
+    areachart: AreachartComponent
+  },
+  filters: {
+    capitalize: function (value) {
+      if (!value) return ''
+      value = value.toString()
+      return value.charAt(0).toUpperCase() + value.slice(1)
+    },
+    numerique: function (value) {
+      if (!value) return ''
+      return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    }
+  },
+  mixins: [basemixin],
   data () {
     return {
       tab: '0',
@@ -144,21 +160,6 @@ export default {
       series: [{ name: 'Nbre de Produit.', data: [] }],
       series_appro_sum: [{ name: 'Montant Achete par mois', data: [] }],
       slide: 'style'
-    }
-  },
-  mixins: [basemixin],
-  components: {
-    areachart: AreachartComponent
-  },
-  filters: {
-    capitalize: function (value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    },
-    numerique: function (value) {
-      if (!value) return ''
-      return String(value).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
     }
   },
   created () {

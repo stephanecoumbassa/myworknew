@@ -5,18 +5,19 @@
     <div class="col-md-11 col-12 q-pa-xs q-ma-xs">
       <!--grid-->
 
-      <q-table title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
+      <q-table
+title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
                :pagination="pagination" :filter="filter" flat>
-        <template v-slot:top="props">
+        <template #top="props">
           <div class="col-4 q-table__title">
-            <q-btn label="Ajouter" class="q-ma-md" size="sm" icon="add" color="secondary" v-on:click="fournisseur = {} ; medium = true" />
+            <q-btn label="Ajouter" class="q-ma-md" size="sm" icon="add" color="secondary" @click="fournisseur = {} ; medium = true" />
             Fournisseurs</div>
-          <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+          <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
           <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(data, 'vente')"/>
-          <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md" />
-          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  @click="props.toggleFullscreen" class="q-ml-md" />
+          <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
+          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  class="q-ml-md" @click="props.toggleFullscreen" />
         </template>
-        <template v-slot:body="props">
+        <template #body="props">
           <q-tr :props="props">
             <q-td key="id" :props="props"> {{props.row.id}} </q-td>
             <q-td key="name" :props="props"> {{props.row.name}} </q-td>
@@ -27,22 +28,22 @@
 
               <q-btn-dropdown size="xs" color="dark" label="">
                 <q-list>
-                  <q-item clickable v-close-popup>
+                  <q-item v-close-popup clickable>
                     <q-item-section>
-                      <q-item-label v-on:click="btn_update(props.row) ; medium = true"> Modifier</q-item-label>
+                      <q-item-label @click="btn_update(props.row) ; medium = true"> Modifier</q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium2 = true">
+                  <q-item v-close-popup clickable @click="medium2 = true">
                     <q-item-section>
                       <q-item-label>Enoyer un email</q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-section>
                       <q-item-label>Envoyer une proforma</q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-item clickable v-close-popup  @click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);">
+                  <q-item v-close-popup clickable  @click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);">
                     <q-item-section>
                       <q-item-label>Liste des commandes</q-item-label>
                     </q-item-section>
@@ -57,30 +58,32 @@
       <q-dialog v-model="medium" position="top">
         <q-card style="width: 700px; max-width: 80vw;">
           <q-card-section>
-            <div class="text-h6" v-if="!status_update">Ajouter un fournisseur</div>
-            <div class="text-h6" v-if="status_update">Modifier un fournisseur</div>
+            <div v-if="!status_update" class="text-h6">Ajouter un fournisseur</div>
+            <div v-if="status_update" class="text-h6">Modifier un fournisseur</div>
           </q-card-section>
 
           <q-card-section>
             <div class="row justify-center">
               <div class="col-10">
 
-                <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md">
-                  <q-select filled v-model="fournisseur.type" :options="options" label="Type de fournisseur"
+                <q-form  class="q-gutter-md" @submit="onSubmit" @reset="onReset">
+                  <q-select
+v-model="fournisseur.type" filled :options="options" label="Type de fournisseur"
                             map-options emit-value option-value="id" option-label="name" />
-                  <q-input autocomplete v-model="fournisseur.name" label="Nom *"
+                  <q-input
+v-model="fournisseur.name" autocomplete label="Nom *"
                            lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
-                  <q-input autocomplete  v-model="fournisseur.last_name" label="Prenom *" />
-                  <q-input type="number" v-model="fournisseur.telephone_code"  label="indicatif *" />
-                  <q-input type="text" v-model="fournisseur.telephone"  label="telephone *" />
-                  <q-input type="email" v-model="fournisseur.email"  label="Email *" />
+                  <q-input v-model="fournisseur.last_name"  autocomplete label="Prenom *" />
+                  <q-input v-model="fournisseur.telephone_code" type="number"  label="indicatif *" />
+                  <q-input v-model="fournisseur.telephone" type="text"  label="telephone *" />
+                  <q-input v-model="fournisseur.email" type="email"  label="Email *" />
                   <country-component v-model="fournisseur.country" code="mli"></country-component>
-                  <q-input type="text" v-model="fournisseur.city" label="Ville" />
-                  <q-input type="textarea" v-model="fournisseur.address" label="Adresse" />
+                  <q-input v-model="fournisseur.city" type="text" label="Ville" />
+                  <q-input v-model="fournisseur.address" type="textarea" label="Adresse" />
                   <div>
                     <br>
-                    <q-btn label="Modifier" v-if="status_update" v-on:click="fournisseur_update()" type="button" color="secondary"/>
-                    <q-btn label="Valider" v-if="!status_update"  type="submit" color="secondary"/>
+                    <q-btn v-if="status_update" label="Modifier" type="button" color="secondary" @click="fournisseur_update()"/>
+                    <q-btn v-if="!status_update" label="Valider"  type="submit" color="secondary"/>
                   </div>
                 </q-form>
 
@@ -89,7 +92,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="Fermer" v-close-popup />
+            <q-btn v-close-popup flat label="Fermer" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -100,10 +103,10 @@
             <q-input v-model="post.subject" label="Sujet"></q-input>
           </div>
           <div class="col-12 q-ma-md">
-            <q-editor v-model="post.body" :dense="$q.screen.lt.md" :definitions="definitions" :toolbar="toolbar" :fonts="fonts" />
+            <q-editor v-model="post.body" :dense="$q.screen.lt.md" :toolbar="toolbar" :fonts="fonts" />
           </div>
           <div class="col-12 q-ma-md">
-            <q-btn size="md" v-on:click="send_email()">Envoyer l'email</q-btn>
+            <q-btn size="md" @click="send_email()">Envoyer l'email</q-btn>
           </div>
         </div>
       </q-dialog>
@@ -113,23 +116,25 @@
       </q-dialog>
 
       <q-dialog v-model="appro_status" position="top" transition-show="slide-up" transition-hide="slide-down">
-        <q-table :data="appro_stats" :columns="appro_columns" style="width: 1000px; max-width: 100%"
+        <q-table
+:data="appro_stats" :columns="appro_columns" style="width: 1000px; max-width: 100%"
                  row-key="id" :pagination="pagination">
-          <template v-slot:top-left>
+          <template #top-left>
             <div class="row">
-              <div class="col-5 "><q-input type="date"  v-model="first" label="debut" /></div>
-              <div class="col-5"><q-input type="date"  v-model="last" label="fin" /></div>
-              <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" v-on:click="appro_stats_get(product_id)" /></div>
+              <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
+              <div class="col-5"><q-input v-model="last"  type="date" label="fin" /></div>
+              <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="appro_stats_get(product_id)" /></div>
             </div>
           </template>
-          <template v-slot:top-right="props">
+          <template #top-right="props">
             <q-btn size="sm" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
             <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
             <download-excel name="vente.xls" :data="appro_columns">
               <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
             </download-excel>
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md float-right" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md float-right" @click="props.toggleFullscreen" />
           </template>
         </q-table>
       </q-dialog>
@@ -149,10 +154,15 @@ import CountryComponent from '../components/country.vue';
 import * as _ from 'lodash';
 export default {
   name: 'FournisseurPage',
+  components: {
+    'downloadExcel': vue3JsonExcel,
+    FactureComponent,
+    CountryComponent
+  },
+  mixins: [basemixin],
   data () {
     return {
       selected: [],
-      // options: [ { id: 1, name: 'personne' }, { id: 2, name: 'compagnie' } ],
       options: [ { id: 1, name: 'personne' }, { id: 2, name: 'compagnie' } ],
       fournisseur: { },
       status_update: false,
@@ -171,11 +181,9 @@ export default {
       nbre_achetes: 0,
       montant_achetes: 0,
       nbre_vendus: 0,
-      montant_vendus: 0,
       vente_sum: [],
       appro_sum: [],
       loading: false,
-      visibleColumns: ['email', 'phoneNumber', 'type'],
       data_status: false,
       pagination: {
         sortBy: 'name',
@@ -199,28 +207,17 @@ export default {
         { name: 'p_sell_price', label: 'Prix Vente', align: 'left', field: 'p_sell_price', format: val => `${this.numerique(val)}`, sortable: true },
         { name: 'dateposted', label: 'Date Achat', align: 'left', field: 'dateposted', sortable: true, format: val => `${this.dateformat(val, 3)}` }
       ],
-      data: [],
-      definitions: {
-        insert_img: {
-          tip: 'Inserer une image', icon: 'photo', handler: this.insertImg
-        }
-      }
+      data: []
     }
   },
-  components: {
-    'downloadExcel': vue3JsonExcel,
-    FactureComponent,
-    CountryComponent
+  watch: {
   },
-  mixins: [basemixin],
   created () {
     this.loadData();
     var date = new Date();
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
     // this.loadData2();
-  },
-  watch: {
   },
   methods: {
     loadData () {
@@ -294,29 +291,6 @@ export default {
             color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
           });
         });
-    },
-    insertImg() { // insertImg method
-      const post = this.post
-      // create an input file element to open file dialog
-      //             // input.onchange = _ => {
-      const input = document.createElement('input')
-      input.type = 'file'
-      input.accept = '.png, .jpg' // file extensions allowed
-      let file
-      input.onchange = () => {
-        const files = Array.from(input.files)
-        file = files[0]
-        // lets load the file as dataUrl
-        const reader = new FileReader()
-        let dataUrl = ''
-        reader.onloadend = function() {
-          dataUrl = reader.result
-          // append result to the body of your post
-          post.body += '<div><img src="' + dataUrl + '" /></div>'
-        }
-        reader.readAsDataURL(file)
-      }
-      input.click()
     },
     appro_stats_get(pid) {
       let params = { 'first': this.first, 'last': this.last, 'fournisseurid': pid };

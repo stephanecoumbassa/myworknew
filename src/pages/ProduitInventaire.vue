@@ -17,7 +17,7 @@
     </div>
 
     <q-dialog v-model="alert">
-      <q-card style="width: 700px; max-width: 80vw;" v-if="lists.length>0">
+      <q-card v-if="lists.length>0" style="width: 700px; max-width: 80vw;">
         <q-card-section>
           <div class="text-h6">Inventaire - {{lists[0]['name']}}</div>
         </q-card-section>
@@ -50,7 +50,7 @@
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="OK" color="primary" v-close-popup />
+          <q-btn v-close-popup flat label="OK" color="primary" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -58,7 +58,8 @@
     <div class="row justify-center q-pa-md">
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
 
-        <q-tabs v-model="tab" dense class="text-dark"
+        <q-tabs
+v-model="tab" dense class="text-dark"
                 active-color="secondary" indicator-color="secondary" align="justify" narrow-indicator>
           <q-tab name="mails" label="Listes des inventaires" />
           <q-tab name="alarms" label="Nouvel Inventaire" />
@@ -69,11 +70,13 @@
 
             <div class="row">
               <div class="col-12 q-pa-lg">
-                <q-input class="row" autocomplete type="search" v-model="search"
-                         v-on:keyup="facture_filter_get(search)" label="Rechercher" />
+                <q-input
+v-model="search" class="row" autocomplete type="search"
+                         label="Rechercher" @keyup="facture_filter_get(search)" />
               </div>
-              <div class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md"
-                   v-for="(item, index) in inventaires" :key="index">
+              <div
+v-for="(item, index) in inventaires"
+                   :key="index" class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md">
                 <q-card :class="'q-pa-md '">
                   <div class="text-h6"> {{item.name}} </div>
                   <br> Crée le {{dateformat(item.dateposted)}}
@@ -91,22 +94,23 @@
           <q-tab-panel name="alarms">
             <br>
             <q-table title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-              <template v-slot:top="props">
+              <template #top="props">
                 <div class="col-7 q-table__title">Liste des produits
                   <div class="row">
-                    <q-input dense debounce="300" v-model="name" placeholder="Nom de l'inventaire" /> &nbsp;&nbsp;
-                    <q-btn class="q-mr-xs" size="sm" label="créer" color="secondary" v-on:click="check_qty()" />
+                    <q-input v-model="name" dense debounce="300" placeholder="Nom de l'inventaire" /> &nbsp;&nbsp;
+                    <q-btn class="q-mr-xs" size="sm" label="créer" color="secondary" @click="check_qty()" />
                   </div>
                   <br>
                 </div>
                 <div class="row">
-                  <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-                  <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                         @click="props.toggleFullscreen" class="q-ml-md" />
+                  <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+                  <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                         class="q-ml-md" @click="props.toggleFullscreen" />
                 </div>
               </template>
-              <template v-slot:body="props">
-                <q-tr :props="props" :key="props.row.id" v-bind="props.row.qty = 0">
+              <template #body="props">
+                <q-tr :key="props.row.id" :props="props" v-bind="props.row.qty = 0">
                   <q-td key="id" :props="props"> {{props.row.id}} </q-td>
                   <q-td key="photo" :props="props">
                     <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>
@@ -115,7 +119,7 @@
                   <q-td key="domainname" :props="props"> {{props.row.domainname}} </q-td>
                   <q-td key="parent_categorie_name" :props="props"> {{props.row.parent_categorie_name}} </q-td>
                   <q-td key="amount" :props="props"> {{numerique(props.row.reste)}} </q-td>
-                  <q-td key="def" :props="props"> <q-input type="number" label="Quantité" :value="0" v-model="props.row.def" filled :dense="true" /> </q-td>
+                  <q-td key="def" :props="props"> <q-input v-model="props.row.def" type="number" label="Quantité" :value="0" filled :dense="true" /> </q-td>
                   <q-td key="difference" :props="props" :class="alerte(props.row)">
                     {{parseInt(props.row.def) - parseInt(props.row.reste)}}
                   </q-td>
@@ -142,6 +146,7 @@ import basemixin from './basemixin';
 // import AreachartComponent from '../components/areachart';
 export default {
   name: 'ProduitInventairePage',
+  mixins: [basemixin],
   data () {
     return {
       tab: 'mails',
@@ -177,7 +182,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
   },
-  mixins: [basemixin],
   mounted () {
     this.products_get();
     this.inventaires_get();

@@ -2,28 +2,28 @@
   <div>
     <div>
       <div class="row">
-        <div class="col-4 mt-4 mb-2" v-for="item in medias_list" v-bind:key="item.id">
+        <div v-for="item in medias_list" :key="item.id" class="col-4 mt-4 mb-2">
           {{item.type}} -{{item.name}}<br>
           <img style="width: 98%; height: 200px; object-fit: cover" :src="'https://www.affairez.com/apistock/public/shop/'+entreprise.id+'/'+folder+'/'+item.name"/><br>
-          <q-btn size="xs" color="negative" type="button" v-on:click="medias_delete(item.id, item.name)">Supprimer</q-btn>
-          <q-btn size="xs" color="secondary" type="button" v-on:click="update(item)">Remplacer</q-btn>
+          <q-btn size="xs" color="negative" type="button" @click="medias_delete(item.id, item.name)">Supprimer</q-btn>
+          <q-btn size="xs" color="secondary" type="button" @click="update(item)">Remplacer</q-btn>
         </div>
       </div>
       <br><br>
       <form>
         <div class="row">
           <div class="col-4">
-            <select required class="form-control search-slt" v-model="typeid" v-on:change='selected_type()'>
+            <select v-model="typeid" required class="form-control search-slt" @change='selected_type()'>
               <option></option>
-              <option v-for="item in medias_type" :value="item.id" :key="item.id">
+              <option v-for="item in medias_type" :key="item.id" :value="item.id">
                 {{item.name}}
               </option>
             </select><br>
           </div>
           <div class="col-12">
-            <input type="hidden" name="image" v-on:change="handleInput" v-model="dataUrl" />
-            <input type="hidden" v-model="image_name" name="image_name" v-on:change="handleInput" />
-            <input type="hidden" v-model="image_extension" name="image_extension" />
+            <input v-model="dataUrl" type="hidden" name="image" @change="handleInput" />
+            <input v-model="image_name" type="hidden" name="image_name" @change="handleInput" />
+            <input v-model="image_extension" type="hidden" name="image_extension" />
             <!--            <input type="hidden" v-model="type_id" readonly  name="type" />-->
             <div v-if="show_crop" style="height: 320px;">
 <!--              <croppa-->
@@ -45,16 +45,19 @@
 <!--              >-->
 <!--              </croppa><br>-->
               <input type="file" @change="change" />
-              <input v-if="choose_status" type="range" @input="onSliderChange" :min="sliderMin" :max="sliderMax" step="0.00001" v-model="sliderVal" style="width: 200px; max-width: 100%">
-              <br><q-btn size="xs" v-if="choose_status"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
+              <input v-if="choose_status" v-model="sliderVal" type="range" :min="sliderMin" :max="sliderMax" step="0.00001" style="width: 200px; max-width: 100%" @input="onSliderChange">
+              <br><q-btn
+v-if="choose_status" size="xs"  type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
                          @click="uploadCroppedImage('image/jpeg')">Recadrer</q-btn>
             </div>
             <div v-if="!show_crop">
               <img :src="dataUrl" style="max-height: 150px; height: 100%"><br>
-              <q-btn size="xs" type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
+              <q-btn
+size="xs" type="button" class="content-profil-add-photo" onclick="event.preventDefault()"
                      @click="show_crop = true">Retour</q-btn>
-              <q-btn size="xs" type="button" class="btn btn-sm btn-primary" onclick="event.preventDefault()"
-                     v-on:click="medias_add">Ajouter</q-btn>
+              <q-btn
+size="xs" type="button" class="btn btn-sm btn-primary" onclick="event.preventDefault()"
+                     @click="medias_add">Ajouter</q-btn>
               <!--              <q-btn size="xs" type="button" class="btn btn-sm btn-primary" onclick="event.preventDefault()"-->
               <!--                      v-on:click="medias_update">Modifier</q-btn>-->
             </div>
@@ -76,6 +79,29 @@ import { defineComponent } from 'vue'
 export default defineComponent({
 // export default {
   name: 'HelloComponent',
+  components: {
+    // 'croppa': Croppa.component
+  },
+  model: {
+    event: 'blur'
+  },
+  props: {
+    typerubrique: Number,
+    idligne: Number,
+    folder: String,
+    height: {
+      type: Number,
+      default: 300
+    },
+    width: {
+      type: Number,
+      default: 300
+    },
+    quality: {
+      type: Number,
+      default: 3
+    },
+  },
   data: function () {
     return {
       // type: this.type_id,
@@ -102,30 +128,6 @@ export default defineComponent({
       sliderMax: 0
     }
   },
-  components: {
-    // 'croppa': Croppa.component
-  },
-  props: {
-    typerubrique: Number,
-    idligne: Number,
-    folder: String,
-    height: {
-      type: Number,
-      default: 300
-    },
-    width: {
-      type: Number,
-      default: 300
-    },
-    quality: {
-      type: Number,
-      default: 3
-    },
-    type_id: {
-      type: Number,
-      default: 1
-    }
-  },
   watch: {
     idligne: {
       immediate: true,
@@ -137,9 +139,6 @@ export default defineComponent({
   created: function () {
     this.medias_type_get();
     this.shop_get();
-  },
-  model: {
-    event: 'blur'
   },
   methods: {
     change(e) {

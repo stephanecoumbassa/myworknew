@@ -234,7 +234,7 @@ var basemixin = {
     hideLoading() {
       Loading.hide();
     },
-    showAlert(response, aze='') {
+    showAlert(response) {
       let msg = '';
       response.status === 1 ?
         msg = { color: 'green', position: 'top', message: response.msg, icon: 'report_problem' }
@@ -254,7 +254,7 @@ var basemixin = {
           })
           .join(",");
       });
-      csv.unshift(fields.join(",")); // add header column
+      csv.unshift(fields.join(","));
       csv = csv.join("\r\n");
       const download = (filename, text) => {
         var element = document.createElement("a");

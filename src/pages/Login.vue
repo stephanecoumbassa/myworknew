@@ -6,15 +6,16 @@
         <q-card flat>
 
           <div class="text-center center">
-            <img class="animate__animated animate__pulse animate__infinite animate__slower"
+            <img
+class="animate__animated animate__pulse animate__infinite animate__slower"
                  src="~assets/fmmi.jpeg" style="height: 150px; width: 150px;">
           </div>
           <br>
 <!--          <div class="text-h6">Connexion</div>-->
           <br>
-          <q-input aria-autocomplete autocomplete type="text" label="Email" v-model="myemail" />
-          <q-input type="password" label="Mot de passe" v-model="mypassword" /><br><br>
-          <q-btn size="full" block full class="bg-secondary text-white full-width" v-on:click="connexion()">Se Connecter 1</q-btn>
+          <q-input v-model="myemail" aria-autocomplete autocomplete type="text" label="Email" />
+          <q-input v-model="mypassword" type="password" label="Mot de passe" /><br><br>
+          <q-btn size="full" block full class="bg-secondary text-white full-width" @click="connexion()">Se Connecter 1</q-btn>
           <br>
           <br>
           <br>
@@ -66,14 +67,14 @@ export default {
     }
   },
   mixin: [basemixin],
-  created () {
-    // this.users_type_get();
-    // console.log(this.state);
-  },
   computed: {
     total() {
       return this.products.reduce((product, item) => product + (item.buy * item.quantity), 0);
     }
+  },
+  created () {
+    // this.users_type_get();
+    // console.log(this.state);
   },
   methods: {
     onSubmit () {

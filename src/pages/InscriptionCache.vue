@@ -24,15 +24,16 @@
 
                         <div class="text-h6">Inscription</div>
 
-                        <q-input type="text" label="Nom" v-model="name"></q-input>
-                        <q-input type="text" label="Prenom" v-model="lastname"></q-input>
-                        <q-input type="text" label="Email" v-model="email"></q-input>
-                        <q-input class="col-3" type="text" label="indicatif" v-model="indicatif"></q-input>
-                        <q-input class="col-9" type="text" label="Telephone" v-model="telephone"></q-input>
-                        <q-select filled map-options emit-value :options="users_types"  v-model="user_type" label="Type utilisateur" option-value="id" stack-label input-debounce="0"
+                        <q-input v-model="name" type="text" label="Nom"></q-input>
+                        <q-input v-model="lastname" type="text" label="Prenom"></q-input>
+                        <q-input v-model="email" type="text" label="Email"></q-input>
+                        <q-input v-model="indicatif" class="col-3" type="text" label="indicatif"></q-input>
+                        <q-input v-model="telephone" class="col-9" type="text" label="Telephone"></q-input>
+                        <q-select
+v-model="user_type" filled map-options emit-value  :options="users_types" label="Type utilisateur" option-value="id" stack-label input-debounce="0"
                                   option-label="name"></q-select>
-                        <q-input type="text" label="ID Magasin" v-model="shop_id" ></q-input>
-                        <q-input type="password" label="Mot de passe"  v-model="password"></q-input><br>
+                        <q-input v-model="shop_id" type="text" label="ID Magasin" ></q-input>
+                        <q-input v-model="password" type="password"  label="Mot de passe"></q-input><br>
 
                         <q-btn class="bg-blue-grey-14" @click="inscription()">Valider</q-btn>
 
@@ -41,10 +42,10 @@
                     <q-tab-panel name="connexion">
 
                         <div class="text-h6">Connexion</div>
-                        <q-input type="text" label="Email" v-model="myemail"></q-input>
-                        <q-input type="password" label="Mot de passe" v-model="mypassword"></q-input><br>
+                        <q-input v-model="myemail" type="text" label="Email"></q-input>
+                        <q-input v-model="mypassword" type="password" label="Mot de passe"></q-input><br>
 
-                        <q-btn size="full" block full class="bg-blue-grey-14 full-width" v-on:click="connexion()">Valider</q-btn>
+                        <q-btn size="full" block full class="bg-blue-grey-14 full-width" @click="connexion()">Valider</q-btn>
                     </q-tab-panel>
 
                 </q-tab-panels>
@@ -91,14 +92,14 @@ export default {
         }
     },
     mixin: [],
-    created () {
-        // this.users_get();
-        this.users_type_get();
-    },
     computed: {
         total() {
             return this.products.reduce((product, item) => product + (item.buy * item.quantity), 0);
         }
+    },
+    created () {
+        // this.users_get();
+        this.users_type_get();
     },
     methods: {
         onSubmit () {

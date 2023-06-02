@@ -2,8 +2,9 @@
   <q-layout view="hHh lpR fFf" style="background-color: #f9f9f9; max-width: 1200px; width: 100%; margin: auto">
     <q-header elevated class="bg-white text-grey-8" height-hint="32" style="background-color: #f9f9f9; max-width: 1200px; width: 100%; margin: auto">
       <q-toolbar class="GNL__toolbar bg-dark-separator text-white">
-        <q-btn flat dense round color="secondary" @click="leftDrawerOpen = !leftDrawerOpen" aria-label="Menu"
-               icon="menu" class="q-mr-sm" />
+        <q-btn
+flat dense round color="secondary" aria-label="Menu" icon="menu"
+               class="q-mr-sm" @click="leftDrawerOpen = !leftDrawerOpen" />
 
         <q-toolbar-title v-if="$q.screen.gt.xs" shrink class="row items-center" >
 <!--          <img :src="'https://batison.com/apistock/public/assets/uploads/magasin/'+entreprise.logo"-->
@@ -29,11 +30,12 @@
     <q-drawer  v-model="leftDrawerOpen" bordered content-class="bg-white" :width="280">
       <q-scroll-area class="fit">
         <q-list padding class="text-grey-8">
-          <img :src="'https://batison.com/apistock/public/assets/uploads/magasin/'+entreprise.logo" class="q-ml-md"
+          <img
+:src="'https://batison.com/apistock/public/assets/uploads/magasin/'+entreprise.logo" class="q-ml-md"
                style="width: 50px; height: 50px; object-fit: cover"/>
           <br>
           <br>
-          <q-item class="GNL__drawer-item" v-ripple v-for="link in links1" :key="link.text" clickable>
+          <q-item v-for="link in links1" :key="link.text" v-ripple class="GNL__drawer-item" clickable>
             <q-item-section avatar>
               <q-icon :name="link.icon" />
             </q-item-section>
@@ -50,7 +52,7 @@
 
     <q-drawer v-model="right" side="right" bordered content-class="bg-white">
     <h6 class="text-center">Panier</h6>
-      <div class="row" v-for="(product, index) in products" :key="index">
+      <div v-for="(product, index) in products" :key="index" class="row">
         <q-item>
           <q-item-section top avatar>
             <q-avatar rounded>
@@ -61,7 +63,7 @@
 
           <q-item-section>
             <q-item-label class="no-padding no-margin no-border">{{product.name}}</q-item-label>
-            <q-input borderless  class="no-padding no-margin no-border" v-model="product.qty" />
+            <q-input v-model="product.qty"  borderless class="no-padding no-margin no-border" />
           </q-item-section>
 
           <q-item-section side top>
@@ -71,9 +73,9 @@
         </q-item>
         <q-separator spaced />
       </div>
-      <q-input class="no-border q-ma-sm" label="Nom et Prenom" v-model="name"/>
-      <q-input class="no-border q-ma-sm" label="Telephone" v-model="telephone"/>
-      <q-input class="no-border q-ma-sm" label="Email" v-model="email" /><br>
+      <q-input v-model="name" class="no-border q-ma-sm" label="Nom et Prenom"/>
+      <q-input v-model="telephone" class="no-border q-ma-sm" label="Telephone"/>
+      <q-input v-model="email" class="no-border q-ma-sm" label="Email" /><br>
       <p class="text-center">
         <q-btn class="text-center q-ml-sm"  color="secondary" label="COMMANDER" icon="shopping_cart" @click="command_cart()"></q-btn>
       </p>

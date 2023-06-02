@@ -4,24 +4,26 @@
     <br>
 
     <div class="row q-mb-lg">
-      <q-btn label="Ajouter un service" class="offset-lg-1" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
+      <q-btn label="Ajouter un service" class="offset-lg-1" size="sm" icon="add" color="secondary" @click="medium = true" />
     </div>
 
 
     <div class="row justify-center text-center">
 
       <div class="col-lg-10 col-12">
-        <q-table title="Treats" :rows="data" :columns="columns" row-key="name"
+        <q-table
+title="Treats" :rows="data" :columns="columns" row-key="name"
                  :pagination="pagination">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-4 q-table__title">Prestations</div>
             <download-excel name="services.xls" :data="data">
               <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
             </download-excel>
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
               <q-td key="photo" :props="props">
@@ -31,9 +33,9 @@
               <q-td key="price_min" :props="props"> {{props.row.price_min}} </q-td>
               <q-td key="price_max" :props="props"> {{props.row.price_max}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true" />&nbsp;
-                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" label="photo" v-on:click="photo_get(props.row)" icon="photo" />&nbsp;
-                <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()" />
+                <q-btn size="xs" icon="edit" @click="btn_update(props.row); medium = true" />&nbsp;
+                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" label="photo" icon="photo" @click="photo_get(props.row)" />&nbsp;
+                <q-btn color="red-4" size="xs" icon="delete" @click="btn_delete()" />
               </q-td>
             </q-tr>
           </template>
@@ -53,24 +55,27 @@
               <!--      <div class="col-2">1</div>-->
               <div class="col-10">
 
-                <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md">
+                <q-form  class="q-gutter-md" @submit="onSubmit" @reset="onReset">
 
-                  <q-input autocomplete v-model="service.name" label="Titre *" hint="Titre"
+                  <q-input
+v-model="service.name" autocomplete label="Titre *" hint="Titre"
                            lazy-rules :rules="[ val => val && val.length > 0 || 'Champs requis']" />
-                  <q-input autocomplet type="textarea" v-model="service.description" label="Description *" />
-                  <q-input autocomplete  v-model="service.price_min" label="Prix Minimum" />
-                  <q-input autocomplete type="text" v-model="service.price_max" label="Prix Maximum" />
-                  <q-select v-model="service.domain_id" :options="domains" label="Domains" map-options emit-value :dense="true"
+                  <q-input v-model="service.description" autocomplet type="textarea" label="Description *" />
+                  <q-input v-model="service.price_min"  autocomplete label="Prix Minimum" />
+                  <q-input v-model="service.price_max" autocomplete type="text" label="Prix Maximum" />
+                  <q-select
+v-model="service.domain_id" :options="domains" label="Domains" map-options emit-value :dense="true"
                             option-value="id" stack-label input-debounce="0" option-label="name"
-                            @input="parent_get(service.domain_id)" :rules="[ val => val || 'champs obligattoire']" />
+                            :rules="[ val => val || 'champs obligattoire']" @input="parent_get(service.domain_id)" />
 
-                  <q-select v-model="service.categorie_id" :options="parents" label="Parents" map-options emit-value :dense="true"
+                  <q-select
+v-model="service.categorie_id" :options="parents" label="Parents" map-options emit-value :dense="true"
                             option-value="id" stack-label input-debounce="0" option-label="name"
-                            @input="categorie_get(service.categorie_id)" :rules="[ val => val || 'champs obligattoire']" />
+                            :rules="[ val => val || 'champs obligattoire']" @input="categorie_get(service.categorie_id)" />
 
                   <div>
-                    <q-btn label="Modifier" v-if="status_update" v-on:click="service_update()" type="button" color="secondary"/>
-                    <q-btn label="Valider" v-if="!status_update"  type="submit" color="secondary"/>
+                    <q-btn v-if="status_update" label="Modifier" type="button" color="secondary" @click="service_update()"/>
+                    <q-btn v-if="!status_update" label="Valider"  type="submit" color="secondary"/>
                   </div>
                 </q-form>
 
@@ -79,7 +84,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="Fermer" v-close-popup v-on:click="btn_update = false ; service = {}" />
+            <q-btn v-close-popup flat label="Fermer" @click="btn_update = false ; service = {}" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -97,7 +102,7 @@
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal">
-            <q-btn flat label="Fermer" v-close-popup />
+            <q-btn v-close-popup flat label="Fermer" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -108,12 +113,16 @@
 
 <script>
 import $httpService from '../boot/httpService';
-import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin';
 import HelloComponent from '../components/hello.vue';
 
 export default {
   name: 'ServiceItemPage',
+  components: {
+    HelloComponent,
+    'downloadExcel': JsonExcel
+  },
+  mixins: [basemixin],
   data () {
     return {
       selected: [],
@@ -175,11 +184,6 @@ export default {
     this.categories_all();
     // this.loadData2();
   },
-  components: {
-    HelloComponent,
-    'downloadExcel': JsonExcel
-  },
-  mixins: [basemixin],
   methods: {
     loadData () {
       $httpService.getWithParams('/my/get/services_items')

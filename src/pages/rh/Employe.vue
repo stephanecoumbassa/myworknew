@@ -4,16 +4,17 @@
 
     <div class="row justify-center">
       <div class="col-12 q-mt-md">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />
+        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" @click="medium2 = true" />
         <br><br>
         <q-table title="employes" :data="employes" :columns="columns" :pagination="pagination" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des employe</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props" :class="alerte(props.row)">
               <q-td key='lastname' :props='props'> {{props.row.lastname}} </q-td>
               <q-td key='firstname' :props='props'> {{props.row.firstname}} </q-td>
@@ -25,36 +26,36 @@
               <q-td key='matricule' :props='props'> {{props.row.matricule}} </q-td>
               <q-td key="actions" :props="props">
                 <q-btn-dropdown size="xs" color="dark">
-                  <q-item clickable v-close-popup>
+                  <q-item v-close-popup clickable>
                     <q-item-section>
-                      <q-item-label v-on:click="update_get(props.row)"> Modifier</q-item-label>
+                      <q-item-label @click="update_get(props.row)"> Modifier</q-item-label>
                     </q-item-section>
                   </q-item>
-                  <q-item clickable v-on:click="employe_delete(props.row.id)">
+                  <q-item clickable @click="employe_delete(props.row.id)">
                     <q-item-label>Supprimer</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Absences</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Conges</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Salaire</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Prime</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Documents</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Notes</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Postes</q-item-label>
                   </q-item>
-                  <q-item clickable v-close-popup @click="medium3 = true">
+                  <q-item v-close-popup clickable @click="medium3 = true">
                     <q-item-label>Courrier</q-item-label>
                   </q-item>
                 </q-btn-dropdown>
@@ -73,50 +74,50 @@
           <div class="text-h6">Nouvel Employe</div>
         </q-card-section>
         <q-card-section>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
             <div class="row">
 
               <div class="col-6 q-pa-md">
-                <q-input type='text' v-model='employe.lastname' label='Nom'/>
-                <q-input type='text' v-model='employe.firstname' label='Prenom'/>
-                <q-input type='text' v-model='employe.telephone' label='Telephone'/>
-                <q-input type='text' v-model='employe.indicatif' label='Indicatif'/>
-                <q-input type='textarea' v-model='employe.adress' label='Adresse'/>
-                <q-input type='text' v-model='employe.sex' label='Sexe'/>
-                <q-input type='text' v-model='employe.cnps' label='CNPS'/>
-                <q-input type='text' v-model='employe.matricule' label='Matricule'/>
-                <q-input type='text' v-model='employe.status_matrimonial' label='Status Matrimonial'/>
-                <q-input type='text' v-model='employe.enfants' label='Nbre Enfants'/>
-                <q-input type='password' v-model='employe.password' label='password'/>
-                <q-input type='text' v-model='employe.cni' label='CNI'/>
-                <q-input type='text' v-model='employe.rib' label='RIB'/>
+                <q-input v-model='employe.lastname' type='text' label='Nom'/>
+                <q-input v-model='employe.firstname' type='text' label='Prenom'/>
+                <q-input v-model='employe.telephone' type='text' label='Telephone'/>
+                <q-input v-model='employe.indicatif' type='text' label='Indicatif'/>
+                <q-input v-model='employe.adress' type='textarea' label='Adresse'/>
+                <q-input v-model='employe.sex' type='text' label='Sexe'/>
+                <q-input v-model='employe.cnps' type='text' label='CNPS'/>
+                <q-input v-model='employe.matricule' type='text' label='Matricule'/>
+                <q-input v-model='employe.status_matrimonial' type='text' label='Status Matrimonial'/>
+                <q-input v-model='employe.enfants' type='text' label='Nbre Enfants'/>
+                <q-input v-model='employe.password' type='password' label='password'/>
+                <q-input v-model='employe.cni' type='text' label='CNI'/>
+                <q-input v-model='employe.rib' type='text' label='RIB'/>
 
               </div>
 
               <div class="col-6 q-pa-md">
-                <q-input type='text' v-model='employe.pays' label='pays'/>
-                <q-input type='text' v-model='employe.ville' label='ville'/>
-                <q-input type='date' stack-label v-model='employe.datenaissance' label='datenaissance'/>
-                <q-input type='file' stack-label v-model='employe.photo' label='photo'/>
-                <q-input type='text' v-model='employe.departement' label='departement'/>
-                <q-input type='text' v-model='employe.fonction' label='fonction'/>
-                <q-input type='text' v-model='employe.contrat' label='contrat'/>
-                <q-input type='date' stack-label v-model='employe.dateentree' label='dateentree'/>
-                <q-input type='date' stack-label v-model='employe.datesortie' label='datesortie'/>
-                <q-input type='number' v-model='employe.salairebase' label='salairebase'/>
-                <q-input type='text' v-model='employe.heuresup' label='heuresup'/>
-                <q-input type='number' v-model='employe.superviseur' label='superviseur'/>
-                <q-input type='text' v-model='employe.contacturgence' label='contacturgence'/>
-                <q-input type='date' stack-label v-model='employe.embauche' label='embauche'/>
+                <q-input v-model='employe.pays' type='text' label='pays'/>
+                <q-input v-model='employe.ville' type='text' label='ville'/>
+                <q-input v-model='employe.datenaissance' type='date' stack-label label='datenaissance'/>
+                <q-input v-model='employe.photo' type='file' stack-label label='photo'/>
+                <q-input v-model='employe.departement' type='text' label='departement'/>
+                <q-input v-model='employe.fonction' type='text' label='fonction'/>
+                <q-input v-model='employe.contrat' type='text' label='contrat'/>
+                <q-input v-model='employe.dateentree' type='date' stack-label label='dateentree'/>
+                <q-input v-model='employe.datesortie' type='date' stack-label label='datesortie'/>
+                <q-input v-model='employe.salairebase' type='number' label='salairebase'/>
+                <q-input v-model='employe.heuresup' type='text' label='heuresup'/>
+                <q-input v-model='employe.superviseur' type='number' label='superviseur'/>
+                <q-input v-model='employe.contacturgence' type='text' label='contacturgence'/>
+                <q-input v-model='employe.embauche' type='date' stack-label label='embauche'/>
               </div>
 
             </div>
           </q-form>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn color="teal" label="Valider" v-on:click="employe_post()" />
-          <q-btn color="teal" label="Modifier" v-on:click="employe_update()" />
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn color="teal" label="Valider" @click="employe_post()" />
+          <q-btn color="teal" label="Modifier" @click="employe_update()" />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -129,18 +130,14 @@ import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 export default {
   name: "EmployePage",
+  components: { },
+  mixins: [basemixin],
   data () {
     return {
-      employe_id: 1,
       loading1: false,
-      red: '#6d1412',
       first: null,
       last: null,
-      medium: false,
       medium2: false,
-      maximizedToggle: true,
-      name: null,
-      image: null,
       employe: {},
       employes: [],
       columns: [
@@ -178,8 +175,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
   },
-  components: { },
-  mixins: [basemixin],
   created () {
     this.employe_get();
     var date = new Date();

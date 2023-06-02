@@ -4,17 +4,19 @@
 
     <div class="row justify-center">
       <div class="col-12 q-mt-md">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />
+        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" @click="medium2 = true" />
         <br><br>
-        <q-table title="p_stasks" :rows="p_stasks" :columns="columns" :filter="filter"
+        <q-table
+title="p_stasks" :rows="p_stasks" :columns="columns" :filter="filter"
                  :pagination="pagination" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des p_stask</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key='titre' :props='props'> {{props.row.titre}} </q-td>
               <q-td key='description' :props='props'> {{props.row.description}} </q-td>
@@ -24,8 +26,8 @@
               <q-td key='stuuid' :props='props'> {{props.row.stuuid}} </q-td>
 
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
-                <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_stask_delete(props.row.id)" icon="delete"></q-btn>
+                <q-btn class="q-mr-xs" size="xs" color="primary" icon="edit" @click="update_get(props.row)"></q-btn>
+                <q-btn class="q-mr-xs" size="xs" color="red" icon="delete" @click="p_stask_delete(props.row.id)"></q-btn>
               </q-td>
             </q-tr>
           </template>
@@ -38,15 +40,15 @@
           <div class="text-h6">Ajouter un P_stask</div>
         </q-card-section>
         <q-card-section>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
             <div class="row">
               <div class="col-12">
-                <q-input dense v-model='p_stask.titre' label='titre' />
-                <q-input dense type='textarea' v-model='p_stask.description' label='description' />
-                <q-input dense type='number' v-model='p_stask.p_task_id' label='p_task_id' />
-                <q-input dense type='date' v-model='p_stask.debut' label='debut' />
-                <q-input dense type='date' v-model='p_stask.fin' label='fin' />
-                <q-input dense v-model='p_stask.stuuid' label='stuuid' />
+                <q-input v-model='p_stask.titre' dense label='titre' />
+                <q-input v-model='p_stask.description' dense type='textarea' label='description' />
+                <q-input v-model='p_stask.p_task_id' dense type='number' label='p_task_id' />
+                <q-input v-model='p_stask.debut' dense type='date' label='debut' />
+                <q-input v-model='p_stask.fin' dense type='date' label='fin' />
+                <q-input v-model='p_stask.stuuid' dense label='stuuid' />
 
               </div>
             </div>
@@ -58,7 +60,7 @@
           </q-form>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -70,18 +72,10 @@
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 export default {
+  mixins: [basemixin],
   data () {
     return {
-      p_stask_id: 1,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
       medium2: false,
-      maximizedToggle: true,
-      name: null,
-      image: null,
       p_stask: {},
       p_stasks: [],
       columns: [
@@ -91,30 +85,19 @@ export default {
         { name: 'debut', align: 'left', label: 'debut', field: 'debut', sortable: true },
         { name: 'fin', align: 'left', label: 'fin', field: 'fin', sortable: true },
         { name: 'stuuid', align: 'left', label: 'stuuid', field: 'stuuid', sortable: true },
-
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
   },
-  mixins: [basemixin],
   created () {
     this.p_stask_get()
-    const date = new Date()
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
   },
   methods: {
     update_get (props) {
       this.p_stask = props
       this.medium2 = true
-    },
-    setEvent (payload, _name) {
-      this.p_stask[_name] = payload
-    },
-    handleFile (_name) {
-      this.p_stask[_name] = this.$refs[_name].files[0]
     },
     p_stask_get () {
       $httpService.getApi('/api/get/p_stask')

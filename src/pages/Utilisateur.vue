@@ -1,15 +1,16 @@
 <template>
   <div class="q-pa-md q-ma-md">
     <!--grid-->
-    <q-btn label="Ajouter" class="q-ma-md" size="sm" icon="add" color="secondary" v-on:click="medium = true" />
+    <q-btn label="Ajouter" class="q-ma-md" size="sm" icon="add" color="secondary" @click="medium = true" />
 
-    <q-table title="Treats" :data="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
+    <q-table
+title="Treats" :data="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
              :selected="selected" :pagination="pagination">
-      <template v-slot:top="props">
+      <template #top="props">
         <div class="col-4 q-table__title">Liste des utilisateurs</div>
-        <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" @click="props.toggleFullscreen" class="q-ml-md" />
+        <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" class="q-ml-md" @click="props.toggleFullscreen" />
       </template>
-      <template v-slot:body="props">
+      <template #body="props">
         <!--        {{props.row}}-->
         <!--        {{props.row.type_users_id}}-->
         <q-tr :props="props">
@@ -20,7 +21,7 @@
           <q-td key="telephone" :props="props"> +{{props.row.telephone_code}} {{props.row.telephone}} </q-td>
           <q-td key="type_users_id" :props="props"> {{props.row.type_users_id}} {{props.row.id}} </q-td>
           <q-td key="actions" :props="props">
-            <q-btn class="q-mr-xs" size="xs" color="secondary" v-on:click="update(props.row)" icon="edit" />
+            <q-btn class="q-mr-xs" size="xs" color="secondary" icon="edit" @click="update(props.row)" />
             <q-btn class="q-mr-xs" size="xs" color="dark" icon="lock" />
             <!--<q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
           </q-td>
@@ -40,17 +41,21 @@
             <!--      <div class="col-2">1</div>-->
             <div class="col-10">
 
-              <q-form  @submit="onSubmit" @reset="onReset" class="q-gutter-md"  >
-                <q-select filled v-model="model" :options="options" label="Type d'utilisateur" option-value="id" stack-label input-debounce="0"
+              <q-form  class="q-gutter-md" @submit="onSubmit" @reset="onReset"  >
+                <q-select
+v-model="model" filled :options="options" label="Type d'utilisateur" option-value="id" stack-label input-debounce="0"
                           option-label="name"></q-select>
-                <q-input autocomplete v-model="nom" label="Nom *" hint="Nom"
+                <q-input
+v-model="nom" autocomplete label="Nom *" hint="Nom"
                          lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
-                <q-input autocomplete  v-model="prenom" label="Prenom *" hint="Prenom"
+                <q-input
+v-model="prenom"  autocomplete label="Prenom *" hint="Prenom"
                          lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
-                <q-input type="text" v-model="telephone_code"  label="indicatif *" hint="Indicatif"></q-input>
-                <q-input type="text" v-model="telephone"  label="telephone *" hint="Telephone"></q-input>
-                <q-input type="email" v-model="email"  label="Email *" hint="Email"></q-input>
-                <q-input type="password" v-model="password"
+                <q-input v-model="telephone_code" type="text"  label="indicatif *" hint="Indicatif"></q-input>
+                <q-input v-model="telephone" type="text"  label="telephone *" hint="Telephone"></q-input>
+                <q-input v-model="email" type="email"  label="Email *" hint="Email"></q-input>
+                <q-input
+v-model="password" type="password"
                          lazy-rules :rules="[ val => val && val.length >= 4 || 'Mot de passe doit etre 4 caracteres minimum']" label="Mot de passe *" hint="Email"></q-input>
 
                 <div>
@@ -65,7 +70,7 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -114,6 +119,8 @@ export default {
             data: []
         }
     },
+    watch: {
+    },
     mounted () {
         // get initial data from server (1st page)
         // this.loadData();
@@ -121,8 +128,6 @@ export default {
     created () {
         this.loadData();
         this.loadData2();
-    },
-    watch: {
     },
     methods: {
         loadData () {

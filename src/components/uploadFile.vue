@@ -1,7 +1,7 @@
 <template>
   <div>
     <form>
-      <q-input type="file" ref="fileInput" @change="uploadFile"/>
+      <q-input ref="fileInput" type="file" @change="uploadFile"/>
       <q-btn label="Upload" @click.prevent="submit"/>
     </form>
   </div>

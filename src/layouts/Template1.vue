@@ -1,52 +1,56 @@
 <template>
   <q-layout view="lHh lpR fFf" class="bg-grey-3">
-    <q-header elevated class="text-grey-8 print-hide" height-hint="64">
+    <q-header class="text-grey-8 print-hide" height-hint="64">
       <q-toolbar class="GNL__toolbar bg-grey-3 text-white print-hide">
-        <q-btn flat dense round color="secondary" @click="leftDrawerOpen = !leftDrawerOpen"
-               aria-label="Menu" icon="menu" class="q-mr-sm" />
+        <q-btn
+flat dense round color="secondary" aria-label="Menu"
+               icon="menu" class="q-mr-sm" @click="leftDrawerOpen = !leftDrawerOpen" />
 
         <q-toolbar-title v-if="$q.screen.gt.xs" shrink class="row items-center no-wrap print-hide">
           &nbsp;&nbsp;&nbsp;
-          <q-btn size="xs" color="grey-6" icon="arrow_back" v-on:click="go_back()" />&nbsp;&nbsp;
-          <q-btn size="xs" color="grey-6" icon="arrow_forward" v-on:click="go_foward()" />
+          <q-btn size="xs" color="grey-6" icon="arrow_back" @click="go_back()" />&nbsp;&nbsp;
+          <q-btn size="xs" color="grey-6" icon="arrow_forward" @click="go_foward()" />
         </q-toolbar-title>
 
         <q-space />
 
         <div class="q-gutter-sm row items-center no-wrap">
-          <q-btn round dense flat color="teal" icon="notifications" v-on:click="showNotif('Activation des notifications')">
-            <q-badge color="red" text-color="white" floating>
-              ON/OFF
-            </q-badge>
-            <q-tooltip>Activation des notifications ( {{status_permission}} )</q-tooltip>
-          </q-btn>
+<!--          <q-btn round dense flat color="teal" icon="notifications" v-on:click="showNotif('Activation des notifications')">-->
+<!--            <q-badge color="red" text-color="white" floating>-->
+<!--              ON/OFF-->
+<!--            </q-badge>-->
+<!--            <q-tooltip>Activation des notifications ( {{status_permission}} )</q-tooltip>-->
+<!--          </q-btn>-->
           <!--          <q-btn round flat color="white">-->
           <!--            <q-avatar color="white" size="26px">-->
           <!--              <img src="https://cdn.quasar.dev/img/boy-avatar.png">-->
           <!--            </q-avatar>-->
           <!--            <q-tooltip>Account</q-tooltip>-->
           <!--          </q-btn>-->
-          <q-btn round dense flat color="red" icon="logout" v-on:click="logout()">
+          <q-btn round dense flat color="red" icon="logout" @click="logout()">
             <q-tooltip>Deconnexion</q-tooltip>
           </q-btn>
         </div>
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above side="left" bordered style="background-color: white"
+    <q-drawer
+v-model="leftDrawerOpen" show-if-above side="left" bordered style="background-color: white"
               content-class="bg-dark-separator text-dark" :width="225" class="print-hide">
       <q-scroll-area class="fit print-hide">
         <q-list padding class="text-grey-10 print-hide" bordered separator>
           <div class="text-center center">
-            <img class="animate__animated animate__pulse animate__infinite animate__slower"
+            <img
+class="animate__animated animate__pulse animate__infinite animate__slower"
                  src="~assets/fmmi.jpeg" style="height: 120px; width: 120px;">
             <!--                 src="~assets/affairez.png" style="height: 60px; width: 120px;">-->
           </div>
           <br>
           <br>
           <div v-for="link in links1" :key="link.text">
-            <q-item class="GNL__drawer-item" v-ripple active-class="text-secondary" v-if="link.role"
-                    :key="link.text" clickable :to="link.link">
+            <q-item
+v-if="link.role" :key="link.text" v-ripple class="GNL__drawer-item"
+                    active-class="text-secondary" clickable :to="link.link">
               <q-item-section avatar> <q-icon :name="link.icon" :style="link.style" /> </q-item-section>
               <q-item-section> <q-item-label>{{ link.text }}</q-item-label> </q-item-section>
             </q-item>
@@ -157,7 +161,7 @@
       </q-scroll-area>
     </q-drawer>
 
-    <q-page-container class="bg-grey-3" style="max-width: 1650px">
+    <q-page-container class="bg-grey-3" style="max-width: 1600px; margin: 0 auto;">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -167,10 +171,10 @@
 import { LocalStorage } from 'quasar'
 import basemixin from '../pages/basemixin';
 import $httpService from '../boot/httpService';
-import { useCounterStore } from 'stores/baseState';
 
 export default {
   name: 'GoogleNewsLayout',
+  mixins: [basemixin],
   data () {
     return {
       store: {},
@@ -228,7 +232,6 @@ export default {
     //   this.command_count();
     // }, 180000);
   },
-  mixins: [basemixin],
   methods: {
     onClear () {
       this.exactPhrase = '';

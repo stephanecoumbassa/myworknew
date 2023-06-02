@@ -4,17 +4,19 @@
 
     <div class="row justify-center">
       <div class="col-12 q-mt-md">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="medium2 = true" />
+        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" @click="medium2 = true" />
         <br><br>
-        <q-table title="budgetdepenses" :rows="budgetdepenses" :columns="columns" :filter="filter"
+        <q-table
+title="budgetdepenses" :rows="budgetdepenses" :columns="columns" :filter="filter"
                  :pagination="pagination" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des budgetdepense</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key='montant' :props='props'> {{props.row.montant}} </q-td>
               <q-td key='mois' :props='props'> {{props.row.mois}} </q-td>
@@ -22,8 +24,8 @@
               <q-td key='description' :props='props'> {{props.row.description}} </q-td>
 
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="xs" color="primary" v-on:click="update_get(props.row)" icon="edit"></q-btn>
-                <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="budgetdepense_delete(props.row.id)" icon="delete"></q-btn>
+                <q-btn class="q-mr-xs" size="xs" color="primary" icon="edit" @click="update_get(props.row)"></q-btn>
+                <q-btn class="q-mr-xs" size="xs" color="red" icon="delete" @click="budgetdepense_delete(props.row.id)"></q-btn>
               </q-td>
             </q-tr>
           </template>
@@ -36,15 +38,15 @@
           <div class="text-h6">Ajouter un budget prévisionnel (dépense) pour un mois</div>
         </q-card-section>
         <q-card-section>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
             <div class="row">
               <div class="col-12">
-                <q-input outlined dense type='number' v-model='budgetdepense.montant' label='montant' />
+                <q-input v-model='budgetdepense.montant' outlined dense type='number' label='montant' />
                 <br>
-                <q-input outlined dense type='month' v-model='budgetdepense.mois' label='mois' />
+                <q-input v-model='budgetdepense.mois' outlined dense type='month' label='mois' />
                 <br>
 <!--                <q-input dense type='number' v-model='budgetdepense.annee' label='annee' />-->
-                <q-input dense type='textarea' v-model='budgetdepense.description' label='description' />
+                <q-input v-model='budgetdepense.description' dense type='textarea' label='description' />
 
               </div>
             </div>
@@ -56,7 +58,7 @@
           </q-form>
         </q-card-section>
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -71,6 +73,7 @@ import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
 import apimixin from "src/services/apimixin";
 export default {
+  mixins: [basemixin, apimixin],
   data () {
     return {
       budgetdepense_id: 1,
@@ -97,7 +100,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
   },
-  mixins: [basemixin, apimixin],
   created () {
     this.budgetdepense_get()
     const date = new Date()

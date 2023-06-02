@@ -4,66 +4,67 @@
     <q-card style="width: 700px; max-width: 80vw;">
       <q-bar>
         <q-space />
-        <q-btn dense flat icon="close" v-close-popup>
+        <q-btn v-close-popup dense flat icon="close">
           <q-tooltip class="bg-white text-primary">Close</q-tooltip>
         </q-btn>
       </q-bar>
       <q-card-section>
-        <div class="text-h6" v-if="!p_task.id">Ajouter une tâche</div>
-        <div class="text-h6" v-if="p_task.id">Modifier une tâche</div>
+        <div v-if="!p_task.id" class="text-h6">Ajouter une tâche</div>
+        <div v-if="p_task.id" class="text-h6">Modifier une tâche</div>
       </q-card-section>
       <q-card-section>
-        <q-form  @submit="p_task_post" class="q-gutter-md">
+        <q-form  class="q-gutter-md" @submit="p_task_post">
           <div class="row">
             <div class="col-12">
-              <q-input outlined dense v-model='p_task.libelle' label='libelle' />
+              <q-input v-model='p_task.libelle' outlined dense label='libelle' />
               <br>
-              <q-input outlined dense type='textarea' v-model='p_task.description' label='description' />
+              <q-input v-model='p_task.description' outlined dense type='textarea' label='description' />
               <br>
-              <q-select :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']"
-                        filled outlined class="q-mb-sm" dense v-model='p_task.status' label='status' />
-<!--              <q-input outlined dense v-model='p_task.status' label='status' />-->
-<!--              <br>-->
-<!--              <q-input outlined dense type='number' v-model='p_task.p_projet_id' label='p_projet_id' />-->
+              <q-select
+v-model='p_task.status'
+                        :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE']" dense outlined label='status' />
               <br>
-              <q-select dense outlined filled v-model="p_task.p_employe_id" :options="employes" label="Executant"
+              <q-select
+v-model="p_task.p_employe_id" dense outlined :options="employes" label="Executant"
                         map-options emit-value option-value="id" option-label="nom" />
               <br>
-              <q-input stack-label outlined dense type='date' v-model='p_task.debut' label='debut' />
+              <q-input v-model='p_task.debut' stack-label outlined dense type='date' label='Date de debut' />
               <br>
-              <q-input stack-label outlined dense type='date' v-model='p_task.fin' label='fin' />
+              <q-input v-model='p_task.fin' stack-label outlined dense type='date' label='Date de fin' />
               <br>
-              <q-input outlined dense v-model='p_task.tuuid' label='tuuid' />
+              <q-input v-model='p_task.livraison' stack-label outlined dense type='date' label='Date de livraison' />
               <br>
             </div>
           </div>
           <div class="row">
             <div class="col-12">
               <q-btn v-if="!p_task.id" color="primary" label="Valider" type="submit" />
-              <q-btn v-if="p_task.id" color="primary" label="Modifier" type="submit" />
+              <q-btn v-if="p_task.id" color="primary" label="Modifier" @click="p_task_update(p_task)" />
             </div>
           </div>
         </q-form>
       </q-card-section>
       <q-card-actions align="right">
-        <q-btn flat label="Fermer" v-close-popup />
+        <q-btn v-close-popup flat label="Fermer" />
       </q-card-actions>
     </q-card>
   </q-dialog>
 
-  <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" v-on:click="openModal = true; p_task = {}" />
+  <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" @click="openModal = true; p_task = {}" />
 
   <br>
 
-  <q-table title="p_tasks" :rows="tasks" :columns="columns" :filter="filter"
+  <q-table
+title="p_tasks" :rows="tasks" :columns="columns" :filter="filter"
            :pagination="pagination" row-key="name">
-    <template v-slot:top="props">
+    <template #top="props">
       <div class="col-7 q-table__title">Liste des tâches</div>
-      <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-      <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-             @click="props.toggleFullscreen" class="q-ml-md"></q-btn>
+      <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+      <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+             class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
     </template>
-    <template v-slot:body="props">
+    <template #body="props">
       <q-tr :props="props">
         <q-td key='libelle' :props='props'> {{props.row.libelle}} </q-td>
         <q-td key='description' :props='props'> {{props.row.description}} </q-td>
@@ -73,6 +74,10 @@
             {{props.row.status}}
           </q-badge>
         </q-td>
+        <q-td key='ponctualite' :props='props'>
+          <q-btn v-if="props.row.ponctualite === 'RETARD'" outline color="red" size="sm">{{props.row.ponctualite}} </q-btn>
+          <q-btn v-if="props.row.ponctualite === 'OK'" outline color="green" size="sm">{{props.row.ponctualite}} </q-btn>
+        </q-td>
         <q-td key='progress' :props='props'>
           <q-linear-progress size="25px" :value="props.row.progress/100" color="green-3">
             <div class="absolute-full flex flex-center">
@@ -80,18 +85,17 @@
             </div>
           </q-linear-progress>
         </q-td>
-<!--        <q-td key='p_projet_id' :props='props'> {{props.row.p_projet_id}} </q-td>-->
         <q-td key='debut' :props='props'> {{props.row.debut}} </q-td>
         <q-td key='fin' :props='props'> {{props.row.fin}} </q-td>
-<!--        <q-td key='tuuid' :props='props'> {{props.row.tuuid}} </q-td>-->
         <q-td key="actions" :props="props">
-          <q-btn class="q-mr-xs" size="xs" outline color="secondary"
-                 v-on:click="assignationModal(props.row)"
+          <q-btn
+class="q-mr-xs" size="xs" outline color="secondary"
                  icon="people"
                  title="assignation"
+                 @click="assignationModal(props.row)"
           />
-          <q-btn class="q-mr-xs" size="xs" color="secondary" v-on:click="p_task = props.row; openModal = true;" icon="edit"></q-btn>
-          <q-btn class="q-mr-xs" size="xs" color="red" v-on:click="p_task_delete(props.row.id)" icon="delete"></q-btn>
+          <q-btn class="q-mr-xs" size="xs" color="secondary" icon="edit" @click="p_task = props.row; openModal = true;"></q-btn>
+          <q-btn class="q-mr-xs" size="xs" color="red" icon="delete" @click="p_task_delete(props.row.id)"></q-btn>
         </q-td>
       </q-tr>
     </template>
@@ -105,20 +109,13 @@ import basemixin from "pages/basemixin";
 
 export default {
 
-  name: 'taskList',
-
-  // props: ['p_tasks', 'p_task'],
+  name: 'TaskList',
+  mixins: [basemixin],
   props: {
     project_id: {type: Number, required: true},
     tasks: {type: Array, default: () => [], required: false },
     employes: {type: Array, default: () => [], required: false },
-    post: { type: Function, required: false },
-    update: { type: Function, required: false },
-    delete: { type: Function, required: false },
-    // openModal: { type: Boolean, default: false, required: false },
   },
-  mixins: [basemixin],
-
   data () {
     return {
       openModal: false,
@@ -132,11 +129,10 @@ export default {
         { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
         { name: 'employe', align: 'left', label: 'employe', field: 'employe', sortable: true },
         { name: 'status', align: 'left', label: 'status', field: 'status', sortable: true },
+        { name: 'ponctualite', align: 'left', label: 'Ponctualite', field: 'ponctualite', sortable: true },
         { name: 'progress', align: 'left', label: 'Progress', field: 'progress', sortable: true },
-        // { name: 'p_projet_id', align: 'left', label: 'p_projet_id', field: 'p_projet_id', sortable: true },
         { name: 'debut', align: 'left', label: 'debut', field: 'debut', sortable: true },
         { name: 'fin', align: 'left', label: 'fin', field: 'fin', sortable: true },
-        // { name: 'tuuid', align: 'left', label: 'tuuid', field: 'tuuid', sortable: true },
         { name: 'actions', align: 'left', label: 'Actions' }
       ],
     }
@@ -147,7 +143,7 @@ export default {
       if(status === 'ECHEC') return 'red';
       if(status === 'STOPPE') return 'red-2';
       if(status === 'ENATTENTE') return 'grey';
-      if(status === 'ENCOURS') return 'green-2';
+      if(status === 'ENCOURS') return 'green-3';
       if(status === 'TERMINE') return 'green';
     },
     p_task_delete (_id) {
@@ -161,6 +157,7 @@ export default {
     },
     p_task_post () {
       this.p_task.p_projet_id = this.project_id;
+      this.p_task.tuuid = this.generateUuid();
       this.showLoading()
       $httpService.postWithParams('/api/post/p_task', this.p_task)
         .then((response) => {
@@ -170,10 +167,9 @@ export default {
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
     },
-    p_task_update () {
-      this.p_task.p_projet_id = this.project_id;
+    p_task_update (__task) {
       this.showLoading()
-      $httpService.putWithParams('/api/put/p_task', this.p_task)
+      $httpService.putWithParams('/api/put/p_task', __task)
         .then((response) => {
           this.p_task_get();
           this.showAlert(response, 'secondary');

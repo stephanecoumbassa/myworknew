@@ -1,7 +1,7 @@
 <template>
   <q-list bordered padding class="rounded-borders">
 
-    <q-item clickable v-ripple>
+    <q-item v-ripple clickable>
       <q-item-section avatar top>
         <q-avatar icon="folder" color="primary" text-color="white" />
       </q-item-section>
@@ -16,7 +16,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item clickable v-ripple>
+    <q-item v-ripple clickable>
       <q-item-section avatar top>
         <q-avatar icon="folder" color="orange" text-color="white" />
       </q-item-section>
@@ -31,7 +31,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item clickable v-ripple>
+    <q-item v-ripple clickable>
       <q-item-section avatar top>
         <q-avatar icon="folder" color="teal" text-color="white" />
       </q-item-section>
@@ -46,7 +46,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item clickable v-ripple>
+    <q-item v-ripple clickable>
       <q-item-section avatar top>
         <q-avatar icon="folder" color="teal" text-color="white" />
       </q-item-section>
@@ -61,7 +61,7 @@
       </q-item-section>
     </q-item>
 
-    <q-item clickable v-ripple>
+    <q-item v-ripple clickable>
       <q-item-section avatar top>
         <q-avatar icon="folder" color="teal" text-color="white" />
       </q-item-section>

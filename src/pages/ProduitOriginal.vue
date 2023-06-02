@@ -78,21 +78,22 @@
 
     <div class="row justify-center q-pa-sm">
       <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md q-pa-sm">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
-               v-on:click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
+        <q-btn
+label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
+               @click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
         <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
         <br><br>
 
         <q-table dense title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-          <template v-slot:top>
+          <template #top>
             <div class="col-7 q-table__title">Liste des produits</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
           </template>
-          <template v-slot:body="props">
-            <q-tr :props="props" :class="alerte(props.row)" :key="props.row.id">
+          <template #body="props">
+            <q-tr :key="props.row.id" :props="props" :class="alerte(props.row)">
               <q-td key="id" :props="props">
                 {{props.row.id}}
-                <q-icon name="dashboard_customize" v-if="props.row.customize" />
+                <q-icon v-if="props.row.customize" name="dashboard_customize" />
               </q-td>
               <q-td key="photo" :props="props">
 <!--                <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>-->
@@ -105,13 +106,13 @@
               <q-td key="marque" :props="props"> {{props.row.marque}} </q-td>
               <q-td key="amount" :props="props"> {{numerique(props.row.reste)}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="prix_status = true; product_id = props.row.id; s_product_prix_get(props.row.id)" label="gest. prix" />
-                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " label="stat" />
-                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " label="vente" />
-                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" v-on:click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" label="achat" />
-                <q-btn class="q-mr-xs" size="xs" color="teal" v-on:click="update_get(props.row)" icon="edit" />
-                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" v-on:click="photo_get(props.row)" icon="photo" />
-                <q-btn size="xs" color="red-9" title="Désactivé" v-on:click="product_disable(props.row)" icon="toggle_off" />
+                <q-btn class="q-mr-xs" size="xs" color="grey-9" label="gest. prix" @click="prix_status = true; product_id = props.row.id; s_product_prix_get(props.row.id)" />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="stat" @click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="vente" @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="achat" @click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" />
+                <q-btn class="q-mr-xs" size="xs" color="teal" icon="edit" @click="update_get(props.row)" />
+                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" icon="photo" @click="photo_get(props.row)" />
+                <q-btn size="xs" color="red-9" title="Désactivé" icon="toggle_off" @click="product_disable(props.row)" />
                 <!--<q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
               </q-td>
             </q-tr>
@@ -129,14 +130,15 @@
         </q-card-section>
         <q-card-section>
 <!--          {{clients}}-->
-          <div class="row q-col-gutter-lg q-mt-xs" v-for="price in prices_list" :key="price.id">
+          <div v-for="price in prices_list" :key="price.id" class="row q-col-gutter-lg q-mt-xs">
             <div class="col-3">
-              <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
-                        v-model="price.client_id" :options="clients" label="Clients" option-value="id" :option-label="'fullname'"
+              <q-select
+v-model="price.client_id" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                        :dense="true" :options="clients" label="Clients" option-value="id" :option-label="'fullname'"
                         input-debounce="300" />
             </div>
             <div class="col-3">
-              <q-input dense label="prix" v-model="price.prix_vente" />
+              <q-input v-model="price.prix_vente" dense label="prix" />
             </div>
             <div class="col-3">
               <q-btn label="Valider" outline @click="s_product_prix_post(price)"/>
@@ -153,27 +155,31 @@
     <q-dialog v-model="medium2">
       <q-card style="width: 900px; max-width: 90vw;">
         <q-card-section>
-          <div class="text-h6" v-if="!product.id">Ajouter un produit</div>
-          <div class="text-h6" v-if="product.id">Modifier un produit</div>
+          <div v-if="!product.id" class="text-h6">Ajouter un produit</div>
+          <div v-if="product.id" class="text-h6">Modifier un produit</div>
         </q-card-section>
 
         <q-card-section>
-          <q-form  @submit="onSubmit" class="q-gutter-md">
+          <q-form  class="q-gutter-md" @submit="onSubmit">
             <div class="row">
               <div class="col-md-7 col-sm-12">
-                <q-input autocomplete v-model="product.name" id="name" label="Nom du produit *" :dense="true" outlined
+                <q-input
+id="name" v-model="product.name" autocomplete label="Nom du produit *" :dense="true" outlined
                          lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
 
-                <q-select v-model="product.type" :options="['matiere', 'produit', 'outil']" id="type" label="type" map-options emit-value :dense="true"
+                <q-select
+id="type" v-model="product.type" :options="['matiere', 'produit', 'outil']" label="type" map-options emit-value :dense="true"
                           stack-label input-debounce="0" :rules="[ val => val || 'champs obligattoire']" outlined />
 
-                <q-select v-model="product.domainid" :options="domains" id="domainid" label="Domains" map-options emit-value :dense="true"
+                <q-select
+id="domainid" v-model="product.domainid" :options="domains" label="Domains" map-options emit-value :dense="true"
                           option-value="id" stack-label input-debounce="0" option-label="name" outlined
-                          @input="parent_get(product.domainid)" :rules="[ val => val || 'champs obligattoire']" />
+                          :rules="[ val => val || 'champs obligattoire']" @input="parent_get(product.domainid)" />
 
-                <q-select v-model="product.parent_categorie_id" :options="parents" id="parent_categorie_id" label="Parents" map-options emit-value :dense="true"
+                <q-select
+id="parent_categorie_id" v-model="product.parent_categorie_id" :options="parents" label="Parents" map-options emit-value :dense="true"
                           option-value="id" stack-label input-debounce="0" option-label="name" outlined
-                          @input="categorie_get(product.parent_categorie_id)" :rules="[ val => val || 'champs obligattoire']" />
+                          :rules="[ val => val || 'champs obligattoire']" @input="categorie_get(product.parent_categorie_id)" />
 
 <!--                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"-->
 <!--                          option-value="id" stack-label input-debounce="0" option-label="name" />-->
@@ -181,7 +187,7 @@
 <!--                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"-->
 <!--                          option-value="id" stack-label input-debounce="0" option-label="nom" />-->
 <!--                <br>-->
-                <q-input autocomplete type="number" v-model="product.price" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
+                <q-input v-model="product.price" autocomplete type="number" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
 <!--                <br>-->
 <!--                <q-input type="number"  v-model="product.tva" label="TVA *" />-->
 <!--                <br>-->
@@ -202,21 +208,21 @@
 <!--                </div>-->
 
 <!--                <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />-->
-                <q-input type="number"  v-model="product.alert_threshold" label="Alert *" outlined dense hint="" />
+                <q-input v-model="product.alert_threshold"  type="number" label="Alert *" outlined dense hint="" />
                 <!--<q-input autocomplete type="textarea"  v-model="product.serial" label="Numero de serie" />-->
-                <q-input type="text"  v-model="product.reference" label="Reference Produit" outlined dense hint="" />
+                <q-input v-model="product.reference"  type="text" label="Reference Produit" outlined dense hint="" />
 
 <!--                <q-input v-if="!product.id" type="number" v-model="product.buy_price" label="Prix achat *" />-->
 <!--                <q-input v-if="!product.id" type="number" v-model="product.stock" label="Stock Initial *" />-->
 
-                <q-input type="text" v-model="product.youtube" label="Url Video Youtube *" outlined dense hint="" />
+                <q-input v-model="product.youtube" type="text" label="Url Video Youtube *" outlined dense hint="" />
 
                 <div class="row">
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.largeur" label="Largeur en m" :dense="true" outlined />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.longueur" label="Longueur en m" :dense="true" outlined />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.hauteur" label="Hauteur en m" :dense="true" outlined />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.poids" label="Poids en KG" :dense="true" outlined />
-                  <q-input class="col-6 q-pa-xs" type="number" v-model="product.diametre" label="Diamètre" :dense="true" outlined />
+                  <q-input v-model="product.largeur" class="col-6 q-pa-xs" type="number" label="Largeur en m" :dense="true" outlined />
+                  <q-input v-model="product.longueur" class="col-6 q-pa-xs" type="number" label="Longueur en m" :dense="true" outlined />
+                  <q-input v-model="product.hauteur" class="col-6 q-pa-xs" type="number" label="Hauteur en m" :dense="true" outlined />
+                  <q-input v-model="product.poids" class="col-6 q-pa-xs" type="number" label="Poids en KG" :dense="true" outlined />
+                  <q-input v-model="product.diametre" class="col-6 q-pa-xs" type="number" label="Diamètre" :dense="true" outlined />
                 </div>
 
               </div>
@@ -238,15 +244,16 @@
               </div>
             </div>
             <q-editor v-model="product.description" min-height="5rem" :toolbar="toolbar" />
-            <q-btn :loading="loading1" label="Ajouter" type="submit" color="primary" v-if="!product.id"/>
-            <q-btn :loading="loading1" label="Modifier" type="button" v-if="product.id"
-                   v-on:click="products_update(product)" color="primary"/>
+            <q-btn v-if="!product.id" :loading="loading1" label="Ajouter" type="submit" color="primary"/>
+            <q-btn
+v-if="product.id" :loading="loading1" label="Modifier" type="button"
+                   color="primary" @click="products_update(product)"/>
             <q-btn  label="Annuler" type="reset" color="negative" outline class="q-ml-sm" />
           </q-form>
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -264,26 +271,27 @@
         </q-card-section>
 
         <q-card-actions align="right" class="bg-white text-teal">
-          <q-btn flat label="Fermer" v-close-popup />
+          <q-btn v-close-popup flat label="Fermer" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <q-dialog v-model="vente_status" transition-show="slide-up" transition-hide="slide-down">
 
-      <q-table :rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
+      <q-table
+:rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
                row-key="id" :pagination="pagination">
-        <template v-slot:top>
+        <template #top>
           <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
         </template>
-        <template v-slot:top-left>
+        <template #top-left>
           <div class="row">
-            <div class="col-5 "><q-input type="date"  v-model="first" label="debut" /></div>
-            <div class="col-5"><q-input type="date"  v-model="last" label="fin" /></div>
-            <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" v-on:click="sales_stats_get(product_id)"/></div>
+            <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
+            <div class="col-5"><q-input v-model="last"  type="date" label="fin" /></div>
+            <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="sales_stats_get(product_id)"/></div>
           </div>
         </template>
-        <template v-slot:top-right>
+        <template #top-right>
           <q-btn size="sm" :label="'Nb Produits vendus: '+ numerique(nbre_vendus)" /><br>
           <q-btn size="sm" class="q-ml-sm" :label="'total: '+numerique(montant_vendus)+' FCFA'" />
           <!--          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"-->
@@ -294,16 +302,17 @@
     </q-dialog>
 
     <q-dialog v-model="appro_status" transition-show="slide-up" transition-hide="slide-down">
-      <q-table :rows="appro_stats" :columns="appro_columns" style="width: 800px; max-width: 100%"
+      <q-table
+:rows="appro_stats" :columns="appro_columns" style="width: 800px; max-width: 100%"
                row-key="id" :pagination="pagination">
-        <template v-slot:top-left>
+        <template #top-left>
           <div class="row">
-            <div class="col-5 "><q-input type="date"  v-model="first" label="debut" /></div>
-            <div class="col-5"><q-input type="date"  v-model="last" label="fin" /></div>
-            <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" v-on:click="appro_stats_get(product_id)" /></div>
+            <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
+            <div class="col-5"><q-input v-model="last"  type="date" label="fin" /></div>
+            <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="appro_stats_get(product_id)" /></div>
           </div>
         </template>
-        <template v-slot:top-right>
+        <template #top-right>
           <q-btn size="sm" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
           <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
           <!--          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"-->
@@ -348,6 +357,12 @@ import {SProductPrixApi} from "src/services/api/SProductPrixApi";
 import {LocalStorage} from "quasar";
 export default {
   name: 'ProduitName',
+  components: {
+    areachart: AreachartComponent,
+    HelloComponent,
+    vueQr
+  },
+  mixins: [basemixin],
   data () {
     return {
       product_id: 1,
@@ -422,12 +437,6 @@ export default {
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
   },
-  components: {
-    areachart: AreachartComponent,
-    HelloComponent,
-    vueQr
-  },
-  mixins: [basemixin],
   created () {
     this.products_get();
     this.categories_all();

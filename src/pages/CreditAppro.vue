@@ -5,17 +5,18 @@
 
         <br><br>
         <q-table title="Produits" :rows="credits" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des approvisionnements et des credits <br>
               <q-btn color="red"> Impayés:
                 {{ numerique( array_somme(credits, 'total') - array_somme(credits, 'credit') ) }}
               </q-btn>
             </div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props">
               <q-td key="id"> {{props.row.id_ap}} </q-td>
               <q-td key="name"> {{props.row.fournisseur_user}} </q-td>
@@ -23,7 +24,8 @@
               <q-td key="credit"> {{ numerique(props.row.credit) }} </q-td>
               <q-td key="reste"> {{ numerique(props.row.total - props.row.credit) }} </q-td>
               <q-td key="actions">
-                <q-btn class="q-mr-xs" size="xs" color="dark" icon="visibility"
+                <q-btn
+class="q-mr-xs" size="xs" color="dark" icon="visibility"
                        @click="get_facture_id(props.row.id_ap); factures_get_credit(props.row.id_ap)" />
                 <!-- <q-btn class="q-mr-xs" size="xs" color="secondary" v-on:click="photo_get(props.row)" icon="photo" />-->
                 <!-- <q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
@@ -34,7 +36,7 @@
       </div>
 
       <q-dialog v-model="fullWidth" position="top">
-        <q-card class="q-ma-sm q-pa-sm" :flat="true" id="facture" style="width: 1000px; max-width: 100%;">
+        <q-card id="facture" class="q-ma-sm q-pa-sm" :flat="true" style="width: 1000px; max-width: 100%;">
           <q-card-section contenteditable="true" class="mobile-hide">
             <div class="row mobile-hide">
               <div class="col-6 alignleft">
@@ -56,14 +58,15 @@
           </q-card-section>
 
           <q-card-section>
-            <q-form  @submit="onSubmit" class="">
+            <q-form  class="" @submit="onSubmit">
               <br>
-              <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
-                <q-select class="col-sm-12 col-xs-12 col-3 row q-pl-sm" v-model="product.product_id" map-options emit-value readonly
+              <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
+                <q-select
+v-model="product.product_id" class="col-sm-12 col-xs-12 col-3 row q-pl-sm" map-options emit-value readonly
                           option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
-                <q-input class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" v-model="product.amount" label="Quantité" />
-                <q-input class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" v-model="product.buying_price" label="Prix Achat" />
-                <q-input class="col-sm-3 col-xs-3 col-2 q-pl-sm" readonly type="number" v-model="product.sell_price" label="Prix Vente" />
+                <q-input v-model="product.amount" class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" label="Quantité" />
+                <q-input v-model="product.buying_price" class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" label="Prix Achat" />
+                <q-input v-model="product.sell_price" class="col-sm-3 col-xs-3 col-2 q-pl-sm" readonly type="number" label="Prix Vente" />
                 <!-- <q-input class="col-2 no-margin" autocomplete type="number" v-model="product.montant_vendu" label="Prix de Vente" />-->
                 <q-input class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" :value="product.amount * product.buying_price" label="total" />
               </div>
@@ -76,21 +79,21 @@
               </div>
 
               Liste des versement
-              &nbsp;<q-btn size="xs" v-on:click="versements.pop()">-</q-btn>
-              &nbsp;<q-btn size="xs" v-on:click="versements.push({montant: 0})">+</q-btn>
-              <div class="row" v-for="fac in versements" v-bind:key="fac.id">
-                <q-input class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label v-model="fac.date"  />
-                <q-input class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" v-model="fac.montant" />
-                <q-btn class="col-1 q-ma-sm" size="xs" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-                <q-btn class="col-1 q-ma-sm" size="xs" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+              &nbsp;<q-btn size="xs" @click="versements.pop()">-</q-btn>
+              &nbsp;<q-btn size="xs" @click="versements.push({montant: 0})">+</q-btn>
+              <div v-for="fac in versements" :key="fac.id" class="row">
+                <q-input v-model="fac.date" class="col-3 q-ma-sm" :dense="true" label="Date" type="date" stack-label  />
+                <q-input v-model="fac.montant" class="col-3 q-ma-sm" :dense="true" label="Montant" stack-label type="number" />
+                <q-btn v-if="fac.id" class="col-1 q-ma-sm" size="xs" @click="credit_update(fac)">✎</q-btn>
+                <q-btn v-if="!fac.id" class="col-1 q-ma-sm" size="xs" @click="credit_add(fac)">✅</q-btn>
               </div>
               <!--                                <q-btn class="print-hide" label="Valider" icon="save" type="submit" color="secondary"/>-->
             </q-form>
           </q-card-section>
 
           <q-card-actions align="right" class="bg-white text-teal print-hide">
-            <q-btn flat label="Fermer" v-close-popup />
-            <q-btn flat label="Imprimer" v-on:click="imprimer()" />
+            <q-btn v-close-popup flat label="Fermer" />
+            <q-btn flat label="Imprimer" @click="imprimer()" />
           </q-card-actions>
         </q-card>
       </q-dialog>
@@ -110,6 +113,11 @@ import basemixin from './basemixin'
 // import AreachartComponent from '../components/areachart'
 
 export default {
+  components: {
+    // areachart: AreachartComponent,
+    // VueQr
+  },
+  mixins: [basemixin],
   data () {
     return {
       product_id: 1,
@@ -179,11 +187,6 @@ export default {
       return this.products.reduce((product, item) => product + (item.buying_price * item.amount + (item.tva * item.buying_price * item.amount)), 0);
     }
   },
-  components: {
-    // areachart: AreachartComponent,
-    // VueQr
-  },
-  mixins: [basemixin],
   created () {
     this.products_get();
     this.credit_get();

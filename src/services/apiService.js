@@ -2,14 +2,10 @@ import axios from 'axios'
 import {LocalStorage} from "quasar";
 import { BASEURL } from "../constante";
 
-// const baseurl = 'https://fmmi.ci/apistock';
-// const baseurl = 'https://127.0.0.1:8000';
 const baseurl = BASEURL;
 
-// const headers = { headers: { 'Authorization': 'Bearer ' + LocalStorage.getItem('token') } }
 
 export async function getApi (url, params = {}) {
-  const headers = { headers: { 'Authorization': 'bearer ' + LocalStorage.getItem('token') } }
   let token = LocalStorage.getItem('token')
   const http = axios.create({
     baseURL: baseurl,

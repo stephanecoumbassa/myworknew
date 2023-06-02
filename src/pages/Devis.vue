@@ -6,75 +6,77 @@
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
-            <facture name="Facture de devis" type="proforma"
+            <facture
+name="Facture de devis" type="proforma"
                      :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
 
         <q-dialog v-model="fullWidth" position="top">
-          <q-card style="width: 1000px; max-width: 100%;" id="facture" :flat="true">
+          <q-card id="facture" style="width: 1000px; max-width: 100%;" :flat="true">
             <q-card-section contenteditable="true">
               <div class="row">
-                <div class="col-6 alignleft">
-                  <img src="~assets/fmmi-logo.jpeg" style="width: 100px; height: 100px; object-fit: cover"/>
-                  <br>
-                  <div>DA: <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" /> </div>
-                  <!-- <div>BC: <input v-model="bc" style="border: 0; border-bottom: 1px dashed grey" /> </div>-->
+                <div class="col-6">
                 </div>
                 <div class="col-6 text-right float-right">
                   <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
-                    <q-input stack-label v-model="dateposted" type="datetime-local" label="Date" :dense="true"></q-input>
-                    <q-select class="print-hide col-md-6 col-sm-12" filled map-options emit-value :dense="true"
-                              v-model="client" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                    <q-input v-model="dateposted" stack-label type="datetime-local" label="Date" :dense="true"></q-input>
+                    <q-select
+v-model="projetid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                              :dense="true" :options="p_projets" label="Projets" :option-value="'id'" :option-label="'titre'"
+                              input-debounce="0" />
+                    <q-select
+v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                              :dense="true" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
                               input-debounce="0" :option-label="'fullname'"
-                              @update:model-value="assign_client(client)"
-                              :rules="[val => !!val || 'Ce champs est requis']" />
+                              :rules="[val => !!val || 'Ce champs est requis']"
+                              @update:model-value="assign_client(client)" />
                   </div>
-                  <div class="row float-right q-mt-sm hidden-sm hidden-xs mobile-hide">
+                  <div class="row float-right q-mt-sm">
                     <div class="col-12">Proforma #:
                       <input v-model="facture_number" style="border: 0; border-bottom: 1px dashed grey" />
                     </div>
-                    <div class="col-12">----</div>
-                    <div class="col-12">----</div>
-                    <div class="col-12" v-if="myclient.id">{{myclient.fullname}}</div>
-                    <div class="col-12" v-if="myclient.id">{{'+ '+myclient.telephone_code}} {{myclient.telephone}}</div>
-                    <div class="col-12" v-if="myclient.id">{{myclient.email}}</div>
+                    <div class="col-12">Appel d'offre/DA:
+                      <input v-model="bl" style="border: 0; border-bottom: 1px dashed grey" />
+                    </div>
                   </div>
                 </div>
               </div>
             </q-card-section>
 
             <q-card-section>
-              <q-form  @submit="onSubmit" class="">
+              <q-form  class="" @submit="onSubmit">
                 <br>
                 <div>
-                  <div class="row q-pa-sm" v-for="(product, index) in products" :key="index">
-                    <!--                    <q-select class="col-4 no-margin" v-model="product.product_id" use-input map-options emit-value :dense="true" @filter="filterFn"-->
-                    <q-select class="col-4 no-margin" v-model="product.product_id" map-options emit-value :dense="true"
+                  <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
+                    <q-select
+v-model="product.product_id" class="col-4 no-margin" map-options emit-value :dense="true"
                               option-value="id" option-label="name" stack-label input-debounce="0" label="produits"
                               :options="products_list" />
-                    <q-input class="col-1 row q-pl-sm" autocomplete type="number" v-model="product.quantite_vendu" label="Quantité" :dense="true" />
-                    <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix" :dense="true" />
-                    <q-input class="col-2 row q-pl-sm" autocomplete type="number" v-model="product.tva" label="TVA" :dense="true" />
+                    <q-input v-model="product.quantite_vendu" class="col-1 row q-pl-sm" autocomplete type="number" label="Quantité" :dense="true" />
+                    <q-input v-model="product.prix_unitaire" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" :dense="true" />
+                    <q-input v-model="product.tva" class="col-2 row q-pl-sm" autocomplete type="number" label="TVA" :dense="true" />
                     <q-input class="col-2 q-pl-sm" :dense="true" type="number" :label="calculTotal(product.prix_unitaire, product.quantite_vendu, product.tva)" disable disabled="" />
                     <div class="col-1 row q-pl-xs">
                       <br>
-                      <q-btn flat size="sm" color="secondary" v-on:click="devis_put(product)" icon="edit" />
-                      <q-btn flat size="sm" color="negative" v-on:click="devis_delete(product.id)" icon="remove" />
+                      <q-btn flat size="sm" color="secondary" icon="edit" @click="devis_put(product)" />
+                      <q-btn flat size="sm" color="negative" icon="remove" @click="devis_delete(product.id)" />
                     </div>
                   </div>
                 </div>
 
                 <div>
-                  <div class="row q-pa-sm" v-for="(product, index) in products2" :key="index">
-                    <q-select class="col-4 q-pa-sm" v-model="product.p" :options="products_list" option-value="id" use-input @filter="filterFn"
-                              input-debounce="0" option-label="prodcat" @focusout="assign2(index)" @input="assign2(index)" :dense="true" />
-                    <q-input class="col-1 q-pa-sm" :dense="true" type="number" v-model="product.quantity" @focusout="getVal(index, product.quantity)" label="Quantité" />
-                    <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.p.sales_price" label="Prix Unitaire" />
-                    <q-input class="col-2 q-pa-sm" :dense="true" type="number" v-model="product.p.tva" label="TVA" />
+                  <div v-for="(product, index) in products2" :key="index" class="row q-pa-sm">
+                    <q-select
+v-model="product.product_id" class="col-4 q-pa-sm" :options="products_list"
+                              option-label="name" option-value="id" use-input input-debounce="0"
+                              :dense="true" @filter="filterFn" @update:model-value="assign(index)" />
+                    <q-input v-model="product.quantity" class="col-1 q-pa-sm" :dense="true" type="number" label="Quantité" @focusout="getVal(index, product.quantity)" />
+                    <q-input v-model="product.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" label="Prix Unitaire" />
+                    <q-input v-model="product.p.tva" class="col-2 q-pa-sm" :dense="true" type="number" label="TVA" />
                     <q-input class="col-2 q-pa-sm" :dense="true" type="number" :label="calculTotal(product.p.sales_price, product.quantity, product.p.tva)" disable disabled="" />
                     <div class="col-1"><br>
-                      <q-btn round color="negative" size="xs" icon="remove" class="print-hide" v-on:click="delete_product(index)" />
+                      <q-btn round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                     </div>
                   </div>
                 </div>
@@ -82,22 +84,22 @@
                 <div class="row q-mt-xs" style="min-height: 20px">
                   <h6 class="col-3 no-padding"> </h6>
                   <h6 class="offset-5 text-right col-4 no-padding">{{ total}} FCFA </h6>
-                  <!--                  <h6 class="offset-5 text-right col-4 no-padding">{{numerique(Math.round(total)) }} FCFA </h6>-->
                 </div>
 
-                <div class="row" v-if="validate_status">
-                  <q-btn class="print-hide" round color="positive" size="xs" icon="add" v-on:click="specialities_add2()" />&nbsp;&nbsp;
+                <div v-if="validate_status" class="row">
+                  <q-btn class="print-hide" round color="positive" size="xs" icon="add" @click="specialities_add2()" />&nbsp;&nbsp;
                   <q-btn v-if="add_status" class="print-hide" label="Valider" size="xs" icon="save" type="submit" color="secondary" />&nbsp;&nbsp;
-                  <q-btn v-if="!add_status" class="print-hide" label="Convertir en Vente" size="xs" type="button" color="teal-9"
-                         v-on:click="convertir_post()" />
+                  <q-btn
+v-if="!add_status" class="print-hide" label="Convertir en Vente" size="xs" type="button" color="teal-9"
+                         @click="convertir_post()" />
                 </div>
 
               </q-form>
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Fermer" v-close-popup />
-              <q-btn flat label="Imprimer" v-on:click="imprimer()" />
+              <q-btn v-close-popup flat label="Fermer" />
+              <q-btn flat label="Imprimer" @click="imprimer()" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -110,16 +112,19 @@
         </q-dialog>
 
 
-        <q-btn class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
+        <q-btn
+class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
                @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
 
         <div class="row">
           <div class="col-12 q-pa-lg">
-            <q-input class="row" autocomplete type="search" v-model="search"
-                     v-on:keyup="facture_filter_get(search)" label="Rechercher" />
+            <q-input
+v-model="search" class="row" autocomplete type="search"
+                     label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
-          <div class="col-lg-3 col-md-4 col-sm-6 col-12 q-pa-md"
-               v-for="(item, index) in sales_list" :key="index">
+          <div
+v-for="(item, index) in sales_list"
+               :key="index" class="col-lg-3 col-md-4 col-sm-6 col-12 q-pa-md">
             <q-card class="q-pa-lg">
               <q-card-section>
                 Devis N° {{item.id_vente}}<br>
@@ -152,11 +157,15 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 import FactureComponent from '../components/facture_component.vue';
 import axios from "axios";
-import {postApi} from "src/services/apiService";
 import Filescomponent from "components/filescomponent.vue";
 import apimixin from "src/services/apimixin";
 export default {
   name: 'DevisPage',
+  components: {
+    Filescomponent,
+    'facture': FactureComponent
+  },
+  mixins: [basemixin, apimixin],
   data () {
     return {
       filter: '',
@@ -178,10 +187,12 @@ export default {
       agent: null,
       fournisseur: null,
       product_id: null,
-      facture_number: '',
+      facture_number: null,
       quantity_id: null,
       sell: null,
       buy: null,
+      projetid: null,
+      p_projets: [],
       categories: [],
       formData: {},
       fileTitre: '',
@@ -211,11 +222,11 @@ export default {
       entreprise: {}
     }
   },
-  components: {
-    Filescomponent,
-    'facture': FactureComponent
+  computed: {
+    total() {
+      return this.products2.reduce((product, item) => product + (item.p.sales_price * item.quantity + (item.p.tva * item.p.sales_price * item.quantity /100)), 0);
+    }
   },
-  mixins: [basemixin, apimixin],
   created () {
     this.formData = new FormData();
     var date = new Date();
@@ -226,14 +237,17 @@ export default {
     this.clients_get();
     this.products_get();
     this.sales_get();
+    this.p_projet_get();
     this.dateposted = date.toISOString().slice(0, 16);
   },
-  computed: {
-    total() {
-      return this.products2.reduce((product, item) => product + (item.p.sales_price * item.quantity + (item.p.tva * item.p.sales_price * item.quantity /100)), 0);
-    }
-  },
   methods: {
+
+    p_projet_get () {
+      $httpService.getApi('/my/get/p_projet')
+        .then((response) => {
+          this.p_projets = response
+        })
+    },
 
     calculTotal(qte, prix, tva) {
       return (qte * prix) + (qte * prix * tva)/100
@@ -263,10 +277,14 @@ export default {
         })
     },
 
-    assign (product, index) {
-      this.products[index].quantite_vendu = 1;
-      this.products[index].prix_unitaire = this.products[index].p.sales_price;
-      this.products[index].remise_totale = 0;
+    assign(index) {
+      // this.products[index].quantite_vendu = 1;
+      // this.products[index].prix_unitaire = this.products[index].p.sales_price;
+      // this.products[index].remise_totale = 0;
+      console.log(this.products2[index])
+      this.products2[index].p = this.products2[index].product_id
+      this.products2[index].p.sales_price = this.products2[index].product_id.price
+      this.products2[index].productid = this.products2[index].product_id.id
     },
 
     assign_client (client) {
@@ -328,7 +346,7 @@ export default {
 
     sales_post() {
       // let params = { agent: this.agent, products: this.products2, clientid: this.client2.id, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc };
-      let params = { agent: this.agent, products: this.products2, clientid: this.clientId, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc };
+      let params = { agent: this.agent, products: this.products2, clientid: this.clientId, credit: this.credit, avance: this.avance, total: this.total, bl: this.bl, bc: this.bc, id_vente: this.facture_number };
       if (confirm('Voulez vous ajouter')) {
         $httpService.postWithParams('/my/post/devis', params)
           .then((response) => {
@@ -340,8 +358,8 @@ export default {
               this.devis_get_by(this.facture_number);
               // this.facture_number = response['factureid'];
               this.validate_status = false;
-              this.sales_get();
-              // window.location.reload()
+              // this.sales_get();
+              window.location.reload()
             } else {
               this.$q.notify({
                 color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
@@ -392,10 +410,10 @@ export default {
                 arr1Item.sales_price = arr2Item.prix_vente
               }
             });
-            this.appro_list = [{}, ...products];
-            this.appro_list2 = [{}, ...products];
-            this.products_list = [{}, ...products];
-            this.products_list2 = [{}, ...products];
+            this.appro_list = products;
+            this.appro_list2 = products;
+            this.products_list = products;
+            this.products_list2 = products;
             console.log(this.products_list);
           })
       })

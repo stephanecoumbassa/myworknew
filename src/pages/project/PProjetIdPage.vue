@@ -11,13 +11,13 @@
       <!--      </div>-->
     </div>
 
-    <div class="row" v-if="p_projet.id">
+    <div v-if="p_projet.id" class="row">
       <div class="col-12 q-pa-lg">
 
-        <q-card class="q-pa-lg q-mb-xs">
+        <q-card class="q-pa-lg q-mb-xs" flat>
           <div class="row">
             <div class="col-3">
-              <q-card class="q-pa-lg bg-grey-3 text-center">
+              <q-card class="q-pa-lg bg-grey-3 text-center" flat>
                 <br>
                 <h5><b>{{p_projet.titre}}</b></h5>
                 <br>
@@ -49,7 +49,7 @@
               </div>
             </div>
             <div class="col-2 q-pa-lg">
-              <span>Tests</span>
+<!--              <span>Tests</span>-->
             </div>
             <div class="col-12">
               <q-separator class="no-margin no-padding" color="grey-2" inset />
@@ -95,7 +95,7 @@
                   <p class="text-h6 text-grey">Liste des taches courantes</p>
                   <!--                  <list-item />-->
                   <q-list bordered padding class="rounded-borders">
-                    <q-item clickable v-ripple v-for="task in p_tasks.slice(0, 5)">
+                    <q-item v-for="(task, index) in p_tasks.slice(0, 5)" :key="index" v-ripple clickable>
                       <q-item-section avatar top>
                         <q-avatar icon="folder" color="primary" text-color="white" />
                       </q-item-section>
@@ -120,7 +120,7 @@
                   </span>
                   <p class="text-h6 text-grey">liste des travailleurs affectés</p>
                   <q-list bordered padding class="rounded-borders">
-                    <q-item clickable v-ripple v-for="employe in employes.slice(0, 5)">
+                    <q-item v-for="(employe, index) in employes.slice(0, 5)" :key="index" v-ripple clickable>
                       <q-item-section avatar top>
                         <q-avatar icon="folder" color="primary" text-color="white" />
                       </q-item-section>
@@ -160,16 +160,16 @@
 
                     <div class="col-6 q-pa-md">
                       <q-list dense>
-                        <q-item clickable v-ripple>
+                        <q-item v-ripple clickable>
                           <q-item-label><span class="text-grey text-weight-bold">-</span> En cours</q-item-label>
                         </q-item>
-                        <q-item clickable v-ripple>
+                        <q-item v-ripple clickable>
                           <q-item-label><span class="text-green text-weight-bold">-</span>Terminé(s)</q-item-label>
                         </q-item>
-                        <q-item clickable v-ripple>
+                        <q-item v-ripple clickable>
                           <q-item-label><span class="text-red text-weight-bold">-</span>Echec(s)</q-item-label>
                         </q-item>
-                        <q-item clickable v-ripple>
+                        <q-item v-ripple clickable>
                           <q-item-label><span class="text-red text-weight-bold">-</span>Arrêté(s)</q-item-label>
                         </q-item>
                       </q-list>
@@ -189,8 +189,8 @@
           </q-tab-panel>
 
           <q-tab-panel name="taches" class="no-padding no-margin">
-            <q-card class="q-pa-lg q-mt-lg">
-              <task-list :employes="employes" :tasks="p_tasks" :project_id="$route.params.id" :update="myupdate"/>
+            <q-card class="q-pa-lg q-mt-lg" flat>
+              <task-list :employes="employes" :tasks="p_tasks" :project_id="$route.params.id" />
             </q-card>
           </q-tab-panel>
 
@@ -198,12 +198,12 @@
             <br>
             <div class="row">
               <div class="col-12 q-mb-md">
-                <q-card class="q-pa-lg">
+                <q-card class="q-pa-lg" flat>
                   <br>
                   <div class="text-h6">Matières utilisées</div>
                   <br>
 
-                  <div class="row" v-for="use in used">
+                  <div v-for="(use, index) in used" :key="index" class="row">
                     <div class="col-4 q-pa-sm">
                       <q-select
                         v-model="use.product_id"
@@ -215,16 +215,17 @@
                     <!--                      <q-input :model-value="100" type="number" label="quantité restante" />-->
                     <!--                    </div>-->
                     <div class="col-2 q-pa-sm">
-                      <q-input  type="number" label="quantité utilisé" v-model="use.quantite" />
+                      <q-input  v-model="use.quantite" type="number" label="quantité utilisé" />
                     </div>
                     <div class="col-3 q-pa-sm">
                       <br>
-                      <q-btn icon="add" size="sm" outline color="green"
-                             v-if="!use.id" @click="p_projet_stock_post(use)" title="ajouter" />
+                      <q-btn
+v-if="!use.id" icon="add" size="sm" outline
+                             color="green" title="ajouter" @click="p_projet_stock_post(use)" />
                       &nbsp;
-                      <q-btn icon="edit" size="sm" v-if="use.id" outline title="modifier" />
+                      <q-btn v-if="use.id" icon="edit" size="sm" outline title="modifier" />
                       &nbsp;
-                      <q-btn icon="delete" size="sm" v-if="use.id" color="red" outline title="supprimer" />
+                      <q-btn v-if="use.id" icon="delete" size="sm" color="red" outline title="supprimer" />
                     </div>
                   </div>
 
@@ -243,7 +244,7 @@
             <br>
             <div class="row">
               <div class="col-12 q-mb-md">
-                <q-card class="q-pa-lg">
+                <q-card class="q-pa-lg" flat>
                   <h6>Prévisions</h6>
                 </q-card>
               </div>
@@ -252,25 +253,26 @@
 
           <q-tab-panel name="depenses" class="no-padding no-margin">
             <br>
-            <q-card class="q-pa-lg">
+            <q-card class="q-pa-lg" flat>
               <div class="row">
                 <div class="col-12 q-pa-sm">
-                  <q-table id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="name"
+                  <q-table
+id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="name"
                            :filter="filter" flat>
-                    <template v-slot:top="props">
+                    <template #top>
                       <div class="print-hide col-4 q-table__title">Depenses</div>
                       <div class="col-3"></div>
                       <div class="col-5">
                         <q-btn dense outline color="primary" label="Ajouter" class="q-ml-md print-hide" @click="depenseModal=true"/>
                         <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md print-hide" @click="json2csv(data, 'vente')"/>
-                        <q-btn flat round dense icon="print" v-print="'#printMe'" class="q-ml-md print-hide" />
-                        <q-input dense debounce="300" v-model="filter" placeholder="Rechercher" class="float-right q-ml-md" />
+                        <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md print-hide" />
+                        <q-input v-model="filter" dense debounce="300" placeholder="Rechercher" class="float-right q-ml-md" />
                       </div>
                       <br>
                       <br>
                       <br>
                     </template>
-                    <template v-slot:body="props">
+                    <template #body="props">
                       <q-tr :props="props">
                         <q-td key="id" :props="props"> {{props.row.id}} </q-td>
                         <q-td key="name" :props="props"> {{props.row.name}} </q-td>
@@ -300,42 +302,44 @@
 
           <q-tab-panel name="facture" class="no-padding no-margin">
             <br>
-            <q-card class="q-pa-lg">
+            <q-card class="q-pa-lg" flat>
               <div class="row">
 
                 <div class="col-12 q-mb-lg q-pa-sm">
-                  <q-card style="width: 1200px; max-width: 100%;" id="facture" :flat="true" v-if="versements && products">
+                  <q-card v-if="versements && products" id="facture" style="width: 1200px; max-width: 100%;" :flat="true">
 
                     <div class="row print-hide">
 
                       <div class="col-12 q-mb-lg">
                         <div class="text-h6">Gestion des versements</div>
                         <br>
-                        &nbsp;<q-btn outline color="grey" size="xs" v-on:click="versements.pop()">-</q-btn>
-                        &nbsp;<q-btn outline color="primary" size="xs" v-on:click="versements.push({montant: 0})" icon="add">
+                        &nbsp;<q-btn outline color="grey" size="xs" @click="versements.pop()">-</q-btn>
+                        &nbsp;<q-btn outline color="primary" size="xs" icon="add" @click="versements.push({montant: 0})">
                           <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
                         </q-btn>
                       </div>
 
-                      <div class="row q-mb-md" v-for="fac in versements" v-bind:key="fac.id">
+                      <div v-for="fac in versements" :key="fac.id" class="row q-mb-md">
 
-                        <q-input filled class="col-1 q-mr-sm" dense label="Date Echéance" type="date" stack-label v-model="fac.echeance"  />
-                        <q-input filled class="col-1 q-mr-sm" dense label="Pourcentage" type="number" stack-label v-model="fac.pourcentage"
+                        <q-input v-model="fac.echeance" filled class="col-1 q-mr-sm" dense label="Date Echéance" type="date" stack-label  />
+                        <q-input
+v-model="fac.pourcentage" filled class="col-1 q-mr-sm" dense label="Pourcentage" type="number" stack-label
                                  @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
-                        <q-input filled class="col-1 q-mr-sm" dense label="Montant Echéance" stack-label type="number" v-model="fac.montant_echeance" />
+                        <q-input v-model="fac.montant_echeance" filled class="col-1 q-mr-sm" dense label="Montant Echéance" stack-label type="number" />
                         &nbsp;
                         &nbsp;
-                        <q-select class="col-1 q-mr-sm" dense label="Type paiement" stack-label v-model="fac.paiement"
+                        <q-select
+v-model="fac.paiement" class="col-1 q-mr-sm" dense label="Type paiement" stack-label
                                   :options="['virement', 'cheque', 'espece']" />
-                        <q-input class="col-1 q-mr-sm" dense label="Date Vers" type="date" stack-label v-model="fac.date"  />
-                        <q-input class="col-1 q-mr-sm" dense label="Montant Vers" stack-label type="number" v-model="fac.montant" />
-                        <q-input class="col-2 q-mr-sm" dense label="N°Chèque/Virement" v-model="fac.numero" />
-                        <q-input class="col-1 q-mr-sm" dense label="Banque" v-model="fac.banque" />
-                        <q-input class="col-1 q-mr-sm" dense label="Date Emission" type="date" stack-label v-model="fac.emission"  />
+                        <q-input v-model="fac.date" class="col-1 q-mr-sm" dense label="Date Vers" type="date" stack-label  />
+                        <q-input v-model="fac.montant" class="col-1 q-mr-sm" dense label="Montant Vers" stack-label type="number" />
+                        <q-input v-model="fac.numero" class="col-2 q-mr-sm" dense label="N°Chèque/Virement" />
+                        <q-input v-model="fac.banque" class="col-1 q-mr-sm" dense label="Banque" />
+                        <q-input v-model="fac.emission" class="col-1 q-mr-sm" dense label="Date Emission" type="date" stack-label  />
 
                         <div class="col-1 q-ml-sm q-pt-md">
-                          <q-btn outline color="secondary" size="sm" v-if="fac.id" v-on:click="credit_update(fac)">✎</q-btn>
-                          <q-btn outline size="sm" v-if="!fac.id" v-on:click="credit_add(fac)">✅</q-btn>
+                          <q-btn v-if="fac.id" outline color="secondary" size="sm" @click="credit_update(fac)">✎</q-btn>
+                          <q-btn v-if="!fac.id" outline size="sm" @click="credit_add(fac)">✅</q-btn>
                         </div>
                       </div>
                     </div>
@@ -345,7 +349,8 @@
 
 
                 <div class="col-12 q-mt-md q-pa-sm text-center">
-                  <facture-component name="Facture de devis" v-if="products"
+                  <facture-component
+v-if="products" name="Facture de devis"
                                      :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
                 </div>
 
@@ -373,38 +378,25 @@
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import apimixin from "src/services/apimixin";
-import ListItem from "components/listItem.vue";
 import TaskList from "components/taskList.vue";
-import {employeGetService, p_task_get, p_task_projet_get} from "src/services/api/rh.api";
-import UploadFormData from "components/uploadFormData.vue";
+import {employeGetService, p_task_projet_get} from "src/services/api/rh.api";
 import Filescomponent from "components/filescomponent.vue";
 import DepenseAdd from "components/DepenseAdd.vue";
 import FactureComponent from "components/facture_component.vue";
 
 export default {
-  components: {FactureComponent, DepenseAdd, UploadFormData, TaskList, ListItem, Filescomponent},
+  components: {FactureComponent, DepenseAdd, TaskList, Filescomponent},
+  mixins: [basemixin, apimixin],
   data () {
     return {
       tab: "mails",
-      p_projet_id: 1,
-      loading1: false,
       fileStatus: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
-      medium2: false,
       depenseModal: false,
-      maximizedToggle: true,
-      date: null,
       dateposted: null,
-      name: null,
-      image: null,
       facture_number: null,
       depense: {},
       client: {},
       p_projet: {},
-      p_projets: [],
       p_tasks: [],
       employes: [],
       products: [],
@@ -413,7 +405,6 @@ export default {
       factures_init: [],
       used: [],
       depenses: [],
-      product: null,
       columnsDepense: [
         { name: 'id', required: true, label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
         { name: 'name', align: 'center', label: 'Titre', field: 'name', sortable: true },
@@ -424,31 +415,9 @@ export default {
         { name: 'date', label: 'Date', field: 'date', sortable: true },
         { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
-      columns: [
-        { name: 'titre', align: 'left', label: 'titre', field: 'titre', sortable: true },
-        { name: 'description', align: 'left', label: 'description', field: 'description', sortable: true },
-        { name: 'status', align: 'left', label: 'status', field: 'status', sortable: true },
-        { name: 'objectif', align: 'left', label: 'objectif', field: 'objectif', sortable: true },
-        { name: 'progress', align: 'left', label: 'progress', field: 'progress', sortable: true },
-        { name: 'datedebut', align: 'left', label: 'datedebut', field: 'datedebut', sortable: true },
-        { name: 'datefin', align: 'left', label: 'datefin', field: 'datefin', sortable: true },
-        { name: 'createdby', align: 'left', label: 'createdby', field: 'createdby', sortable: true },
-        { name: 'priorite', align: 'left', label: 'priorite', field: 'priorite', sortable: true },
-        { name: 'cout', align: 'left', label: 'cout', field: 'cout', sortable: true },
-        { name: 'clientid', align: 'left', label: 'clientid', field: 'clientid', sortable: true },
-        { name: 'porteur', align: 'left', label: 'porteur', field: 'porteur', sortable: true },
-        { name: 'execucants', align: 'left', label: 'execucants', field: 'execucants', sortable: true },
-        { name: 'puuid', align: 'left', label: 'puuid', field: 'puuid', sortable: true },
-        { name: 'photo', align: 'left', label: 'photo', field: 'photo', sortable: true },
-
-        { name: 'actions', align: 'left', label: 'Actions' }
-      ],
-
       filter: '',
-      pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 }
     }
   },
-  mixins: [basemixin, apimixin],
   computed: {
     total() {
       return this.products.reduce((product, item) => product + (item.total ), 0);
@@ -527,16 +496,6 @@ export default {
           this.depenses = response;
         })
     },
-    update_get (props) {
-      this.p_projet = props
-      this.medium2 = true
-    },
-    setEvent (payload, _name) {
-      this.p_projet[_name] = payload
-    },
-    handleFile (_name) {
-      this.p_projet[_name] = this.$refs[_name].files[0]
-    },
     productsGet () {
       $httpService.getApi('/my/get/products')
         .then((response) => {
@@ -549,7 +508,6 @@ export default {
           this.p_projet = response
         })
     },
-
     p_projet_stock_get () {
       $httpService.getApi('/my/get/projet_stock/'+this.$route.params.id)
         .then((response) => {
@@ -568,15 +526,6 @@ export default {
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
     },
-    p_projet_update () {
-      this.showLoading()
-      $httpService.putWithParams('/api/put/p_projet', this.p_projet)
-        .then((response) => {
-          this.p_projet_get()
-          this.showAlert(response.msg, 'secondary')
-          this.hideLoading()
-        }).catch(() => { this.hideLoading() })
-    },
     getTaskList () {
       p_task_projet_get(this.$route.params.id).then((response) => {
         this.p_tasks = response
@@ -584,18 +533,8 @@ export default {
     },
     employesGet () {
       employeGetService().then((response) => {
-        console.log(response)
         this.employes = response
       });
-    },
-    myupdate(a, b) {
-      // console.log('Hello update')
-      // console.log(a)
-      // console.log(b)
-      // return a
-    },
-    uploaded(data) {
-      console.log(data)
     }
   }
 }

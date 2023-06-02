@@ -22,8 +22,8 @@ module.exports = {
     // Uncomment any of the lines below to choose desired strictness,
     // but leave only one uncommented!
     // See https://eslint.vuejs.org/rules/#available-rules
-    'plugin:vue/vue3-essential', // Priority A: Essential (Error Prevention)
-    // 'plugin:vue/vue3-strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
+    // 'plugin:vue/vue3-essential', // Priority A: Essential (Error Prevention)
+    'plugin:vue/vue3-strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
     // 'plugin:vue/vue3-recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
 
     // https://github.com/prettier/eslint-config-prettier#installation
@@ -62,6 +62,39 @@ module.exports = {
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'vue/no-deprecated-slot-attribute': 'off'
+    'vue/no-deprecated-slot-attribute': 'off',
+    "vue/no-unused-properties": ["warn", {
+      "groups": ["props", "data", "methods"],
+      "deepData": true,
+      // "ignorePublicMembers": false,
+      // "unreferencedOptions": []
+    }],
+    // 'no-inline-comments': 'error',
+    // 'vue/require-component-is': 'error',
+    // 'vue/require-prop-type-constructor': 'error',
+    // 'vue/require-default-prop': 'error',
+    // 'vue/require-valid-default-prop': 'error',
+    // 'vue/no-reserved-component-names': 'error',
+    // "vue/attributes-order": "error",
+    "vue/no-unused-refs": "error",
+    "vue/no-unused-components": "error",
+    "vue/no-unused-vars": "error",
+    "vue/attributes-order": ["error", {
+      "order": [
+        "DEFINITION",
+        "LIST_RENDERING",
+        "CONDITIONALS",
+        "RENDER_MODIFIERS",
+        "GLOBAL",
+        ["UNIQUE", "SLOT"],
+        "TWO_WAY_BINDING",
+        "OTHER_DIRECTIVES",
+        "OTHER_ATTR",
+        "EVENTS",
+        "CONTENT"
+      ],
+      "alphabetical": false
+    }]
+    // "no-console": process.env.NODE_ENV === "production" ? "error" : "error",
   }
 }

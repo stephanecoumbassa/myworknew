@@ -1,12 +1,10 @@
-import { defineStore, mapStores  } from 'pinia'
+import { defineStore  } from 'pinia'
 
 // given two stores with the following ids
-const useUserStore = defineStore('user', {
-  // ...
-})
-const useCartStore = defineStore('cart', {
-  // ...
-})
+// const useUserStore = defineStore('user', {
+// })
+// const useCartStore = defineStore('cart', {
+// })
 
 export const useCounterStore = defineStore('basestore', {
   state: () => ({

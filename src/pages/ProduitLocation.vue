@@ -17,18 +17,20 @@
 
     <div class="row justify-center q-pa-md">
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
-        <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
-               v-on:click="product = { description: '', stock: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
+        <q-btn
+label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
+               @click="product = { description: '', stock: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
         <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
         <br><br>
         <q-table title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name">
-          <template v-slot:top="props">
+          <template #top="props">
             <div class="col-7 q-table__title">Liste des produits</div>
-            <q-input borderless dense debounce="300" v-model="filter" placeholder="Rechercher" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   @click="props.toggleFullscreen" class="q-ml-md" />
+            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
+            <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                   class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
-          <template v-slot:body="props">
+          <template #body="props">
             <q-tr :props="props" :class="alerte(props.row)">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
               <q-td key="photo" :props="props">
@@ -39,12 +41,12 @@
               <q-td key="parent_categorie_name" :props="props"> {{props.row.parent_categorie_name}} </q-td>
               <q-td key="amount" :props="props"> {{numerique(props.row.reste)}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " label="stat" />
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " label="vente" />
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" v-on:click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" label="achat" />
-                <q-btn class="q-mr-xs" size="xs" color="teal" v-on:click="update_get(props.row)" icon="edit" />
-                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" label="photo" v-on:click="photo_get(props.row)" icon="photo" />
-                <q-btn size="xs" color="red-9" label="désactivé" v-on:click="product_disable(props.row)" icon="toggle_off" />
+                <q-btn class="q-mr-xs" size="xs" color="grey-9" label="stat" @click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " />
+                <q-btn class="q-mr-xs" size="xs" color="grey-9" label="vente" @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " />
+                <q-btn class="q-mr-xs" size="xs" color="grey-9" label="achat" @click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" />
+                <q-btn class="q-mr-xs" size="xs" color="teal" icon="edit" @click="update_get(props.row)" />
+                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" label="photo" icon="photo" @click="photo_get(props.row)" />
+                <q-btn size="xs" color="red-9" label="désactivé" icon="toggle_off" @click="product_disable(props.row)" />
                 <!--<q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
               </q-td>
             </q-tr>
@@ -58,27 +60,31 @@
             </q-card-section>
 
             <q-card-section>
-              <q-form  @submit="onSubmit" class="q-gutter-md">
+              <q-form  class="q-gutter-md" @submit="onSubmit">
                 <div class="row">
                   <div class="col-md-6 col-sm-12 q-pa-lg">
-                    <q-input autocomplete v-model="product.name" label="Nom du produit *"
+                    <q-input
+v-model="product.name" autocomplete label="Nom du produit *"
                              lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
 
-                    <q-select v-model="product.domain_id" :options="domains" label="Domains" map-options emit-value
+                    <q-select
+v-model="product.domain_id" :options="domains" label="Domains" map-options emit-value
                               option-value="id" stack-label input-debounce="0" option-label="name"
-                              @input="parent_get(product.domain_id)" :rules="[ val => val || 'champs obligattoire']" />
+                              :rules="[ val => val || 'champs obligattoire']" @input="parent_get(product.domain_id)" />
 
-                    <q-select v-model="product.parent_categorie_id" :options="parents" label="Parents" map-options emit-value
+                    <q-select
+v-model="product.parent_categorie_id" :options="parents" label="Parents" map-options emit-value
                               option-value="id" stack-label input-debounce="0" option-label="name" :rules="[ val => val || 'champs obligattoire']" />
 
-                    <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value
+                    <q-select
+v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value
                               option-value="id" stack-label input-debounce="0" option-label="nom" />
                     <br>
-                    <q-input autocomplete type="number"  v-model="product.price_jour" label="Prix jour *" />
+                    <q-input v-model="product.price_jour" autocomplete  type="number" label="Prix jour *" />
                     <br>
-                    <q-input autocomplete type="number"  v-model="product.price_week" label="Prix semaine *" />
+                    <q-input v-model="product.price_week" autocomplete  type="number" label="Prix semaine *" />
                     <br>
-                    <q-input autocomplete type="number"  v-model="product.price_month" label="Prix mois *" />
+                    <q-input v-model="product.price_month" autocomplete  type="number" label="Prix mois *" />
                     <div class="q-gutter-sm">
                       <br>
                       <label>Voulez vous vendre sur internet</label>
@@ -88,28 +94,29 @@
 
                   </div>
                   <div class="col-md-6 col-sm-12 q-pa-lg">
-                    <q-input type="number"  v-model="product.tva" label="TVA *" />
-                    <q-input type="number"  v-model="product.quantity" label="Quantité *" />
-                    <q-input type="text"  v-model="product.reference" label="Reference Produit" />
-                    <q-input type="text" v-model="product.youtube" label="Url Video Youtube *" />
+                    <q-input v-model="product.tva"  type="number" label="TVA *" />
+                    <q-input v-model="product.quantity"  type="number" label="Quantité *" />
+                    <q-input v-model="product.reference"  type="text" label="Reference Produit" />
+                    <q-input v-model="product.youtube" type="text" label="Url Video Youtube *" />
 
-                    <q-input class="q-pa-xs" type="number" v-model="product.largeur" label="Largeur en m" />
-                    <q-input class="q-pa-xs" type="number" v-model="product.longueur" label="Longueur en m" />
-                    <q-input class="q-pa-xs" type="number" v-model="product.hauteur" label="Hauteur en m" />
-                    <q-input class="q-pa-xs" type="number" v-model="product.poids" label="Poids en KG" />
+                    <q-input v-model="product.largeur" class="q-pa-xs" type="number" label="Largeur en m" />
+                    <q-input v-model="product.longueur" class="q-pa-xs" type="number" label="Longueur en m" />
+                    <q-input v-model="product.hauteur" class="q-pa-xs" type="number" label="Hauteur en m" />
+                    <q-input v-model="product.poids" class="q-pa-xs" type="number" label="Poids en KG" />
 
                   </div>
                 </div>
                 <q-editor v-model="product.description" min-height="5rem" :toolbar="toolbar" />
-                <q-btn :loading="loading1" label="Ajouter" type="submit" color="primary" v-if="!product.id"/>
-                <q-btn :loading="loading1" label="Modifier" type="button" v-if="product.id"
-                       v-on:click="products_update(product)" color="primary"/>
+                <q-btn v-if="!product.id" :loading="loading1" label="Ajouter" type="submit" color="primary"/>
+                <q-btn
+v-if="product.id" :loading="loading1" label="Modifier" type="button"
+                       color="primary" @click="products_update(product)"/>
                 <q-btn  label="Annuler" type="reset" color="negative" outline class="q-ml-sm" />
               </q-form>
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Fermer" v-close-popup />
+              <q-btn v-close-popup flat label="Fermer" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -127,30 +134,32 @@
             </q-card-section>
 
             <q-card-actions align="right" class="bg-white text-teal">
-              <q-btn flat label="Fermer" v-close-popup />
+              <q-btn v-close-popup flat label="Fermer" />
             </q-card-actions>
           </q-card>
         </q-dialog>
 
         <q-dialog v-model="vente_status" transition-show="slide-up" transition-hide="slide-down">
 
-          <q-table :data="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
+          <q-table
+:data="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
                    row-key="id" :pagination="pagination">
-            <template v-slot:top>
+            <template #top>
               <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
             </template>
-            <template v-slot:top-left>
+            <template #top-left>
               <div class="row">
-                <div class="col-5 "><q-input type="date"  v-model="first" label="debut" /></div>
-                <div class="col-5"><q-input type="date"  v-model="last" label="fin" /></div>
-                <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" v-on:click="sales_stats_get(product_id)"/></div>
+                <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
+                <div class="col-5"><q-input v-model="last"  type="date" label="fin" /></div>
+                <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="sales_stats_get(product_id)"/></div>
               </div>
             </template>
-            <template v-slot:top-right="props">
+            <template #top-right="props">
               <q-btn size="sm" :label="'Nb Produits vendus: '+ numerique(nbre_vendus)" /><br>
               <q-btn size="sm" class="q-ml-sm" :label="'total: '+numerique(montant_vendus)+' FCFA'" />
-              <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                     @click="props.toggleFullscreen" class="q-ml-md float-right" />
+              <q-btn
+flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                     class="q-ml-md float-right" @click="props.toggleFullscreen" />
             </template>
           </q-table>
 
@@ -191,6 +200,12 @@ import basemixin from './basemixin';
 import AreachartComponent from '../components/areachart.vue';
 export default {
   name: 'ProduitLocationPage',
+  components: {
+    areachart: AreachartComponent,
+    HelloComponent,
+    // VueQr
+  },
+  mixins: [basemixin],
   data () {
     return {
       product_id: 1,
@@ -285,12 +300,6 @@ export default {
       ]
     }
   },
-  components: {
-    areachart: AreachartComponent,
-    HelloComponent,
-    // VueQr
-  },
-  mixins: [basemixin],
   created () {
     this.products_get();
     this.categories_all();
