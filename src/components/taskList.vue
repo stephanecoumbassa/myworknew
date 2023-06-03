@@ -111,8 +111,8 @@ export default {
 
   name: 'TaskList',
   mixins: [basemixin],
+  emits: ['reload'],
   props: {
-    project_id: {type: Number, required: true},
     tasks: {type: Array, default: () => [], required: false },
     employes: {type: Array, default: () => [], required: false },
   },
@@ -122,7 +122,6 @@ export default {
       openAssign: false,
       p_task: {},
       p_assignation: {},
-      p_tasks: [],
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 10 },
       columns: [
         { name: 'libelle', align: 'left', label: 'libelle', field: 'libelle', sortable: true },
@@ -150,7 +149,6 @@ export default {
       this.showLoading()
       $httpService.deleteWithParams('/api/delete/p_task/' + _id)
         .then((response) => {
-          // this.p_task_get()
           this.showAlert(response.msg, 'secondary')
           this.hideLoading()
         }).catch(() => { this.hideLoading() })
@@ -162,18 +160,18 @@ export default {
       $httpService.postWithParams('/api/post/p_task', this.p_task)
         .then((response) => {
           this.p_task = {}
-          this.p_task_get()
           this.showAlert(response, 'secondary')
           this.hideLoading()
+          this.$emit('reload', true)
         }).catch(() => { this.hideLoading() })
     },
     p_task_update (__task) {
       this.showLoading()
       $httpService.putWithParams('/api/put/p_task', __task)
         .then((response) => {
-          this.p_task_get();
           this.showAlert(response, 'secondary');
           this.hideLoading();
+          this.$emit('reload', true)
         }).catch(() => { this.hideLoading() })
     },
     assignationModal(item) {
@@ -181,16 +179,7 @@ export default {
       this.p_assignation = item;
       this.p_assignation.p_task_id = this.$route.params.id;
       this.p_assignation.p_assigneur_id = this.currentUser().id;
-    },
-    assignationPost () {
-      this.showLoading()
-      this.postApi('/api/post/p_assignation', this.p_assignation)
-        .then((response) => {
-          this.p_assignation = {}
-          this.showAlert(response.msg, 'secondary')
-          this.hideLoading()
-        }).catch(() => { this.hideLoading() })
-    },
+    }
   }
 
 }

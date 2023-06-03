@@ -228,31 +228,21 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      selected: [],
       options: [ { id: 1, name: 'personne' }, { id: 2, name: 'compagnie' } ],
       client: { exonere: 0},
-      date: false,
       status_update: false,
       post: { body: '', subject: '' },
-      entreprise: {},
       datemin: null,
       datemax: null,
-      model: null,
       filter: '',
       medium: false,
       medium2: false,
-      medium3: false,
       vente_status: false,
       fileStatus: false,
-      loading: false,
       sales_stats: [],
-      appro_stats: [],
       clientId: 0,
-      nbre_achetes: 0,
-      montant_achetes: 0,
       nbre_vendus: 0,
       montant_vendus: 0,
-      visibleColumns: ['email', 'phoneNumber', 'type'],
       data_status: false,
       pagination: {
         sortBy: 'name',
@@ -268,14 +258,9 @@ export default {
         { name: 'telephone', label: 'Telephone', field: 'telephone', sortable: true },
         { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
-      facture_id: null,
       products: [],
-      sales_list: [],
-      products_list: [],
       sumdata: [],
       namedata: [],
-      appro_list: [{ p: { sell_price: 0, id: null, quantity: 1 }, quantity: 1 }],
-      product: { description: '' },
       sales_columns: [
         { name: 'p_name', required: true, label: 'Nom', align: 'left', field: 'p_name', sortable: true },
         { name: 'quantite_vendu', align: 'center', label: 'Qté', field: 'quantite_vendu', sortable: true, format: val => `${this.numerique(val)}` },
@@ -298,10 +283,6 @@ export default {
   },
   created () {
     this.loadData();
-    // var date = new Date();
-    // this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    // this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    // this.loadData2();
   },
   methods: {
     client_stat (datemin, datemax) {
@@ -399,19 +380,6 @@ export default {
       }
       input.click()
     },
-    shop_get() {
-      $httpService.getWithParams('/my/get/shop')
-        .then((response) => {
-          this.entreprise = response;
-        })
-    },
-    assign (index) {
-      this.products[index].p.quantity = 1;
-      this.products[index].quantity = 1;
-    },
-    qr_get(dataUrl) {
-      this.image = dataUrl;
-    },
     send_email () {
       $httpService.postWithParams('/my/send/email', { id: this.client.id, email: this.client.email, subject: this.post.subject, message: this.post.body })
         .then((response) => {
@@ -424,10 +392,6 @@ export default {
             color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
           });
         });
-    },
-    startDownload() {
-      confirm('Voulez-vous generer');
-      return false;
     },
     sales_stats_get(clientid) {
       let params = { 'first': '2023-02-31', 'last': '2023-02-28', 'clientid': clientid };

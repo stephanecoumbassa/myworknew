@@ -89,32 +89,8 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      selected: [],
-      marques: [],
-      marques_items: [],
-      options: [],
-      marque: { status_client: true },
-      // date: '2020-03-10',
-      date: '2020-03-10',
-      name: null,
-      description: null,
-      tva: null,
-      code_comptable: null,
-      client: null,
-      clients: [],
-      clients2: [],
-      image: 'hhghjj',
-      price: null,
-      email: null,
-      telephone_code: null,
-      telephone: null,
-      model: null,
       status_update: false,
-      filter: '',
       medium: false,
-      loading: false,
-      visibleColumns: ['email', 'phoneNumber', 'type'],
-      data_status: false,
       pagination: {
         sortBy: 'name',
         descending: false,
@@ -149,9 +125,6 @@ export default {
       this.marque = item;
       this.status_update = true;
     },
-    btn_delete() {
-      this.status_update = true;
-    },
     onSubmit () {
       if (this.accept !== true) {
         this.marque_register();
@@ -160,20 +133,6 @@ export default {
           color: 'green-4', textColor: 'white', icon: 'fas fa-check-circle', message: 'Submitted', splitterModel: 20, model: null
         });
       }
-    },
-    marque_register () {
-      $httpService.postWithParams('/my/post/marques', this.marque)
-        .then((response) => {
-          this.$q.notify({
-            color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
-          });
-          this.loadData();
-        })
-        .catch(() => {
-          this.$q.notify({
-            color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
-          });
-        });
     },
     marque_update () {
       $httpService.postWithParams('/my/put/marques', this.marque)
@@ -202,14 +161,6 @@ export default {
             color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
           });
         });
-    },
-    filterFn (val, update) {
-      update(() => {
-        const needle = val.toLocaleLowerCase();
-        this.clients = this.clients2.filter(
-          (v) => { return v.fullname.toLocaleLowerCase().indexOf(needle) > -1 }
-        );
-      })
     }
   }
 

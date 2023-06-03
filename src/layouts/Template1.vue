@@ -177,21 +177,11 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      store: {},
       leftDrawerOpen: false,
-      search: '',
-      showAdvanced: false,
-      showDateOptions: false,
-      exactPhrase: '',
-      count: '',
-      hasWords: '',
-      excludeWords: '',
-      byWebsite: '',
-      byDate: 'Any time',
       role: {},
       shopid: null,
-      status_permission: '',
-      entreprise: { name: '', city: 1, footer_facture: 'agffggf', footer_site: '', footer_livraison: '', footer_paiement: '', footer_faq: '', contact: '' },
+      // status_permission: '',
+      entreprise: { name: '' },
       links1: [
         { icon: 'web', text: 'Dashboard', link: '/board', role: this.role_admin() },
         { icon: 'attach_money', text: 'Ventes', link: '/ventes', role: this.role_vendor() },
@@ -200,9 +190,9 @@ export default {
         { icon: 'shopping_cart', text: 'Produits', link: '/produits', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
         // { icon: 'shopping_cart', text: 'Budget Revenu', link: '/budget-revenu', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
         // { icon: 'shopping_cart', text: 'Budget Dépense', link: '/budget-depense', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
-        // { icon: 'published_with_changes', text: 'Location', link: '/location', role: this.role_vendor() },
-        // { icon: 'shopping_cart', text: 'Produits à louer', link: '/produits-location', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
-        // { icon: 'local_atm', text: 'Prestations', link: '/prestations', role: this.role_vendor() },
+        { icon: 'published_with_changes', text: 'Location', link: '/location', role: this.role_vendor() },
+        { icon: 'shopping_cart', text: 'Produits à louer', link: '/produits-location', role: true, style: 'border: 1px solid orange; border-radius: 45%' },
+        { icon: 'local_atm', text: 'Prestations', link: '/prestations', role: this.role_vendor() },
         { icon: 'money_off', text: 'Depense', link: '/depenses', role: this.role_achat() },
         // { icon: 'room_service', text: 'Services', link: '/services', role: true, style: 'border: 2px solid orange; border-radius: 45%' },
         // { icon: 'remove_shopping_cart', text: 'Pertes', link: '/pertes', role: true },
@@ -213,62 +203,39 @@ export default {
         // { icon: 'score', text: 'Inventaire', link: '/produits/inventaire', role: this.role_manager() },
         // { icon: 'settings_applications', text: 'Parametres', link: '/parametres', role: this.role_manager() }
       ],
-      links2: [
-        // { icon: 'settings_applications', text: 'Parametres' }
-        // { icon: 'language', text: 'Language & region' }
-        // { icon: 'near_me', text: 'Localisation' }
-      ],
-      links3: [
-        // { icon: '', text: 'Settings' }
-      ]
     }
   },
   created () {
     this.role = LocalStorage.getItem('current_user').roles[0];
     this.shopid = LocalStorage.getItem('current_user').shop_id;
     this.$q.loadingBar.setDefaults({ color: 'orange-4', size: '7px', position: 'top' });
-    // this.command_count();
-    // setInterval(() => {
-    //   this.command_count();
-    // }, 180000);
   },
   methods: {
-    onClear () {
-      this.exactPhrase = '';
-      this.hasWords = '';
-      this.excludeWords = '';
-      this.byWebsite = '';
-      this.byDate = 'Any time'
-    },
-    showNotif(msg = 'Vous avez une nouvelle commande !') {
-      this.status_permission = Notification.permission;
-      setTimeout(() => {}, 2000)
-      if (Notification.permission === 'granted') {
-        const audio = new Audio('../statics/discord.mp3')
-        audio.play();
-      } else if (Notification.permission !== 'denied') {
-        Notification.requestPermission().then((permission) => {
-          if (permission === 'granted') {
-            this.status_permission = 'granted';
-          }
-        })
-      } else if (Notification.permission === 'denied') {
-        alert('Permission refusée, veuillez activer les notifications SVP !');
-        return false;
-      }
-      const notification = new Notification('Nouvelle Commande', {
-        body: msg,
-        icon: 'statics/affairez.png',
-        sound: 'statics/discord.mp3'
-      });
-      notification.onclick = () => {
-        window.location.href = window.location.origin + '/#/commandes-clients'
-      };
-    },
-    changeDate (option) {
-      this.byDate = option
-      this.showDateOptions = false
-    },
+    // showNotif(msg = 'Vous avez une nouvelle commande !') {
+    //   this.status_permission = Notification.permission;
+    //   setTimeout(() => {}, 2000)
+    //   if (Notification.permission === 'granted') {
+    //     const audio = new Audio('../statics/discord.mp3')
+    //     audio.play();
+    //   } else if (Notification.permission !== 'denied') {
+    //     Notification.requestPermission().then((permission) => {
+    //       if (permission === 'granted') {
+    //         this.status_permission = 'granted';
+    //       }
+    //     })
+    //   } else if (Notification.permission === 'denied') {
+    //     alert('Permission refusée, veuillez activer les notifications SVP !');
+    //     return false;
+    //   }
+    //   const notification = new Notification('Nouvelle Commande', {
+    //     body: msg,
+    //     icon: 'statics/affairez.png',
+    //     sound: 'statics/discord.mp3'
+    //   });
+    //   notification.onclick = () => {
+    //     window.location.href = window.location.origin + '/#/commandes-clients'
+    //   };
+    // },
     go_back() {
       this.$router.go(-1);
     },
@@ -289,20 +256,18 @@ export default {
       this.$q.cookies.remove('token2');
       this.$q.cookies.remove('shop');
       this.$router.push({ path: '/login' });
-      // window.location.replace('/');
-      // this.$q.router.forward('/');
     },
-    command_count () {
-      let commandCount = localStorage.getItem('command_count');
-      $httpService.getWithParams('/my/count/user_command')
-        .then((response) => {
-          this.count = response['count'];
-          if (parseInt(commandCount) < parseInt(this.count)) {
-            this.showNotif();
-          }
-          localStorage.setItem('command_count', this.count);
-        })
-    }
+    // command_count () {
+    //   let commandCount = localStorage.getItem('command_count');
+    //   $httpService.getWithParams('/my/count/user_command')
+    //     .then((response) => {
+    //       this.count = response['count'];
+    //       if (parseInt(commandCount) < parseInt(this.count)) {
+    //         this.showNotif();
+    //       }
+    //       localStorage.setItem('command_count', this.count);
+    //     })
+    // }
   }
 }
 </script>

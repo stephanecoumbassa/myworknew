@@ -25,9 +25,9 @@
                   <div class="col-lg-8 col-md-8 col-sm-8 col-xs-4 text-right float-right" style="min-width: 200px" contenteditable="true">
                     <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
                       <q-select
-v-if="status_download" v-model="fournisseur" class="print-hide col-md-6 col-sm-12" filled map-options
-                                emit-value :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)"
-                                stack-label input-debounce="0" option-label="name" :dense="true" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_fournisseur(fournisseur)" />
+                        v-if="status_download" v-model="fournisseur" class="print-hide col-md-6 col-sm-12" filled map-options
+                        emit-value :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)"
+                        stack-label input-debounce="0" option-label="name" :dense="true" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_fournisseur(fournisseur)" />
                     </div>
                     <div class="row float-right q-mt-sm">
                       <div class="col-12">Facture #: {{facture_number}}</div>
@@ -51,15 +51,15 @@ v-if="status_download" v-model="fournisseur" class="print-hide col-md-6 col-sm-1
                   <div class="col-2 q-pa-sm">Total</div>
                   <div class="col-2 q-pa-sm">Motif</div>
                 </div>
-                <div v-for="(product, index) in products" :key="index" class="row q-mb-lg" style="height: 47px">
+                <div v-for="(prod, index) in products" :key="index" class="row q-mb-lg" style="height: 47px">
                   <q-select
-v-model="product.p" class="col-3 q-pa-sm text-wrap" :options="appro_list" option-value="id" use-input option-label="name"
-                            :dense="true" @filter="filterFn" @focusout="assign(index)" @input="assign(index)" />
-                  <q-input v-model="product.quantite" class="col-1 q-pa-sm" :dense="true" type="number" @focusout="getVal(index, product.quantity)" />
-                  <q-input v-model="product.p.tva" class="col-1 q-pa-sm" :dense="true" type="number" />
-                  <q-input v-model="product.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" />
-                  <q-input class="col-2 q-pa-sm" :dense="true" type="number" :value="product.p.sales_price * product.quantite" />
-                  <q-input v-model="product.p.motif" class="col-2 q-pa-sm" :dense="true" />
+                    v-model="prod.p" class="col-3 q-pa-sm text-wrap" :options="appro_list" option-value="id" use-input option-label="name"
+                    :dense="true" @filter="filterFn" @focusout="assign(index)" @input="assign(index)" />
+                  <q-input v-model="prod.quantite" class="col-1 q-pa-sm" :dense="true" type="number" @focusout="getVal(index, prod.quantity)" />
+                  <q-input v-model="prod.p.tva" class="col-1 q-pa-sm" :dense="true" type="number" />
+                  <q-input v-model="prod.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" />
+                  <q-input class="col-2 q-pa-sm" :dense="true" type="number" :value="prod.p.sales_price * prod.quantite" />
+                  <q-input v-model="prod.p.motif" class="col-2 q-pa-sm" :dense="true" />
                   <div class="col-1"><br>
                     <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                   </div>
@@ -107,8 +107,8 @@ v-model="product.p" class="col-3 q-pa-sm text-wrap" :options="appro_list" option
         </div>
 
         <q-table
-title="Listes des avoirs" :grid="grid" :rows="avoir_list" :columns="columns"
-                 :pagination="pagination" :filter="filter">
+          title="Listes des avoirs" :grid="grid" :rows="avoir_list" :columns="columns"
+          :pagination="pagination" :filter="filter">
           <template #top="props">
             <div class="col-4 q-table__title">Liste des avoirs</div>&nbsp;&nbsp;&nbsp;
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
@@ -184,28 +184,19 @@ export default {
   data () {
     return {
       filter: '',
-      fitst: 1,
       last: 30,
-      name: null,
       grid: false,
       status_download: true,
       validate_status: true,
       fullWidth: false,
-      medium: false,
       medium2: false,
       credit: false,
-      solde: true,
       avance: 0,
       agent: null,
       fournisseur: 1,
       fournisseur2: { id: null },
-      product_id: null,
       facture_number: null,
       description: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
       versements: [],
       date: '',
       client: 1,
@@ -215,10 +206,8 @@ export default {
       clients: [],
       products: [{ p: { id: 1, prodcat: 'Selectionner', name: 'Selectionner', tva: 0, sell_price: 0 }, quantity: 1 }],
       avoir_list: [],
-      products_list: [],
       appro_list: [{ p: { sell_price: 0 } }],
       appro_list2: [{ p: { sell_price: 0 } }],
-      product: { description: '' },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true, status: false },
         { name: 'p_name', align: 'left', label: 'Nom', field: 'p_name', sortable: true, status: true },
@@ -231,7 +220,6 @@ export default {
         { name: 'id_vente', align: 'left', label: 'Facture ID', field: 'id_vente', sortable: true },
         { name: 'actions', label: 'Actions' }
       ],
-      data: [],
       entreprise: {},
       pagination: {
         sortBy: 'name',
@@ -285,13 +273,6 @@ export default {
       this.products[index].p.quantite = 1;
       this.products[index].quantite = 1;
     },
-    assign_client (client) {
-      this.client2.id = client.id;
-      this.client2.fullname = client.fullname;
-      this.client2.email = client.email;
-      this.client2.telephone = client.telephone;
-      this.client2.telephone_code = client.telephone_code;
-    },
     assign_fournisseur (fournisseur) {
       this.fournisseur2.id = fournisseur.id;
       this.fournisseur2.fullname = fournisseur.fullname;
@@ -318,10 +299,6 @@ export default {
         .catch(() => {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
-    },
-    update_show(item) {
-      this.medium2 = true;
-      this.product = item;
     },
     avoir_post() {
       let params = { agent: this.agent,
@@ -354,14 +331,14 @@ export default {
           })
       }
     },
-    avoir_put() {
-      if (confirm('Voulez vous modifier')) {
-        $httpService.putWithParams('/my/put/avoir', this.product).then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.avoir_get();
-        })
-      }
-    },
+    // avoir_put() {
+    //   if (confirm('Voulez vous modifier')) {
+    //     $httpService.putWithParams('/my/put/avoir', this.product).then((response) => {
+    //       this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+    //       this.avoir_get();
+    //     })
+    //   }
+    // },
     products_get () {
       $httpService.getWithParams('/my/get/products')
         .then((response) => {
@@ -393,9 +370,6 @@ export default {
     specialities_add () {
       this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
     },
-    specialities_delete () {
-      this.products.pop();
-    },
     imprimer() {
       window.print();
     },
@@ -407,10 +381,6 @@ export default {
         this.products[index].quantity = parseInt(val);
         this.products[index].p.quantity = parseInt(val);
       })
-    },
-    startDownload() {
-      confirm('Voulez-vous generer');
-      return false;
     },
     delete_product(i) {
       this.products = this.products.filter((x) => {

@@ -25,9 +25,9 @@
                   <div class="col-lg-8 col-md-8 col-sm-8 col-xs-4 text-right float-right" style="min-width: 200px" contenteditable="true">
                     <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
                       <q-select
-v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options
-                                emit-value :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                                stack-label input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
+                        v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options
+                        emit-value :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                        stack-label input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
                     </div>
                     <div class="row float-right q-mt-sm">
                       <div class="col-12">Facture Retour #: {{facture_number}}</div>
@@ -50,14 +50,14 @@ v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" fi
                   <div class="col-2 q-pa-sm">Total</div>
                   <div class="col-2 q-pa-sm">Motif</div>
                 </div>
-                <div v-for="(product, index) in products" :key="index" class="row q-mb-lg">
+                <div v-for="(prod, index) in products" :key="index" class="row q-mb-lg">
                   <q-select
-v-model="product.p" class="col-sm-12 col-xs-12 col-3 q-pa-sm text-wrap" :options="appro_list" option-value="id" use-input option-label="name"
-                            :dense="true" @filter="filterFn" @focusout="assign(index)" @input="assign(index)" />
-                  <q-input v-model="product.quantite" class="col-sm-1 col-xs-1 col-1 q-pa-sm" hint="qty" :dense="true" type="number" @focusout="getVal(index, product.quantity)" />
-                  <q-input v-model="product.p.sales_price" class="col-sm-3 col-xs-3 col-2 q-pa-sm" hint="pu" :dense="true" type="number" />
-                  <q-input class="col-sm-3 col-xs-3 col-2 q-pa-sm" hint="tot" :dense="true" type="number" :value="product.p.sales_price * product.quantite" />
-                  <q-input v-model="product.p.motif" class="col-sm-4 col-xs-4 col-2 q-pa-sm" hint="motif" :dense="true" />
+                    v-model="prod.p" class="col-sm-12 col-xs-12 col-3 q-pa-sm text-wrap" :options="appro_list" option-value="id" use-input option-label="name"
+                    :dense="true" @filter="filterFn" @focusout="assign(index)" @input="assign(index)" />
+                  <q-input v-model="prod.quantite" class="col-sm-1 col-xs-1 col-1 q-pa-sm" hint="qty" :dense="true" type="number" @focusout="getVal(index, prod.quantity)" />
+                  <q-input v-model="prod.p.sales_price" class="col-sm-3 col-xs-3 col-2 q-pa-sm" hint="pu" :dense="true" type="number" />
+                  <q-input class="col-sm-3 col-xs-3 col-2 q-pa-sm" hint="tot" :dense="true" type="number" :value="prod.p.sales_price * prod.quantite" />
+                  <q-input v-model="prod.p.motif" class="col-sm-4 col-xs-4 col-2 q-pa-sm" hint="motif" :dense="true" />
                   <div class="col-1"><br>
                     <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                   </div>
@@ -108,8 +108,8 @@ v-model="product.p" class="col-sm-12 col-xs-12 col-3 q-pa-sm text-wrap" :options
         </div>
 
         <q-table
-title="Listes des retours" :grid="grid" :rows="retour_list" :columns="columns"
-                 :pagination="pagination" :filter="filter">
+          title="Listes des retours" :grid="grid" :rows="retour_list" :columns="columns"
+          :pagination="pagination" :filter="filter">
           <template #top="props">
             <div class="col-4 q-table__title">Liste des retours</div>&nbsp;&nbsp;&nbsp;
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
@@ -185,40 +185,26 @@ export default {
   data () {
     return {
       filter: '',
-      fitst: 1,
-      last: 30,
-      name: null,
       grid: false,
       status_download: true,
       validate_status: true,
       fullWidth: false,
-      medium: false,
       medium2: false,
       credit: false,
-      solde: true,
       avance: 0,
       agent: null,
-      fournisseur: null,
-      product_id: null,
       facture_number: null,
       description: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
       versements: [],
       date: '',
       client: 1,
       client2: { id: null },
       image: '',
-      users: [],
       clients: [],
       products: [{ p: { id: 1, prodcat: 'Selectionner', name: 'Selectionner', tva: 0, sell_price: 0 }, quantity: 1 }],
       retour_list: [],
-      products_list: [],
       appro_list: [{ p: { sell_price: 0 } }],
       appro_list2: [{ p: { sell_price: 0 } }],
-      product: { description: '' },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true, status: false },
         { name: 'p_name', align: 'left', label: 'Nom', field: 'p_name', sortable: true, status: true },
@@ -231,7 +217,6 @@ export default {
         { name: 'id_vente', align: 'left', label: 'Facture ID', field: 'id_vente', sortable: true },
         { name: 'actions', label: 'Actions' }
       ],
-      data: [],
       entreprise: {},
       pagination: {
         sortBy: 'name',
@@ -252,20 +237,11 @@ export default {
     // }
   },
   created () {
-    var date = new Date();
-    this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
     this.shop_get();
     this.clients_get();
-    // this.users_get();
     this.products_get();
     this.retour_get();
     this.factures_number_get();
-    // setInterval(function () {
-    //     var connection = navigator.onLine ? 'online' : 'offline';
-    //     console.log(connection);
-    // }, 2500);
   },
   methods: {
     onSubmit () {
@@ -312,10 +288,6 @@ export default {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
     },
-    update_show(item) {
-      this.medium2 = true;
-      this.product = item;
-    },
     retour_post() {
       let params = { agent: this.agent,
         products: this.products,
@@ -347,14 +319,14 @@ export default {
           })
       }
     },
-    retour_put() {
-      if (confirm('Voulez vous modifier')) {
-        $httpService.putWithParams('/my/put/retour', this.product).then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.retour_get();
-        })
-      }
-    },
+    // retour_put() {
+    //   if (confirm('Voulez vous modifier')) {
+    //     $httpService.putWithParams('/my/put/retour', this.product).then((response) => {
+    //       this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+    //       this.retour_get();
+    //     })
+    //   }
+    // },
     products_get () {
       $httpService.getWithParams('/my/get/products')
         .then((response) => {
@@ -386,9 +358,6 @@ export default {
     specialities_add () {
       this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
     },
-    specialities_delete () {
-      this.products.pop();
-    },
     imprimer() {
       window.print();
     },
@@ -400,10 +369,6 @@ export default {
         this.products[index].quantity = parseInt(val);
         this.products[index].p.quantity = parseInt(val);
       })
-    },
-    startDownload() {
-      confirm('Voulez-vous generer');
-      return false;
     },
     delete_product(i) {
       this.products = this.products.filter((x) => {

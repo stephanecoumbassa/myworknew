@@ -13,8 +13,8 @@
             </div>
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   class="q-ml-md" @click="props.toggleFullscreen" />
+              flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
           <template #body="props">
             <q-tr :props="props">
@@ -25,8 +25,8 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               <q-td key="reste"> {{ numerique(props.row.total - props.row.credit) }} </q-td>
               <q-td key="actions">
                 <q-btn
-class="q-mr-xs" size="xs" color="dark" icon="visibility"
-                       @click="get_facture_id(props.row.id_ap); factures_get_credit(props.row.id_ap)" />
+                  class="q-mr-xs" size="xs" color="dark" icon="visibility"
+                  @click="get_facture_id(props.row.id_ap); factures_get_credit(props.row.id_ap)" />
                 <!-- <q-btn class="q-mr-xs" size="xs" color="secondary" v-on:click="photo_get(props.row)" icon="photo" />-->
                 <!-- <q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
               </q-td>
@@ -62,8 +62,8 @@ class="q-mr-xs" size="xs" color="dark" icon="visibility"
               <br>
               <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
                 <q-select
-v-model="product.product_id" class="col-sm-12 col-xs-12 col-3 row q-pl-sm" map-options emit-value readonly
-                          option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
+                  v-model="product.product_id" class="col-sm-12 col-xs-12 col-3 row q-pl-sm" map-options emit-value readonly
+                  option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
                 <q-input v-model="product.amount" class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" label="Quantité" />
                 <q-input v-model="product.buying_price" class="col-sm-3 col-xs-3 col-2 row q-pl-sm" readonly type="number" label="Prix Achat" />
                 <q-input v-model="product.sell_price" class="col-sm-3 col-xs-3 col-2 q-pl-sm" readonly type="number" label="Prix Vente" />
@@ -120,47 +120,14 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      product_id: 1,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
-      medium2: false,
       fullWidth: false,
-      stat_status: false,
-      vente_status: false,
-      appro_status: false,
-      sales_stats: [],
-      appro_stats: [],
-      nbre_achetes: 0,
-      montant_achetes: 0,
-      nbre_vendus: 0,
-      montant_vendus: 0,
-      vente_sum: [],
-      appro_sum: [],
-      maximizedToggle: true,
-      name: null,
-      image: null,
-      productid: null,
-      categories: [],
-      users: [],
       products: [],
       credits: [{ details: {} }],
-      product: { description: '' },
       fournisseur: {},
       entreprise: {},
-      facture: { type: 'achat' },
-      position: {},
-      search: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
       date: '',
       versements: [],
-      factures: [],
-      factures_init: [],
       factures_details: [],
       facture_id: null,
 
@@ -172,7 +139,6 @@ export default {
         { name: 'reste', align: 'left', label: 'Reste (Impayés)', field: 'reste', sortable: true },
         { name: 'actions', label: 'Actions', align: 'right' }
       ],
-      data: [],
       filter: '',
       pagination: {
         sortBy: 'name',
@@ -208,39 +174,16 @@ export default {
         this.$q.notify({ color: 'green-4', textColor: 'white', icon: 'fas fa-check-circle', message: 'Submitted' })
       }
     },
-    update_get(props) {
-      this.product = props;
-      this.product.categories = props.product_categories_id;
-      this.product.description = props.product_desc;
-      this.product_id = props.id;
-      this.medium2 = true;
-    },
     credit_get () {
       $httpService.getWithParams('/my/get/credit_appro')
         .then((response) => {
           this.credits = response;
         })
     },
-    alerte(item) {
-      if (item.amount <= item.alert_threshold) {
-        return 'bg-blue-grey-3';
-      }
-    },
     get_facture_id (_id) {
       this.fullWidth = true;
       this.facture_id = _id;
       this.factures_get_id();
-    },
-    facture_filter_get() {
-      const val1 = this.factures_init.filter((x) => { return x.facture.toString().includes(this.search); });
-      this.factures = val1;
-    },
-    factures_get () {
-      $httpService.getWithParams('/my/get/factures_appro')
-        .then((response) => {
-          this.factures = response;
-          this.factures_init = response;
-        })
     },
     factures_get_id () {
       $httpService.getWithParams('/my/get/appro_by_facture', { id_ap: this.facture_id })

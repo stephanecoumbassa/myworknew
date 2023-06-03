@@ -40,14 +40,13 @@ export default {
     event: 'blur'
   },
   props: {
-    type: String,
-    typeid: Number,
-    folder: String
+    type: {type: String, required: true},
+    typeid: {type: Number, required: true},
+    folder: {type: String, required: true}
   },
   data: function () {
     return {
       titre: '',
-      photo: {},
       photos: [],
     }
   },
@@ -59,6 +58,7 @@ export default {
       }
     }
   },
+  emits:['blur'],
   created: function () {
     this.photos_get();
     // this.medias_type_get()

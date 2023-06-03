@@ -97,7 +97,6 @@ export default {
     return {
       name: null,
       icon: null,
-      type: null,
       parentid: null,
       domainid: null,
       categories: [],
@@ -111,20 +110,12 @@ export default {
         rowsPerPage: 10,
         rowsNumber: 10
       },
-      options: ['Categorie', 'Parent'],
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
         { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
         { name: 'parentid', align: 'left', label: 'Parent', field: 'parentid', sortable: true },
         { name: 'actions', label: 'Actions' }
       ],
-      domains_columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
-        { name: 'domainid', align: 'left', label: 'Domaine', field: 'domainid', sortable: true },
-        { name: 'actions', label: 'Actions' }
-      ],
-      data: []
     }
   },
   created () {
@@ -179,42 +170,42 @@ export default {
           this.parents2 = response;
         })
     },
-    parent_post() {
-      $httpService.postWithParams('/my/post/categories_parent', { 'name': this.name, 'domainid': this.domainid })
-        .then(() => {
-          this.parent_get();
-          this.$q.notify({
-            color: 'green', position: 'top', message: 'Catégorie Parente Ajoutée', icon: 'report_problem'
-          });
-        })
-    },
-    parent_put(item) {
-      $httpService.putWithParams('/my/put/categories_parent', item)
-        .then((response) => {
-          this.parent_get();
-          this.$q.notify({
-            color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-          });
-        })
-    },
-    categories_put(item) {
-      $httpService.putWithParams('/my/put/categories_stock', item)
-        .then((response) => {
-          this.categories_get();
-          this.$q.notify({
-            color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-          });
-        })
-    },
-    categories_delete(id) {
-      $httpService.deleteWithParams('/api/s_product_categories/' + id)
-        .then(() => {
-          this.categories_get();
-          this.$q.notify({
-            color: 'green', position: 'top', message: 'Supprimé', icon: 'report_problem'
-          });
-        })
-    },
+    // parent_post() {
+    //   $httpService.postWithParams('/my/post/categories_parent', { 'name': this.name, 'domainid': this.domainid })
+    //     .then(() => {
+    //       this.parent_get();
+    //       this.$q.notify({
+    //         color: 'green', position: 'top', message: 'Catégorie Parente Ajoutée', icon: 'report_problem'
+    //       });
+    //     })
+    // },
+    // parent_put(item) {
+    //   $httpService.putWithParams('/my/put/categories_parent', item)
+    //     .then((response) => {
+    //       this.parent_get();
+    //       this.$q.notify({
+    //         color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
+    //       });
+    //     })
+    // },
+    // categories_put(item) {
+    //   $httpService.putWithParams('/my/put/categories_stock', item)
+    //     .then((response) => {
+    //       this.categories_get();
+    //       this.$q.notify({
+    //         color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
+    //       });
+    //     })
+    // },
+    // categories_delete(id) {
+    //   $httpService.deleteWithParams('/api/s_product_categories/' + id)
+    //     .then(() => {
+    //       this.categories_get();
+    //       this.$q.notify({
+    //         color: 'green', position: 'top', message: 'Supprimé', icon: 'report_problem'
+    //       });
+    //     })
+    // },
     filterFn (val, update) {
       update(() => {
         const needle = val.toLocaleLowerCase();

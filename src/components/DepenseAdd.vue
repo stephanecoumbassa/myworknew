@@ -48,17 +48,17 @@ import basemixin from '../pages/basemixin'
 export default {
   name: 'DepenseAdd',
   components: {
-    // 'downloadExcel': vue3JsonExcel
   },
   mixins: [basemixin],
-  props: ['depense'],
+  props: {
+    depense: {type: String, default: ()  => {}}
+  },
   emits: ['reload'],
   data () {
     return {
       mydepense: {},
       date: '2020-03-10',
       name: null,
-      description: null,
       status_update: false,
       data_status: false,
       data: [],
@@ -103,13 +103,6 @@ export default {
       this.name = null;
       this.age = null;
       this.accept = false;
-    },
-    btn_update(item) {
-      this.service = item;
-      this.status_update = true;
-    },
-    btn_delete() {
-      this.status_update = true;
     },
     depense_register () {
       $httpService.postWithParams('/my/post/depenses', this.depense)

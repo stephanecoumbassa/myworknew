@@ -13,61 +13,12 @@ export default {
     name: 'GoogleNewsLayout',
     data () {
         return {
-            leftDrawerOpen: false,
-            search: '',
-            showAdvanced: false,
-            showDateOptions: false,
-            exactPhrase: '',
-            hasWords: '',
-            excludeWords: '',
-            byWebsite: '',
-            byDate: 'Any time',
-            links1: [
-                { icon: 'web', text: 'Dashboard', link: '/' },
-                // { icon: 'money_off', text: 'Achats', link: '/achats' },
-                { icon: 'money_off', text: 'Achats', link: '/commandes' },
-                // { icon: 'attach_money', text: 'Ventes', link: '/ventes' },
-                { icon: 'attach_money', text: 'Ventes', link: '/ventes_new' },
-                // { icon: 'star_border', text: 'Depenses', link: '/depenses' },
-                { icon: 'money', text: 'Factures', link: '/factures' },
-                { icon: 'shopping_cart', text: 'Produits', link: '/produits' },
-                { icon: 'category', text: 'Categories', link: '/categories' },
-                { icon: 'people', text: 'Users', link: '/users' },
-                { icon: 'apps', text: 'App', link: '/app' },
-                { icon: 'shopping_cart', text: 'Boutique', link: '/boutique' }
-            ],
-            links2: [
-                { icon: 'settings_applications', text: 'Parametres' },
-                { icon: 'language', text: 'Language & region' }
-                // { icon: 'near_me', text: 'Localisation' }
-            ],
-            links3: [
-                // { icon: '', text: 'Settings' }
-            ]
         }
     },
     created () {
         localStorage.clear();
     },
     methods: {
-        onClear () {
-            this.exactPhrase = ''
-            this.hasWords = ''
-            this.excludeWords = ''
-            this.byWebsite = ''
-            this.byDate = 'Any time'
-        },
-        changeDate (option) {
-            this.byDate = option
-            this.showDateOptions = false
-        },
-        logout() {
-            localStorage.removeItem('current_user');
-            localStorage.removeItem('token');
-            localStorage.removeItem('token2');
-            window.location.replace('/');
-            // this.$q.router.forward('/');
-        }
     }
 }
 </script>

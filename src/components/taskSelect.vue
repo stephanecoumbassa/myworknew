@@ -34,6 +34,7 @@ export default {
       return this.tasks.find(task => task.id === this.selectedTaskId)
     }
   },
+  emits:['selected'],
   watch: {
     selectedTask (newValue) {
       this.$emit('selected', newValue)

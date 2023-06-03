@@ -37,17 +37,17 @@
         </router-link>
       </div>
 
-<!--      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">-->
-<!--        <router-link class="item item-link" to="/produits/marques">-->
-<!--          <q-card class="my-card" clickable>-->
-<!--            <q-item clickable>-->
-<!--              <q-card-section>-->
-<!--                <div class="text-h6">Marques</div>-->
-<!--              </q-card-section>-->
-<!--            </q-item>-->
-<!--          </q-card>-->
-<!--        </router-link>-->
-<!--      </div>-->
+      <!--      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">-->
+      <!--        <router-link class="item item-link" to="/produits/marques">-->
+      <!--          <q-card class="my-card" clickable>-->
+      <!--            <q-item clickable>-->
+      <!--              <q-card-section>-->
+      <!--                <div class="text-h6">Marques</div>-->
+      <!--              </q-card-section>-->
+      <!--            </q-item>-->
+      <!--          </q-card>-->
+      <!--        </router-link>-->
+      <!--      </div>-->
 
       <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
         <router-link class="item item-link" to="/produits/inventaire">
@@ -79,8 +79,8 @@
     <div class="row justify-center q-pa-sm">
       <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md q-pa-sm">
         <q-btn
-label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
-               @click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
+          label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
+          @click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 }; medium2 = true" />&nbsp;&nbsp;
         <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
         <br><br>
 
@@ -96,7 +96,7 @@ label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
                 <q-icon v-if="props.row.customize" name="dashboard_customize" />
               </q-td>
               <q-td key="photo" :props="props">
-<!--                <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>-->
+                <!--                <img v-if="props.row.photos" :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(props.row.photos)[0]['name']" style="width: 50px; height: 50px; object-fit: cover"/>-->
                 <img v-if="props.row.photo" :src="uploadurl+'/uploads/products/'+props.row.photo" style="width: 70px; height: 70px; object-fit: cover"/>
               </q-td>
               <q-td key="name" :props="props"> {{props.row.name}} </q-td>
@@ -129,13 +129,13 @@ label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
           <div class="text-h6">gestion de prix par client</div>
         </q-card-section>
         <q-card-section>
-<!--          {{clients}}-->
+          <!--          {{clients}}-->
           <div v-for="price in prices_list" :key="price.id" class="row q-col-gutter-lg q-mt-xs">
             <div class="col-3">
               <q-select
-v-model="price.client_id" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
-                        :dense="true" :options="clients" label="Clients" option-value="id" :option-label="'fullname'"
-                        input-debounce="300" />
+                v-model="price.client_id" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                :dense="true" :options="clients" label="Clients" option-value="id" :option-label="'fullname'"
+                input-debounce="300" />
             </div>
             <div class="col-3">
               <q-input v-model="price.prix_vente" dense label="prix" />
@@ -164,56 +164,56 @@ v-model="price.client_id" class="print-hide col-md-6 col-sm-12" filled map-optio
             <div class="row">
               <div class="col-md-7 col-sm-12">
                 <q-input
-id="name" v-model="product.name" autocomplete label="Nom du produit *" :dense="true" outlined
-                         lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
+                  id="name" v-model="product.name" autocomplete label="Nom du produit *" :dense="true" outlined
+                  lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
 
                 <q-select
-id="type" v-model="product.type" :options="['matiere', 'produit', 'outil']" label="type" map-options emit-value :dense="true"
-                          stack-label input-debounce="0" :rules="[ val => val || 'champs obligattoire']" outlined />
+                  id="type" v-model="product.type" :options="['matiere', 'produit', 'outil']" label="type" map-options emit-value :dense="true"
+                  stack-label input-debounce="0" :rules="[ val => val || 'champs obligattoire']" outlined />
 
                 <q-select
-id="domainid" v-model="product.domainid" :options="domains" label="Domains" map-options emit-value :dense="true"
-                          option-value="id" stack-label input-debounce="0" option-label="name" outlined
-                          :rules="[ val => val || 'champs obligattoire']" @input="parent_get(product.domainid)" />
+                  id="domainid" v-model="product.domainid" :options="domains" label="Domains" map-options emit-value :dense="true"
+                  option-value="id" stack-label input-debounce="0" option-label="name" outlined
+                  :rules="[ val => val || 'champs obligattoire']" @input="parent_get(product.domainid)" />
 
                 <q-select
-id="parent_categorie_id" v-model="product.parent_categorie_id" :options="parents" label="Parents" map-options emit-value :dense="true"
-                          option-value="id" stack-label input-debounce="0" option-label="name" outlined
-                          :rules="[ val => val || 'champs obligattoire']" @input="categorie_get(product.parent_categorie_id)" />
+                  id="parent_categorie_id" v-model="product.parent_categorie_id" :options="parents" label="Parents" map-options emit-value :dense="true"
+                  option-value="id" stack-label input-debounce="0" option-label="name" outlined
+                  :rules="[ val => val || 'champs obligattoire']" @input="categorie_get(product.parent_categorie_id)" />
 
-<!--                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"-->
-<!--                          option-value="id" stack-label input-debounce="0" option-label="name" />-->
-<!--                <br>-->
-<!--                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"-->
-<!--                          option-value="id" stack-label input-debounce="0" option-label="nom" />-->
-<!--                <br>-->
+                <!--                <q-select v-model="product.product_categories_id" :options="categories" id="product_categories_id" label="Categories" map-options emit-value :dense="true"-->
+                <!--                          option-value="id" stack-label input-debounce="0" option-label="name" />-->
+                <!--                <br>-->
+                <!--                <q-select v-model="product.marque_id" :options="marques" label="Marques" map-options emit-value :dense="true"-->
+                <!--                          option-value="id" stack-label input-debounce="0" option-label="nom" />-->
+                <!--                <br>-->
                 <q-input v-model="product.price" autocomplete type="number" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
-<!--                <br>-->
-<!--                <q-input type="number"  v-model="product.tva" label="TVA *" />-->
-<!--                <br>-->
-<!--                <q-input autocomplete type="number"  v-model="product.promo" label="Prix de promotionel" :dense="true" />-->
+                <!--                <br>-->
+                <!--                <q-input type="number"  v-model="product.tva" label="TVA *" />-->
+                <!--                <br>-->
+                <!--                <q-input autocomplete type="number"  v-model="product.promo" label="Prix de promotionel" :dense="true" />-->
 
-<!--                <div class="q-gutter-sm">-->
-<!--                  <br>-->
-<!--                  <label>Voulez vous vendre sur internet</label>-->
-<!--                  <q-radio v-model="product.webstatus" :val="0" label="Non" />-->
-<!--                  <q-radio v-model="product.webstatus" :val="1" label="Oui" />-->
-<!--                </div>-->
+                <!--                <div class="q-gutter-sm">-->
+                <!--                  <br>-->
+                <!--                  <label>Voulez vous vendre sur internet</label>-->
+                <!--                  <q-radio v-model="product.webstatus" :val="0" label="Non" />-->
+                <!--                  <q-radio v-model="product.webstatus" :val="1" label="Oui" />-->
+                <!--                </div>-->
 
-<!--                <div class="q-gutter-sm">-->
-<!--                  <br>-->
-<!--                  <label>Ce produit est-il customizable </label>-->
-<!--                  <q-radio v-model="product.customize" :val="0" label="Non" />-->
-<!--                  <q-radio v-model="product.customize" :val="1" label="Oui" />-->
-<!--                </div>-->
+                <!--                <div class="q-gutter-sm">-->
+                <!--                  <br>-->
+                <!--                  <label>Ce produit est-il customizable </label>-->
+                <!--                  <q-radio v-model="product.customize" :val="0" label="Non" />-->
+                <!--                  <q-radio v-model="product.customize" :val="1" label="Oui" />-->
+                <!--                </div>-->
 
-<!--                <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />-->
+                <!--                <q-input type="number" v-if="product.webstatus" v-model="product.priceweb" label="Prix sur Internet *" :dense="true" />-->
                 <q-input v-model="product.alert_threshold"  type="number" label="Alert *" outlined dense hint="" />
                 <!--<q-input autocomplete type="textarea"  v-model="product.serial" label="Numero de serie" />-->
                 <q-input v-model="product.reference"  type="text" label="Reference Produit" outlined dense hint="" />
 
-<!--                <q-input v-if="!product.id" type="number" v-model="product.buy_price" label="Prix achat *" />-->
-<!--                <q-input v-if="!product.id" type="number" v-model="product.stock" label="Stock Initial *" />-->
+                <!--                <q-input v-if="!product.id" type="number" v-model="product.buy_price" label="Prix achat *" />-->
+                <!--                <q-input v-if="!product.id" type="number" v-model="product.stock" label="Stock Initial *" />-->
 
                 <q-input v-model="product.youtube" type="text" label="Url Video Youtube *" outlined dense hint="" />
 
@@ -246,8 +246,8 @@ id="parent_categorie_id" v-model="product.parent_categorie_id" :options="parents
             <q-editor v-model="product.description" min-height="5rem" :toolbar="toolbar" />
             <q-btn v-if="!product.id" :loading="loading1" label="Ajouter" type="submit" color="primary"/>
             <q-btn
-v-if="product.id" :loading="loading1" label="Modifier" type="button"
-                   color="primary" @click="products_update(product)"/>
+              v-if="product.id" :loading="loading1" label="Modifier" type="button"
+              color="primary" @click="products_update(product)"/>
             <q-btn  label="Annuler" type="reset" color="negative" outline class="q-ml-sm" />
           </q-form>
         </q-card-section>
@@ -279,8 +279,8 @@ v-if="product.id" :loading="loading1" label="Modifier" type="button"
     <q-dialog v-model="vente_status" transition-show="slide-up" transition-hide="slide-down">
 
       <q-table
-:rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
-               row-key="id" :pagination="pagination">
+        :rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
+        row-key="id" :pagination="pagination">
         <template #top>
           <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
         </template>
@@ -303,8 +303,8 @@ v-if="product.id" :loading="loading1" label="Modifier" type="button"
 
     <q-dialog v-model="appro_status" transition-show="slide-up" transition-hide="slide-down">
       <q-table
-:rows="appro_stats" :columns="appro_columns" style="width: 800px; max-width: 100%"
-               row-key="id" :pagination="pagination">
+        :rows="appro_stats" :columns="appro_columns" style="width: 800px; max-width: 100%"
+        row-key="id" :pagination="pagination">
         <template #top-left>
           <div class="row">
             <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
@@ -368,7 +368,6 @@ export default {
       product_id: 1,
       token: LocalStorage.getItem('token'),
       loading1: false,
-      red: '#6d1412',
       first: null,
       last: null,
       medium: false,
@@ -388,14 +387,9 @@ export default {
       vente_sum: [],
       appro_sum: [],
       marques: [],
-      series: [{ name: 'Nbre de Produit.', data: [] }],
       series_appro_sum: [{ name: 'Montant Achete par mois', data: [] }],
-      series_vente_count: [{ name: 'Montant Achete.', data: [] }],
       series_vente_sum: [{ name: 'Montant Vendu par mois', data: [] }],
-      maximizedToggle: true,
-      name: null,
       image: null,
-      productid: null,
       parents: [],
       parents2: [],
       categories: [],
@@ -403,7 +397,6 @@ export default {
       categoriesall: [],
       domains: [],
       domains2: [],
-      users: [],
       products: [],
       clients: [],
       product: { description: '', stock: 0, buy_price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1, customize: 0 },
@@ -432,7 +425,6 @@ export default {
         { name: 'p_sell_price', label: 'Prix Vente', align: 'left', field: 'p_sell_price', format: val => `${this.numerique(val)}`, sortable: true },
         { name: 'dateposted', label: 'Date Achat', align: 'left', field: 'dateposted', sortable: true, format: val => `${this.dateformat(val, 3)}` }
       ],
-      data: [],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
@@ -551,17 +543,6 @@ export default {
     products_update (prod) {
       if (confirm('Voulez vous modifier ?')) {
         $httpService.putWithParams('/my/put/products', prod)
-          .then((response) => {
-            this.products_get();
-            this.$q.notify({
-              color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-            });
-          })
-      }
-    },
-    categories_delete (id) {
-      if (confirm('Voulez vous supprimer ?')) {
-        $httpService.deleteWithParams('/api/s_product_categories/' + id)
           .then((response) => {
             this.products_get();
             this.$q.notify({

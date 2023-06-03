@@ -8,24 +8,24 @@
         <div class="row">
           <div class="col-12 q-pa-lg">
             <q-input
-v-model="search" class="row" autocomplete type="search"
-                     label="Rechercher" @keyup="facture_filter_get(search)" />
+              v-model="search" class="row" autocomplete type="search"
+              label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div class="col-12">
 
             <q-table
-id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
-                     :pagination="pagination" :filter="filter" dense>
+              id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
+              :pagination="pagination" :filter="filter" dense>
               <template #top="props">
                 <div class="col-4 q-table__title">Liste des factures</div>&nbsp;&nbsp;&nbsp;
-<!--                <q-input dense debounce="300" type="search" icon="search" v-model="filter" placeholder="Rechercher" />-->
+                <!--                <q-input dense debounce="300" type="search" icon="search" v-model="filter" placeholder="Rechercher" />-->
                 <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(factures, 'vente')"/>
                 <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
                 <q-btn flat round dense icon="grid_on" class="q-ml-md" @click="grid = !grid" />
                 <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" class="q-ml-md" @click="props.toggleFullscreen" />
               </template>
               <template #body="props">
-                 <q-tr :props="props">
+                <q-tr :props="props">
                   <q-td key="facture" :props="props">{{ props.row.facture }}</q-td>
                   <q-td key="dateposted" :props="props">{{ props.row.dateposted }}</q-td>
                   <q-td key="fullname" :props="props">{{ props.row.fullname }}</q-td>
@@ -49,8 +49,8 @@ id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="co
             <q-card-section>
               <div class="row">
                 <div class="col-5 alignleft">
-<!--                  <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 100px; height: 100px; object-fit: cover"/>-->
-<!--                  <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 100px; height: 100px; object-fit: cover"/>-->
+                  <!--                  <img v-if="entreprise.logo" :src="uploadurl+'/'+entreprise.id+'/magasin/'+entreprise.logo" style="width: 100px; height: 100px; object-fit: cover"/>-->
+                  <!--                  <img v-if="!entreprise.logo" src="~assets/affairez.png" style="width: 100px; height: 100px; object-fit: cover"/>-->
                   <img src="~assets/fmmi-logo.jpeg" style="width: 100px; height: 100px; object-fit: cover"/>
                   <div>{{entreprise.name}}</div>
                   <div>{{entreprise.telephone}}</div>
@@ -86,14 +86,14 @@ id="printMe" title="Listes de ventes" :grid="grid" :rows="factures" :columns="co
                 </div>
                 <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
                   <q-select
-v-model="product.product_id" outlined class="col-4 no-margin text-no-wrap truncate" use-input map-options emit-value
-                            dense option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
+                    v-model="product.product_id" outlined class="col-4 no-margin text-no-wrap truncate" use-input map-options emit-value
+                    dense option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
                   <q-input v-model="product.quantite_vendu" dense class="col-1 row q-pl-sm" autocomplete type="number" label="Quantité" />
                   <q-input v-model="product.prix_unitaire" dense class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" />
                   <q-input v-model="product.tva" dense class="col-2 row q-pl-sm" autocomplete type="number" label="tva" />
                   <q-input
-dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="product.total = (product.quantite_vendu*product.prix_unitaire) + (product.quantite_vendu*product.prix_unitaire * product.tva) /100"
-                           :model-value="product.total" />
+                    dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="product.total = (product.quantite_vendu*product.prix_unitaire) + (product.quantite_vendu*product.prix_unitaire * product.tva) /100"
+                    :model-value="product.total" />
                   <div class="col-1 row q-pl-xs print-hide">
                     <q-btn flat size="sm" color="secondary" icon="edit" @click="sales_update(product)" />
                     <q-btn flat size="sm" color="negative" icon="remove" @click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" />
@@ -117,8 +117,8 @@ dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="p
                     <div class="text-h6">Gestion des versements</div>
                     &nbsp;<q-btn outline color="grey" size="xs" @click="versements.pop()">-</q-btn>
                     &nbsp;<q-btn outline color="primary" size="xs" icon="add" @click="versements.push({montant: 0})">
-                      <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
-                    </q-btn>
+                    <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
+                  </q-btn>
                   </div>
                   <div v-for="fac in versements" :key="fac.id" class="row">
 
@@ -128,8 +128,8 @@ dense class="col-2 row q-pl-sm" autocomplete type="number" label="total" :set="p
                     &nbsp;
                     &nbsp;
                     <q-select
-v-model="fac.paiement" class="col-1 q-ma-sm" dense label="Type paiement" stack-label
-                              :options="['virement', 'cheque', 'espece']" />
+                      v-model="fac.paiement" class="col-1 q-ma-sm" dense label="Type paiement" stack-label
+                      :options="['virement', 'cheque', 'espece']" />
                     <q-input v-model="fac.date" class="col-1 q-ma-sm" dense label="Date Vers" type="date" stack-label  />
                     <q-input v-model="fac.montant" class="col-1 q-ma-sm" dense label="Montant Vers" stack-label type="number" />
                     <q-input v-model="fac.numero" class="col-1 q-ma-sm" dense label="N°Chèque/Virement" />
@@ -157,8 +157,8 @@ v-model="fac.paiement" class="col-1 q-ma-sm" dense label="Type paiement" stack-l
         <q-dialog v-model="facture_status2" position="top" facture_filter_getstyle="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
             <facture
-name="Facture de devis"
-                     :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
+              name="Facture de devis"
+              :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
 
@@ -171,7 +171,6 @@ name="Facture de devis"
 <script>
 import basemixin from './basemixin';
 
-const data = [{ 'name': 'Facebook' }, { 'name': 'Google' }, { 'name': 'Twitter' }];
 import $httpService from '../boot/httpService';
 import FactureComponent from '../components/facture_component.vue';
 export default {
@@ -182,53 +181,26 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      items: data,
-      facture: { type: 'vente' },
-      value: 'Facebook',
-      name: '',
       filter: '',
       fullWidth: false,
-      medium: false,
-      medium2: false,
       status_download: true,
       facture_status2: false,
       agent: null,
       client: {},
       entreprise: {},
       fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
       search: null,
-      buy: null,
       versements: [],
-      categories: [],
-      users: [],
       factures: [],
       grid: false,
       factures_init: [],
       factures_details: [],
       facture_id: null,
       products: [],
-      sales_list: [],
       products_list: [],
       date: '',
       dateposted: '',
-      appro_list: [{ p: { sell_price: 0, id: null, quantity: 1 }, quantity: 1 }],
-      product: { description: '' },
-      columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'p_name', align: 'left', label: 'Nom', field: 'p_name', sortable: true },
-        { name: 'dateposted', align: 'left', label: 'date', field: 'dateposted', sortable: true },
-        { name: 'quantite_vendu', align: 'left', label: 'qte', field: 'quantite_vendu', sortable: true },
-        { name: 'montant_vendu', align: 'left', label: 'qte', field: 'montant_vendu', sortable: true },
-        { name: 'prix_unitaire', align: 'left', label: 'prix', field: 'prix_unitaire', sortable: true },
-        { name: 'remise_totale', align: 'left', label: 'remise.', field: 'remise_totale', sortable: true },
-        { name: 'benefice_vente', align: 'left', label: 'benefice', field: 'benefice_vente', sortable: true },
-        { name: 'a_name', align: 'left', label: 'Agent', field: 'a_name', sortable: true },
-        { name: 'actions', label: 'Actions' }
-      ],
       columns_facture: [
         { name: 'facture', align: 'left', label: 'Facture', field: 'facture', sortable: true },
         { name: 'dateposted', align: 'left', label: 'Date', field: 'dateposted', sortable: true },
@@ -239,7 +211,6 @@ export default {
         { name: 'actions', align: 'left', classes: 'print-hide', headerClasses: 'print-hide', label: 'Actions' }
       ],
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
-      data: []
     }
   },
   computed: {
@@ -284,9 +255,6 @@ export default {
         .then((response) => {
           this.entreprise = response;
         })
-    },
-    assign (index) {
-      this.products[index].p.quantity = 1;
     },
     sales_post() {
       if (confirm('Voulez vous ajouter')) {
@@ -389,7 +357,6 @@ export default {
       }
     },
     sales_delete(id, motif, codeAp) {
-      // console.log({ id: id, motif: motif, code_ap: codeAp, total: this.total });
       if (confirm('Voulez vous supprimer ?')) {
         $httpService.postWithParams('/my/delete/sales', { id: id, motif: motif, code_ap: codeAp })
           .then((response) => {
@@ -408,33 +375,6 @@ export default {
             this.factures_get();
           })
       }
-    },
-    imprimer() {
-      window.print();
-    },
-    colorize (value) {
-      if (value > 0) {
-        return 'bg-red-1';
-      }
-    },
-    specialities_add () {
-      this.products.push({ p: { sell_price: 0, id: null, quantity: 1 } });
-    },
-    specialities_delete () {
-      this.products.pop();
-    },
-    filterFn(val, update) {
-      this.value = null;
-      if (val === '') {
-        update(() => {
-          this.items = data
-        });
-        return
-      }
-      update(() => {
-        const needle = val.toLowerCase();
-        this.items = data.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
-      })
     }
   }
 }

@@ -73,16 +73,7 @@ export default {
   mixins: [basemixin, apimixin],
   data () {
     return {
-      budgetrevenu_id: 1,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
       medium2: false,
-      maximizedToggle: true,
-      name: null,
-      image: null,
       budgetrevenu: {},
       budgetrevenus: [],
       columns: [
@@ -106,12 +97,6 @@ export default {
     update_get (props) {
       this.budgetrevenu = props
       this.medium2 = true
-    },
-    setEvent (payload, _name) {
-      this.budgetrevenu[_name] = payload
-    },
-    handleFile (_name) {
-      this.budgetrevenu[_name] = this.$refs[_name].files[0]
     },
     budgetrevenu_get () {
       $httpService.getApi('/api/get/budgetrevenu')

@@ -1,9 +1,9 @@
 <template>
   <q-page>
 
-    <div class="row justify-center text-center q-pa-md">
+    <div class="row justify-center text-center q-pa-sm">
 
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md text-center">
         <q-card class="text-center justify-center content-center">
           <q-item>
             <q-card-section>
@@ -22,8 +22,8 @@
     </div>
 
 
-    <div class="row justify-center q-pa-md">
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
+    <div class="row justify-center q-pa-sm">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md">
 
         <q-table id="printMe" title="Produits" :rows="p_projections" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" dense>
           <template #top="props">
@@ -77,9 +77,9 @@ class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
     </div>
 
 
-    <div class="row justify-center text-center q-pa-md">
+    <div class="row justify-center text-center q-pa-sm">
 
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md text-center">
         <q-card class="q-pa-lg text-right">
 
           <!--          <div class="text-right text-h6">Actions</div>-->
@@ -113,7 +113,6 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      date: '2023',
       products: [],
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
@@ -139,8 +138,8 @@ export default {
   mounted () {
     this.stock_get();
     this.p_projet_get();
-    this.p_projet_previson_get();
     this.date = this.year + '-'+this.month;
+    this.p_projet_previson_get(this.date);
   },
   methods: {
     p_projet_get () {
@@ -154,12 +153,10 @@ export default {
         return x.id !== _id
       })
     },
-    p_projet_previson_get (date='2023-03') {
-      let year = date.split('-')[0];
+    p_projet_previson_get (date) {
       this.year = date.split('-')[0];
-      let month = date.split('-')[1];
       this.month = date.split('-')[1];
-      $httpService.getApi('/my/get/p_projet_previson?mois='+month+'&annee='+year)
+      $httpService.getApi('/my/get/p_projet_previson?mois='+this.month+'&annee='+this.year)
         .then((response) => {
           this.p_projections = response['data'];
           this.$q.notify(response['msg']);
@@ -185,8 +182,6 @@ export default {
         x.mois = this.month;
         x.dejalivre = Number(x.livree);
       });
-      // console.log(stock);
-      // return stock;
       if (confirm("Voulez vous valider ?")) {
         $httpService.postWithParams('/my/post/p_projet_previson', stock)
           .then((response) => {

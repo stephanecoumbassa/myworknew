@@ -59,8 +59,8 @@
       <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
 
         <q-tabs
-v-model="tab" dense class="text-dark"
-                active-color="secondary" indicator-color="secondary" align="justify" narrow-indicator>
+          v-model="tab" dense class="text-dark"
+          active-color="secondary" indicator-color="secondary" align="justify" narrow-indicator>
           <q-tab name="mails" label="Listes des inventaires" />
           <q-tab name="alarms" label="Nouvel Inventaire" />
         </q-tabs>
@@ -71,12 +71,12 @@ v-model="tab" dense class="text-dark"
             <div class="row">
               <div class="col-12 q-pa-lg">
                 <q-input
-v-model="search" class="row" autocomplete type="search"
-                         label="Rechercher" @keyup="facture_filter_get(search)" />
+                  v-model="search" class="row" autocomplete type="search"
+                  label="Rechercher" @keyup="facture_filter_get(search)" />
               </div>
               <div
-v-for="(item, index) in inventaires"
-                   :key="index" class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md">
+                v-for="(item, index) in inventaires"
+                :key="index" class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md">
                 <q-card :class="'q-pa-md '">
                   <div class="text-h6"> {{item.name}} </div>
                   <br> Crée le {{dateformat(item.dateposted)}}
@@ -105,8 +105,8 @@ v-for="(item, index) in inventaires"
                 <div class="row">
                   <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
                   <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                         class="q-ml-md" @click="props.toggleFullscreen" />
+                    flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                    class="q-ml-md" @click="props.toggleFullscreen" />
                 </div>
               </template>
               <template #body="props">
@@ -143,29 +143,21 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
 <script>
 import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
-// import AreachartComponent from '../components/areachart';
 export default {
   name: 'ProduitInventairePage',
   mixins: [basemixin],
   data () {
     return {
       tab: 'mails',
-      product_id: 1,
       alert: false,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
       inventaire: null,
       inventaires: [],
       lists: [],
       lists_products: [],
       name: null,
-      last: null,
       entreprise: {},
       search: '',
-      maximizedToggle: true,
       products: [],
-      product: { description: '', stock: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
         { name: 'photo', align: 'left', label: 'photo' },
@@ -177,7 +169,6 @@ export default {
         { name: 'difference', label: 'Diff' },
         { name: 'actions', label: 'Actions' }
       ],
-      data: [],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
@@ -185,17 +176,8 @@ export default {
   mounted () {
     this.products_get();
     this.inventaires_get();
-    var date = new Date();
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
   },
   methods: {
-    shop_get() {
-      $httpService.getWithParams('/my/get/shop')
-        .then((response) => {
-          this.entreprise = response;
-        })
-    },
     check_qty() {
       if (confirm("Voulez vous appliquer l'inventaire ?")) {
         $httpService.postWithParams('/my/inventaire/products', { products: this.products, name: this.name })

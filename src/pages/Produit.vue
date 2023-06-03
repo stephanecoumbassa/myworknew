@@ -346,11 +346,7 @@ export default {
   data () {
     return {
       product_id: 1,
-      token: LocalStorage.getItem('token'),
       loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
       medium: false,
       medium2: false,
       prix_status: false,
@@ -368,14 +364,9 @@ export default {
       vente_sum: [],
       appro_sum: [],
       marques: [],
-      series: [{ name: 'Nbre de Produit.', data: [] }],
       series_appro_sum: [{ name: 'Montant Achete par mois', data: [] }],
-      series_vente_count: [{ name: 'Montant Achete.', data: [] }],
       series_vente_sum: [{ name: 'Montant Vendu par mois', data: [] }],
-      maximizedToggle: true,
-      name: null,
       image: null,
-      productid: null,
       parents: [],
       parents2: [],
       categories: [],
@@ -383,7 +374,6 @@ export default {
       categoriesall: [],
       domains: [],
       domains2: [],
-      users: [],
       products: [],
       clients: [],
       product: { alert_threshold: 0, description: '', stock: 0, buy_price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1, customize: 0 },
@@ -412,7 +402,6 @@ export default {
         { name: 'p_sell_price', label: 'Prix Vente', align: 'left', field: 'p_sell_price', format: val => `${this.numerique(val)}`, sortable: true },
         { name: 'dateposted', label: 'Date Achat', align: 'left', field: 'dateposted', sortable: true, format: val => `${this.dateformat(val, 3)}` }
       ],
-      data: [],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
@@ -423,9 +412,6 @@ export default {
     this.marques_get();
     this.shop_get();
     ClientApi.get().then((res) => { this.clients = res; console.log(res)})
-    var date = new Date();
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
   },
   methods: {
     onSubmit () {
@@ -443,10 +429,6 @@ export default {
     },
     test(dataUrl) {
       this.image = dataUrl;
-    },
-    photo_get(props) {
-      this.product_id = props.id;
-      this.medium = true;
     },
     product_disable(props) {
       this.product_id = props.id;
@@ -531,17 +513,6 @@ export default {
     products_update (prod) {
       if (confirm('Voulez vous modifier ?')) {
         $httpService.putWithParams('/my/put/products', prod)
-          .then((response) => {
-            this.products_get();
-            this.$q.notify({
-              color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-            });
-          })
-      }
-    },
-    categories_delete (id) {
-      if (confirm('Voulez vous supprimer ?')) {
-        $httpService.deleteWithParams('/api/s_product_categories/' + id)
           .then((response) => {
             this.products_get();
             this.$q.notify({

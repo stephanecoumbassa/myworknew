@@ -8,8 +8,8 @@
       </div>
       <div class="col q-pa-lg float-right text-right">
         <q-btn
-color="primary" icon="add" size="sm"
-               @click="projectModal=true; p_projet={status: 'ENCOURS'}">Créer</q-btn>
+          color="primary" icon="add" size="sm"
+          @click="projectModal=true; p_projet={status: 'ENCOURS'}">Créer</q-btn>
       </div>
     </div>
 
@@ -35,10 +35,10 @@ color="primary" icon="add" size="sm"
                   <q-item-label><span class="text-grey text-weight-bold">-</span> ({{stats.cours}}) En cours</q-item-label>
                 </q-item>
                 <q-item v-ripple clickable>
-                    <q-item-label><span class="text-green text-weight-bold">-</span> ({{stats.termine}}) Terminé(s)</q-item-label>
+                  <q-item-label><span class="text-green text-weight-bold">-</span> ({{stats.termine}}) Terminé(s)</q-item-label>
                 </q-item>
                 <q-item v-ripple clickable>
-                    <q-item-label><span class="text-red text-weight-bold">-</span> ({{stats.attente}}) Attente(s)</q-item-label>
+                  <q-item-label><span class="text-red text-weight-bold">-</span> ({{stats.attente}}) Attente(s)</q-item-label>
                 </q-item>
               </q-list>
             </div>
@@ -81,23 +81,23 @@ color="primary" icon="add" size="sm"
       </div>
     </div>
 
-<!--    <div class="row">-->
-<!--      <div class="col-12 q-pa-lg">-->
-<!--        <span class="text-h6">Projets</span>-->
-<!--      </div>-->
-<!--    </div>-->
+    <!--    <div class="row">-->
+    <!--      <div class="col-12 q-pa-lg">-->
+    <!--        <span class="text-h6">Projets</span>-->
+    <!--      </div>-->
+    <!--    </div>-->
 
     <div class="row justify-center">
       <div class="col-12 q-pa-lg">
         <q-table
-title="p_projets" :rows="p_projets" :columns="columns" :filter="filter"
-                 :pagination="pagination" row-key="name" flat>
+          title="p_projets" :rows="p_projets" :columns="columns" :filter="filter"
+          :pagination="pagination" row-key="name" flat>
           <template #top="props">
             <div class="col-7 q-table__title">Liste des projets</div>
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
+              flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
           <template #body="props">
             <q-tr :props="props">
@@ -114,7 +114,7 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               <q-td key='qte' :props='props'> {{props.row.qte}} </q-td>
               <q-td key='prix_unitaire' :props='props'> {{props.row.prix_unitaire}} </q-td>
               <q-td key='montant_ht' :props='props'> {{props.row.montant_ht}} </q-td>
-<!--              <q-td key='objectif' :props='props'> {{props.row.objectif}} </q-td>-->
+              <!--              <q-td key='objectif' :props='props'> {{props.row.objectif}} </q-td>-->
               <q-td key='progress' :props='props'> {{props.row.progress}} </q-td>
               <q-td key='datedebut' :props='props'> {{props.row.datedebut}} </q-td>
               <q-td key='datefin' :props='props'> {{props.row.datefin}} </q-td>
@@ -147,38 +147,38 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
             <div class="row">
               <div class="col-12">
                 <q-select
-v-model="p_projet.clientid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
-                          :dense="true" :options="clients" label="Clients" option-value="id" option-label="fullname"
-                          input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
+                  v-model="p_projet.clientid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                  :dense="true" :options="clients" label="Clients" option-value="id" option-label="fullname"
+                  input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
                 <q-select
-v-model='p_projet.status'
-                          :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE']" filled outlined class="q-mb-sm" dense label='status' />
+                  v-model='p_projet.status'
+                  :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE']" filled outlined class="q-mb-sm" dense label='status' />
                 <q-input v-model='p_projet.titre' outlined class="q-mb-sm" dense label='titre' />
                 <q-input v-model='p_projet.description' outlined class="q-mb-sm" dense type='textarea' label='description' />
-<!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />-->
-<!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.objectif' label='objectif' />-->
+                <!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.status' label='status' />-->
+                <!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.objectif' label='objectif' />-->
                 <q-input v-model='p_projet.progress' outlined class="q-mb-sm" dense type='number' label='progression' />
                 <q-input v-model='p_projet.datedebut' stack-label outlined class="q-mb-sm" dense type='date' label='datedebut' />
                 <q-input v-model='p_projet.datefin' stack-label outlined class="q-mb-sm" dense type='date' label='datefin' />
                 <q-input v-model='p_projet.datelivraison' stack-label outlined class="q-mb-sm" dense type='date' label='livraison' />
                 <q-input
-v-model='p_projet.priorite' outlined class="q-mb-sm" dense label='priorite'
-                type="number" min="0" max="5" />
+                  v-model='p_projet.priorite' outlined class="q-mb-sm" dense label='priorite'
+                  type="number" min="0" max="5" />
                 <q-input v-model='p_projet.cout' outlined class="q-mb-sm" dense type='number' label='cout' />
                 <q-select
-v-model="p_projet.productid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
-                          :dense="true" :options="products" label="Produits" option-value="id" option-label="name"
-                          input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
+                  v-model="p_projet.productid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                  :dense="true" :options="products" label="Produits" option-value="id" option-label="name"
+                  input-debounce="0" :rules="[val => !!val || 'Ce champs est requis']" />
                 <q-input v-model='p_projet.qte' outlined class="q-mb-sm" dense type='number' label='Quantité' />
                 <q-input v-model='p_projet.prix_unitaire' outlined class="q-mb-sm" dense type='number' label='Prix unitaire' />
                 <q-input
-outlined class="q-mb-sm" dense type='number'
-                         :model-value="p_projet.qte * p_projet.prix_unitaire" label='Montant' />
+                  outlined class="q-mb-sm" dense type='number'
+                  :model-value="p_projet.qte * p_projet.prix_unitaire" label='Montant' />
 
-<!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.clientid' label='clientid' />-->
-<!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.porteur' label='porteur' />-->
-<!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.puuid' label='puuid' />-->
-<!--                <upload v-model='p_projet.photo' title='photo' @blurevent="setEvent($event, 'photo')" />-->
+                <!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.clientid' label='clientid' />-->
+                <!--                <q-input outlined class="q-mb-sm" dense type='number' v-model='p_projet.porteur' label='porteur' />-->
+                <!--                <q-input outlined class="q-mb-sm" dense v-model='p_projet.puuid' label='puuid' />-->
+                <!--                <upload v-model='p_projet.photo' title='photo' @blurevent="setEvent($event, 'photo')" />-->
               </div>
             </div>
             <div class="row">
@@ -208,7 +208,6 @@ export default {
   data () {
     return {
       projectModal: false,
-      medium2: false,
       stats: {},
       p_projet: {},
       p_projets: [],
@@ -266,7 +265,7 @@ export default {
     },
     update_get (props) {
       this.p_projet = props
-      this.medium2 = true
+      this.projectModal = true
     },
     p_projet_stats () {
       $httpService.getApi('/my/stats/p_projet')

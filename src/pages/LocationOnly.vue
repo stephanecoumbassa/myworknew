@@ -31,8 +31,8 @@
                       <q-item clickable class="no-padding no-margin">
                         <q-item-section avatar>
                           <img
-v-if="item.photos" style="width: 70px; height: 70px; object-fit: cover" loading="lazy"
-                               :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(item.photos)[0]['name']" />
+                            v-if="item.photos" style="width: 70px; height: 70px; object-fit: cover" loading="lazy"
+                            :src="uploadurl+'/'+entreprise.id+'/product/'+JSON.parse(item.photos)[0]['name']" />
                         </q-item-section>
                         <q-card-section>
                           <div class="text-subtitle2">{{item.name}}</div>
@@ -58,9 +58,9 @@ v-if="item.photos" style="width: 70px; height: 70px; object-fit: cover" loading=
                           <q-input v-model="dateposted" stack-label type="datetime-local" label="Date" :dense="true"></q-input>
                           <br>
                           <q-select
-v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
-                                    :dense="true" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                                    input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
+                            v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                            :dense="true" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                            input-debounce="0" :option-label="'fullname'" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_client(client)" />
                         </div>
 
                         <div class="col-5 q-ma-sm print-hide">
@@ -74,16 +74,16 @@ v-if="status_download" v-model="client" class="print-hide col-md-6 col-sm-12" fi
                   <q-card v-if="total" class="my-card q-mb-md">
                     <q-item>
                       <q-card-section>
-                        <div v-for="(product, index) in products" :key="index" class="row q-mb-xs">
-                          <q-input v-model="product.name" borderless readonly class="col-12 bold" :dense="true" type="text" />
+                        <div v-for="(prod, index) in products" :key="index" class="row q-mb-xs">
+                          <q-input v-model="prod.name" borderless readonly class="col-12 bold" :dense="true" type="text" />
                           <q-input
-v-model="product.quantity" class="col-3 q-pr-sm" :dense="true" type="number"
-                                   @input="getVal(index, product.quantity)" />
+                            v-model="prod.quantity" class="col-3 q-pr-sm" :dense="true" type="number"
+                            @input="getVal(index, prod.quantity)" />
                           <q-input class="col-1 q-pr-sm" :dense="true" label="X"></q-input>
-                          <q-input v-model="product.price" class="col-3 q-pr-sm" :dense="true" type="number" />
-                          <q-input borderless readonly class="col-4 q-pr-sm" :dense="true" type="number" :value="product.sales_price * product.quantity" />
+                          <q-input v-model="prod.price" class="col-3 q-pr-sm" :dense="true" type="number" />
+                          <q-input borderless readonly class="col-4 q-pr-sm" :dense="true" type="number" :value="prod.sales_price * prod.quantity" />
                           <div class="col-1"><br>
-                            <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
+<!--                            <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />-->
                           </div>
                           <hr>
                         </div>
@@ -124,8 +124,8 @@ v-model="product.quantity" class="col-3 q-pr-sm" :dense="true" type="number"
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
             <facture
-name="Facture de vente" :myentreprise="entreprise"
-                     :client="client" :facturenum="facture_number" :products="products" />
+              name="Facture de vente" :myentreprise="entreprise"
+              :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
         <!--        <q-btn class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary" @click="fullWidth = true; validate_status = true" /><br>-->
@@ -156,49 +156,29 @@ export default {
   data () {
     return {
       tab: 'alarms',
-      filter: '',
       filter2: '',
-      fitst: 1,
-      last: 30,
-      name: null,
-      grid: false,
       facture_status2: false,
       status_download: true,
       validate_status: true,
       fullWidth: false,
-      medium: false,
-      medium2: false,
       credit: false,
-      solde: true,
       caution: 0,
       avance: 0,
       agent: null,
-      fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
-      versements: [],
       date: '',
       dateposted: '',
       date_start: null,
       date_end: null,
       first: '',
       client: 1,
-      client2: {},
       myclient: {},
-      image: '',
-      users: [],
       clients: [],
       products: [],
       sales_list: [],
       products_list: [],
       appro_list: [],
       appro_list2: [],
-      product: { description: '' },
-      data: [],
       entreprise: {}
     }
   },
@@ -247,9 +227,6 @@ export default {
           this.entreprise = response;
         })
     },
-    qr_get(dataUrl) {
-      this.image = dataUrl;
-    },
     clients_get () {
       $httpService.getWithParams('/my/get/client')
         .then((response) => {
@@ -260,10 +237,6 @@ export default {
         .catch(() => {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
-    },
-    update_show(item) {
-      this.medium2 = true;
-      this.product = item;
     },
     location_post() {
       let params = {
@@ -297,33 +270,14 @@ export default {
           })
       }
     },
-    location_update(product) {
-      if (confirm('Voulez vous ajouter')) {
-        $httpService.postWithParams('/my/put/location', product)
-          .then((response) => {
-            var status = response['status'];
-            if (status == !0) {
-              this.$q.notify({
-                color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-              });
-              this.facture_number = response['factureid'];
-              this.sales_get();
-            } else {
-              this.$q.notify({
-                color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
-              });
-            }
-          })
-      }
-    },
-    location_put() {
-      if (confirm('Voulez vous modifier')) {
-        $httpService.putWithParams('/my/put/location', this.product).then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.sales_get();
-        })
-      }
-    },
+    // location_put() {
+    //   if (confirm('Voulez vous modifier')) {
+    //     $httpService.putWithParams('/my/put/location', this.product).then((response) => {
+    //       this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+    //       this.sales_get();
+    //     })
+    //   }
+    // },
     products_get () {
       $httpService.getWithParams('/my/get/products_location')
         .then((response) => {
@@ -335,15 +289,6 @@ export default {
       $httpService.getWithParams('/my/get/location')
         .then((response) => {
           this.sales_list = response;
-        })
-    },
-    sales_stats_get() {
-      let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
-      $httpService.getWithParams('/my/get/sales_stats', params)
-        .then((response) => {
-          this.sales_list = response;
-          this.nbre_vendus = _.sumBy(this.sales_list, 'quantite_vendu');
-          this.montant_vendus = _.sumBy(this.sales_list, 'montant_vendu');
         })
     },
     assign_product (item) {
@@ -383,20 +328,6 @@ export default {
         return false;
       }
     },
-    specialities_add () {
-      this.products_list.push({ id: 0, name: 'Selectionner un produit', tva: 0, price: 0, quantity: 1 });
-    },
-    specialities_delete () {
-      this.products_list.pop();
-    },
-    // select_index(productid, index) {
-    //     // this.products_list[index] = { product_id: productid, tva: 0, price: 0, quantity: 1 };
-    // },
-    // delete_product(i) {
-    //     this.products_list = this.sales_list.filter((x) => {
-    //         return x.product_id !== this.products_list[i].product_id;
-    //     });
-    // },
     filterFn (val, update) {
       update(() => {
         const needle = val.toLocaleLowerCase();
@@ -407,19 +338,8 @@ export default {
         );
       })
     },
-    factures_get_credit (factureid) {
-      $httpService.getWithParams('/my/get/sales_by_credit?id_vente=' + factureid)
-        .then((response) => {
-          this.versements = response;
-        })
-    },
     get_facture_id (_id) {
       this.fullWidth = true;
-      this.factures_get_id(_id);
-    },
-    get_facture_update(_id) {
-      this.listes_status = false;
-      this.update_status = true;
       this.factures_get_id(_id);
     },
     factures_get_id (factureid) {

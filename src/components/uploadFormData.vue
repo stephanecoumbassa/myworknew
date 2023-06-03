@@ -9,6 +9,8 @@
 
 <script>
 export default {
+  name: 'UploadFormData',
+  emits: ['uploaded'],
   methods: {
     submit() {
       this.$refs.fileInput.click()

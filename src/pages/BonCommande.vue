@@ -151,7 +151,6 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      status: '',
       entreprise: {},
       facture_number: null,
       date: '',
@@ -160,30 +159,21 @@ export default {
       avance: 0,
       first: 1,
       last: 30,
-      name: null,
       credit: false,
       fullWidth: false,
-      medium: false,
       medium2: false,
       agent: null,
       search: null,
       fournisseur: null,
       fournisseur2: {},
-      product_id: null,
-      quantity_id: null,
-      sell: null,
       tva: 0,
-      buy: null,
-      categories: [],
       bons: [],
       users: [],
       products: [{ p: { sell_price: 0, id: null, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: this.tva }, quantity: 1, buy: 0, sell: 0, tva: this.tva }],
       commands_list: [],
       products_list: [],
       products_list2: [],
-      product: { description: '' },
-      filter: '',
-      data: []
+      // product: {},
     }
   },
   computed: {
@@ -240,12 +230,6 @@ export default {
           this.fournisseur = JSON.parse(response[0]['fournisseur']);
         })
     },
-    update_show(item) {
-      this.medium2 = true;
-      this.product = item;
-      this.product.buying_price = item.p_buying_price;
-      this.product.sell_price = item.p_sell_price;
-    },
     command_post() {
       if (confirm('Voulez vous ajouter')) {
         let params = { agent: this.agent, fournisseur: this.fournisseur2.id, avance: this.avance, credit: this.credit, total: this.total, products: this.products };
@@ -269,15 +253,15 @@ export default {
           })
       }
     },
-    command_delete(id, motif, codeAp) {
-      if (confirm('Voulez vous supprimer ?')) {
-        $httpService.postWithParams('/my/delete/bon', { id: id, motif: motif, code_ap: codeAp })
-          .then((response) => {
-            this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-            this.commands_get();
-          })
-      }
-    },
+    // command_delete(id, motif, codeAp) {
+    //   if (confirm('Voulez vous supprimer ?')) {
+    //     $httpService.postWithParams('/my/delete/bon', { id: id, motif: motif, code_ap: codeAp })
+    //       .then((response) => {
+    //         this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+    //         this.commands_get();
+    //       })
+    //   }
+    // },
     users_get () {
       $httpService.getWithParams('/my/get/fournisseur')
         .then((response) => {
@@ -315,9 +299,6 @@ export default {
     },
     specialities_add () {
       this.products.push({ p: { sell_price: 0, id: null, name: 'Selectionner un produit' }, tva: this.tva, quantity: 1, buy: 0, sell: 0 });
-    },
-    specialities_delete () {
-      this.products.pop();
     },
     imprimer() {
       window.print();

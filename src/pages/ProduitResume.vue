@@ -20,14 +20,14 @@
         <q-input v-model="date" type="date" @change="products_get()" />
         <br>
         <q-table
-dense title="Produits" :rows="products" :columns="columns"
-                 :pagination="pagination" :filter="filter" row-key="name">
+          dense title="Produits" :rows="products" :columns="columns"
+          :pagination="pagination" :filter="filter" row-key="name">
           <template #top="props">
             <div class="col-7 q-table__title">Liste des produits - <small>{{dateformat(date, 4)}} au {{dateformat(end_date)}}</small> </div>
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   class="q-ml-md" @click="props.toggleFullscreen" />
+              flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
           <template #body="props">
             <q-tr :key="props.row.id" :props="props" :class="alerte(props.row)+ 'text-center'">
@@ -95,18 +95,7 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      product_id: 1,
-      loading1: false,
-      date: '',
       end_date: '',
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
-      medium2: false,
-      stat_status: false,
-      vente_status: false,
-      appro_status: false,
       r1: 0,
       r2: 0,
       r3: 0,
@@ -115,20 +104,12 @@ export default {
       r6: 0,
       r7: 0,
       entreprise: {},
-      maximizedToggle: true,
-      users: [],
       products: [],
-      product: { description: '', stock: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        // { name: 'photo', align: 'left', label: 'photo' },
         { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
         { name: 'stock', align: 'left', label: 'Stock', field: 'stock', sortable: true, classes: 'bg-grey-6', headerClasses: 'bg-grey-6 text-white' }
-        // this.weeks
-        // { name: 'actions', label: 'Actions' }
       ],
-      weeks: [{ align: 'left' }],
-      data: [],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 }
     }
@@ -150,13 +131,6 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
-      if (this.accept !== true) {
-        this.products_post();
-      } else {
-        this.$q.notify({ color: 'green-4', textColor: 'white', icon: 'fas fa-check-circle', message: 'Submitted' })
-      }
-    },
     shop_get() {
       $httpService.getWithParams('/my/get/shop')
         .then((response) => {
@@ -186,8 +160,8 @@ export default {
       $httpService.postWithParams('/my/resume/products/' + this.date, {
         a, b, interval
       }).then((response) => {
-          this.products = response;
-        })
+        this.products = response;
+      })
     }
   }
 }

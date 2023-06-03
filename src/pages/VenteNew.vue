@@ -25,14 +25,13 @@
             </div>
 
             <q-table
-id="printMe" title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="columns"
-                     :pagination="pagination" :filter="filter" flat>
+              id="printMe" title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="columns"
+              :pagination="pagination" :filter="filter" flat>
               <template #top="props">
                 <div class="col-4 q-table__title">Liste des ventes</div>&nbsp;&nbsp;&nbsp;
                 <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
                 <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(sales_list, 'vente')"/>
                 <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
-<!--                <q-btn flat round dense icon="grid_on" @click="grid = !grid" class="q-ml-md" />-->
                 <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'" class="q-ml-md" @click="props.toggleFullscreen" />
               </template>
               <template #body="props">
@@ -47,10 +46,7 @@ id="printMe" title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="
                   <q-td key="a_name" :props="props"> {{ props.row.a_name }} {{ props.row.a_last_name }}</q-td>
                   <q-td key="id_vente" :props="props"> {{ props.row.id_vente }} </q-td>
                   <q-td key="actions" :props="props">
-                    <!--                <q-btn class="q-ma-xs" size="xs" color="secondary" v-on:click="update_show(props.row)" icon="edit" />-->
-                    <q-btn class="q-ma-xs" size="xs" color="dark" icon="receipt" @click=" get_facture_id(props.row.id_vente); facture_number = props.row.id_vente; facture_status2 = true" />
-                    <!--                      <q-btn class="q-ma-xs" size="xs" color="secondary" v-on:click="get_facture_id(props.row.id_vente); factures_get_credit(props.row.id_vente)" icon="visibility" />-->
-                    <!--                      <q-btn class="q-ma-xs" size="xs" color="red" icon="delete" />-->
+                    <q-btn class="q-ma-xs" size="xs" color="dark" icon="receipt" @click=" factures_get_id(props.row.id_vente); facture_number = props.row.id_vente; facture_status2 = true" />
                   </q-td>
                 </q-tr>
               </template>
@@ -65,8 +61,7 @@ id="printMe" title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="
                         <q-item-section side>
                           <q-item-label >{{ col.value }}</q-item-label>
                           <q-item-label v-if="col.label == 'Actions'">
-                            <!--                        <q-btn class="q-ma-xs" size="xs" color="secondary" v-on:click="update_show(props)" icon="edit" />-->
-                            <q-btn class="q-ma-xs" size="xs" color="secondary" icon="visibility" @click="get_facture_id(props.id_vente); factures_get_credit(props.id_vente)" />
+                            <q-btn class="q-ma-xs" size="xs" color="secondary" icon="visibility" @click="factures_get_id(props.id_vente); factures_get_credit(props.id_vente)" />
                             <q-btn class="q-ma-xs" size="xs" color="red" icon="delete" />
                           </q-item-label>
                         </q-item-section>
@@ -90,11 +85,10 @@ id="printMe" title="Listes de ventes" :grid="grid" :rows="sales_list" :columns="
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
             <facture
-name="Facture de vente" :myentreprise="entreprise"
-                     :client="client" :facturenum="facture_number" :products="products" />
+              name="Facture de vente" :myentreprise="entreprise"
+              :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
-        <!--        <q-btn class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary" @click="fullWidth = true; validate_status = true" /><br>-->
       </div>
     </div>
     <br>
@@ -120,46 +114,20 @@ export default {
     return {
       tab: 'mails',
       filter: '',
-      fitst: 1,
       last: 30,
-      name: null,
       grid: false,
       facture_status2: false,
       status_download: true,
-      validate_status: true,
-      fullWidth: false,
-      medium: false,
-      medium2: false,
-      credit: false,
-      solde: true,
-      avance: 0,
-      agent: null,
-      fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
       versements: [],
-      date: '',
       dateposted: '',
-      bc: '',
-      bl: '',
       first: '',
       clientId: 1,
       client: 1,
-      client2: {},
-      myclient: {},
-      image: '',
-      users: [],
-      clients: [],
       products: [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }],
       sales_list: [],
-      products_list: [],
       appro_list: [{ p: { sell_price: 0, prodcat: '' }, prodcat: '' }],
       appro_list2: [{ p: { sell_price: 0, prodcat: '' }, prodcat: '' }],
-      product: { description: '' },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true, status: false },
         { name: 'p_name', align: 'left', label: 'Nom', field: 'p_name', sortable: true, status: true },
@@ -172,7 +140,6 @@ export default {
         { name: 'id_vente', align: 'left', label: 'Facture ID', field: 'id_vente', sortable: true },
         { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
-      data: [],
       entreprise: {},
       pagination: {
         sortBy: 'name',
@@ -189,15 +156,8 @@ export default {
   },
   created () {
     let date = new Date();
-    // this.dateposted = this.dateposted();
-    this.date = this.dateformat(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(), 4);
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    this.shop_get();
-    this.clients_get();
     this.products_get();
     this.sales_get();
-    this.factures_number_get();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     this.dateposted = date.toISOString().slice(0, 16);
   },
@@ -205,107 +165,6 @@ export default {
     reload($event) {
       console.log($event)
       this.sales_get();
-    },
-    onSubmit () {
-      if (this.accept !== true) {
-        this.sales_post();
-      } else {
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'fas fa-check-circle',
-          message: 'Submitted'
-        })
-      }
-    },
-    shop_get() {
-      this.getApi('/my/get/shop')
-        .then((response) => {
-          this.entreprise = response;
-        })
-    },
-    assign (index) {
-      if (this.products[index].p.reste <= 0) {
-        // this.products[index] = { p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 };
-        this.products.splice(index, 1);
-        this.$q.notify({ color: 'dark', position: 'top', message: 'Le produit est en rupture de stock' });
-      } else if (this.products[index].p.reste < this.products[index].quantity) {
-        this.products[index].quantity = this.products[index].p.reste;
-        this.$q.notify({ color: 'dark', position: 'top', message: 'il reste ' + this.products[index].p.reste + ' en stock, Veuillez ne pas depasser la quantité en stock' });
-      } else if (this.products[index].quantity <= 0) {
-        this.products[index].quantity = 1;
-        this.$q.notify({ color: 'dark', position: 'top', message: 'Veuillez rentrer un nombre positif' });
-      }
-      this.products[index].p.tva = 0;
-    },
-    assign_client (client) {
-      this.clientId = client.id;
-      this.myclient.id = client.id;
-      this.myclient.fullname = client.fullname;
-      this.myclient.email = client.email;
-      this.myclient.telephone = client.telephone;
-      this.myclient.telephone_code = client.telephone_code;
-      this.products_get();
-    },
-    qr_get(dataUrl) {
-      this.image = dataUrl;
-    },
-    clients_get () {
-      this.getApi('/my/get/client')
-        .then((response) => {
-          this.clients = response;
-          this.client = this.clients[0];
-          this.myclient = this.clients[0];
-        })
-        .catch(() => {
-          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
-        });
-    },
-    update_show(item) {
-      this.medium2 = true;
-      this.product = item;
-    },
-    sales_post() {
-      let params = { agent: this.agent,
-        products: this.products,
-        id_vente: this.facture_number,
-        clientid: this.myclient.id,
-        credit: this.credit,
-        avance: this.avance,
-        total: this.total,
-        bl: this.bl,
-        bc: this.bc,
-        dateposted: this.dateposted
-      };
-      if (confirm('Voulez vous ajouter')) {
-        this.postApi('/my/post/sales', params)
-          .then((response) => {
-            var status = response['statut'];
-            if (status == !0) {
-              this.postWithParams('/my/post/qr_code', {
-                id: response['id'], typerubrique: 3, file: this.image
-              });
-              this.$q.notify({
-                color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-              });
-              this.facture_number = response['factureid'];
-              this.validate_status = false;
-              this.sales_get();
-            } else {
-              this.$q.notify({
-                color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
-              });
-            }
-          })
-      }
-    },
-    sales_put() {
-      if (confirm('Voulez vous modifier')) {
-        this.putApi('/my/put/sales', this.product).then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.sales_get();
-        })
-      }
     },
     products_get () {
       this.getApi('/my/get/products').then((res) => {
@@ -326,12 +185,7 @@ export default {
           })
       })
     },
-    factures_number_get () {
-      this.getApi('/my/get/facture_number')
-        .then((response) => {
-          this.facture_number = response['nb'];
-        })
-    },
+
     sales_get () {
       this.getApi('/my/get/sales')
         .then((response) => {
@@ -347,60 +201,25 @@ export default {
           this.montant_vendus = _.sumBy(this.sales_list, 'montant_vendu');
         })
     },
-    specialities_add () {
-      this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
-    },
-    specialities_delete () {
-      this.products.pop();
-    },
-    getVal(index, val) {
-      this.products[index].quantity = parseInt(val);
-      this.products[index].p.quantity = parseInt(val);
-
-      this.$nextTick(() => {
-        this.products[index].quantity = parseInt(val);
-        this.products[index].p.quantity = parseInt(val);
-      })
-    },
-    delete_product(i) {
-      this.products = this.products.filter((x) => {
-        return x.p.id !== this.products[i].p.id;
-      });
-    },
-    filterFn (val, update) {
-      update(() => {
-        const needle = val.toLocaleLowerCase();
-        this.appro_list = this.appro_list2.filter(
-          (v) => {
-            return v.prodcat.toLocaleLowerCase().indexOf(needle) > -1;
-          }
-        );
-      })
-    },
     factures_get_credit (factureid) {
       this.getApi('/my/get/sales_by_credit?id_vente=' + factureid, { })
         .then((response) => {
           this.versements = response;
         })
     },
-    get_facture_id (_id) {
-      this.fullWidth = true;
-      // this.medium2 = true;
-      this.factures_get_id(_id);
-    },
     factures_get_id (factureid) {
       this.getApi('/my/get/sales_by_idvente?id_vente=' + factureid, { })
         .then((response) => {
-          for (let i = 0; i < response.length; i++) {
-            response[i].p = {};
-            response[i].p.id = response[i].p_id;
-            response[i].p.tva = response[i].tva;
-            response[i].p.sales_price = response[i].prix_unitaire;
-            response[i].price = response[i].prix_unitaire;
-            response[i].p.quantity = response[i].quantite_vendu;
-            response[i].quantity = response[i].quantite_vendu;
-            response[i].p.name = response[i].p_name;
-            response[i].name = response[i].p_name;
+          for (const element of response) {
+            element.p = {};
+            element.p.id = element.p_id;
+            element.p.tva = element.tva;
+            element.p.sales_price = element.prix_unitaire;
+            element.price = element.prix_unitaire;
+            element.p.quantity = element.quantite_vendu;
+            element.quantity = element.quantite_vendu;
+            element.p.name = element.p_name;
+            element.name = element.p_name;
             // response[i].total = response[i].montant_vendu;
           }
           this.factures_details = response;

@@ -110,28 +110,16 @@ export default {
         return {
             right: false,
             leftDrawerOpen: false,
-            // countCart: JSON.parse(localStorage.getItem('cart')).length || [],
             countCart: 0,
-            search: '',
             telephone: '',
             name: '',
             entreprise: { name: '' },
             email: '',
-            id: 1,
-            byDate: 'Any time',
             links1: [
                 { icon: 'home', text: 'Accueil', link: '/accueil' },
                 { icon: 'shop', text: 'Boutique', link: '/boutique' },
                 { icon: 'category', text: 'Categories', link: '/categories-liste' }
                 // { icon: 'shopping_cart', text: 'Panier', link: '/boutique-panier' }
-            ],
-            links2: [
-                // { icon: 'settings_applications', text: 'Parametres' },
-                // { icon: 'near_me', text: 'Localisation' }
-            ],
-            links3: [
-                // { icon: '', text: 'Language & region' },
-                // { icon: '', text: 'Settings' }
             ],
             products: []
         }

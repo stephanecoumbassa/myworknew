@@ -47,33 +47,12 @@ export default {
     name: 'LoginPage',
     data () {
         return {
-            name: null,
             tab: 'connexion',
             email: null,
             code: null,
             myemail: null,
-            indicatif: null,
-            telephone: null,
-            mytelephone: null,
-            lastname: null,
-            shop_id: null,
             password: null,
-            mypassword: null,
-            user_type: null,
-            fullWidth: false,
-            medium: false,
-            medium2: false,
-            agent: null,
-            fournisseur: null,
-            product_id: null,
-            quantity_id: null,
-            sell: null,
-            buy: null,
-            categories: [],
-            users: [],
-            users_types: [],
             products: [{ p: { sell_price: 0, id: null }, quantity: 1, buy: 0, sell: 0 }],
-            state: storeGlobal.state
         }
     },
     mixin: [basemixin],
@@ -87,18 +66,6 @@ export default {
         // console.log(this.state);
     },
     methods: {
-        onSubmit () {
-            if (this.accept !== true) {
-                this.command_post();
-            } else {
-                this.$q.notify({
-                    color: 'green-4',
-                    textColor: 'white',
-                    icon: 'fas fa-check-circle',
-                    message: 'Submitted'
-                })
-            }
-        },
         reset() {
             let params = { 'email': this.myemail };
             $httpService.postWithLogin('/api/password_reset', params)

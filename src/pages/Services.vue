@@ -108,23 +108,15 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      selected: [],
       services_items: [],
-      options: [],
       service: { status_client: true },
       date: '2020-03-10',
       name: null,
-      description: null,
-      tva: null,
       client: null,
       clients: [],
       clients2: [],
       status_update: false,
-      filter: '',
       medium: false,
-      loading: false,
-      visibleColumns: ['email', 'phoneNumber', 'type'],
-      data_status: false,
       pagination: {
         sortBy: 'name',
         descending: false,
@@ -174,9 +166,6 @@ export default {
     },
     btn_update(item) {
       this.service = item;
-      this.status_update = true;
-    },
-    btn_delete() {
       this.status_update = true;
     },
     onSubmit () {

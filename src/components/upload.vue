@@ -65,14 +65,10 @@ export default {
         event: 'blur'
     },
     props: {
-        // typerubrique: Number,
-        // idligne: Number,
         src: { type: String, default: null },
-        // folder: String,
         height: { type: Number, default: 250 },
         width: { type: Number, default: 250 },
         quality: { type: Number, default: 3 },
-        type_id: { type: Number, default: 1 },
         dimension: { type: Boolean, default: false }
     },
     data: function() {
@@ -82,31 +78,18 @@ export default {
             myheight: this.height,
             mywidth: this.width,
             image_extension: 'jpg',
-            who: 'Stefyu',
-            medias_list: [{ image: '' }],
-            medias_type: [],
             myCroppa: {},
             dataUrl: '',
             image: '',
             dimension_status: false,
             choose_status: false,
             show_crop: true,
-            status_upload: false,
-            image_name_old: "<?= $_SESSION['photo'] ?>",
             sliderVal: 0,
             sliderMin: 0,
             sliderMax: 0
         }
     },
-    watch: {
-        // idligne: {
-        //     immediate: true,
-        //     handler (val, oldVal) { }
-        // }
-    },
-    created: function () {
-        // this.medias_get();
-    },
+    emits: ['blur'],
     methods: {
         handleInput () {
             this.$emit('blur', {
@@ -115,17 +98,6 @@ export default {
                 image_extension: this.image_extension,
                 type: this.type
             });
-        },
-        choose() {
-            this.croppa.chooseFile();
-        },
-        removeImage: function () {
-            this.image = '';
-        },
-        reset () {
-            this.image = null;
-            this.image_name = '';
-            this.image_extension = '';
         },
         uploadCroppedImage() {
             this.dataUrl = this.myCroppa.generateDataUrl('image/jpeg');

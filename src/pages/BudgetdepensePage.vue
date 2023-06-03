@@ -67,8 +67,6 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
 </template>
 
 <script>
-// import $httpService from '../services/httpService'
-// import basemixin from '../services/basemixin'
 import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
 import apimixin from "src/services/apimixin";
@@ -76,16 +74,7 @@ export default {
   mixins: [basemixin, apimixin],
   data () {
     return {
-      budgetdepense_id: 1,
-      loading1: false,
-      red: '#6d1412',
-      first: null,
-      last: null,
-      medium: false,
       medium2: false,
-      maximizedToggle: true,
-      name: null,
-      image: null,
       budgetdepense: {},
       budgetdepenses: [],
       columns: [
@@ -110,12 +99,6 @@ export default {
     update_get (props) {
       this.budgetdepense = props
       this.medium2 = true
-    },
-    setEvent (payload, _name) {
-      this.budgetdepense[_name] = payload
-    },
-    handleFile (_name) {
-      this.budgetdepense[_name] = this.$refs[_name].files[0]
     },
     budgetdepense_get () {
       $httpService.getApi('/api/get/budgetdepense')

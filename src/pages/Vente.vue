@@ -49,7 +49,6 @@
         </router-link>
       </div>
 
-
       <div class="col-lg-3 col-md-3 col-sm-6 q-pa-lg">
         <router-link class="item item-link" to="/ventes/retour">
           <q-card clickable  flat>
@@ -63,21 +62,21 @@
       </div>
 
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">
-        <q-card class="my-card" flat>
+        <q-card flat class="no-margin">
           <q-card-section>
-<!--            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />-->
+            <!--            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />-->
             <mixedchart :series="series_vente_sum" />
           </q-card-section>
         </q-card>
       </div>
 
-<!--      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">-->
-<!--        <q-card class="my-card">-->
-<!--          <q-card-section>-->
-<!--            <columnchart />-->
-<!--          </q-card-section>-->
-<!--        </q-card>-->
-<!--      </div>-->
+      <!--      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">-->
+      <!--        <q-card class="my-card">-->
+      <!--          <q-card-section>-->
+      <!--            <columnchart />-->
+      <!--          </q-card-section>-->
+      <!--        </q-card>-->
+      <!--      </div>-->
 
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm">
         <div class="row q-pa-sm print-hide">
@@ -93,8 +92,8 @@
             <q-btn size="md" :label="'Nbre de produits vendus: '+ numerique(nbre_vendus)" /><br>
             <q-btn size="md" class="q-ml-sm" :label="'Montant total: '+numerique(montant_vendus)+' FCFA'" />
             <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   class="q-ml-md float-right" @click="props.toggleFullscreen" />
+              flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              class="q-ml-md float-right" @click="props.toggleFullscreen" />
           </template>
         </q-table>
       </div>
@@ -134,14 +133,12 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      tab: '0',
       first: null,
       last: null,
       products: [],
       sales_stats: [],
       nbre_vendus: 0,
       montant_vendus: 0,
-      filter: '',
       pagination: {
         sortBy: 'name',
         descending: false,
@@ -158,48 +155,15 @@ export default {
         // { name: 'benefice_vente', label: 'Benefice', field: 'benefice_vente', sortable: true },
         { name: 'dateposted', label: 'Date Vente', field: 'dateposted', sortable: true, format: val => `${this.dateformat(val, 3)}` }
       ],
-      products_columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
-        { name: 'amount', align: 'left', label: 'Quantité Restante', field: 'amount', sortable: true }
-        // { name: 'actions', label: 'Actions' }
-      ],
-      series_vente_count: [{ name: 'Montant Achete.', data: [] }],
       series_vente_sum: [{ name: 'Montant Vendu par mois', data: [] }],
-      slide: 'style'
     }
   },
   mounted () {
-    // var date = new Date();
-    // this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    // this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    this.first = this.convert(new Date());
-    this.last = this.convert(new Date());
     this.sales_stats_get();
     this.appro_stats_global();
     this.products_get();
-
-    // const path = require('path');
-    //
-    // // This will save the database in the same directory as the application.
-    // const location = path.join(__dirname, '');
-    //
-    // db.createTable('customers', location, (succ, msg) => {
-    //     // succ - boolean, tells if the call is successful
-    //     if (succ) {
-    //         console.log(msg)
-    //     } else {
-    //         console.log('An error has occured. ' + msg)
-    //     }
-    // })
   },
   methods: {
-    convert(str) {
-      var date = new Date(str),
-        mnth = ('0' + (date.getMonth() + 1)).slice(-2),
-        day = ('0' + date.getDate()).slice(-2);
-      return [date.getFullYear(), mnth, day].join('-');
-    },
     sales_stats_get() {
       let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
       $httpService.getWithParams('/my/get/sales_stats', params)
@@ -207,15 +171,6 @@ export default {
           this.sales_stats = response;
           this.nbre_vendus = _.sumBy(this.sales_stats, 'quantite_vendu');
           this.montant_vendus = _.sumBy(this.sales_stats, 'montant_vendu');
-        })
-    },
-    appro_stats_get() {
-      let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
-      $httpService.getWithParams('/my/get/appro_stats', params)
-        .then((response) => {
-          this.appro_stats = response;
-          this.nbre_achetes = _.sumBy(this.appro_stats, 'amount');
-          this.montant_achetes = _.sumBy(this.appro_stats, 'buying_price');
         })
     },
     appro_stats_global() {

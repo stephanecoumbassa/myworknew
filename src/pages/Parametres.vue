@@ -194,13 +194,11 @@ import basemixin from './basemixin';
 export default {
   name: 'ParametresName',
   components: {
-    // AddressComponent,
     ImageComponent,
     MyMapComponent
   },
   data () {
     return {
-      name: null,
       tab: 'mails',
       entreprise: { city: 1, footer_facture: 'agffggf', footer_site: '', footer_livraison: '', footer_paiement: '', footer_faq: '', contact: '', latlong: [0, 0] },
       cities: [],

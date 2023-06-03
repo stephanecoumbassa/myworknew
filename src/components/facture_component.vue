@@ -17,7 +17,7 @@
       pdf-orientation="portrait"
       pdf-content-width="800px"
       style="margin: 0 auto"
-      @beforeDownload="beforeDownload($event)"
+      @before-download="beforeDownload($event)"
     >
       <template #pdf-content>
         <div id="a4" size="A4" style="margin: 0 auto">
@@ -162,8 +162,8 @@ export default {
   mixins: [basemixin],
   props: {
     products: { type: Array, default () { return [{ name: 'Nbre Dons.', dateposted: '', data: [ ] }] } },
-    client: { type: Object },
-    facturenum: { type: String },
+    client: { type: Object, default: ()  =>  {} },
+    facturenum: { type: String, default: null },
     type: { type: String, default: null},
   },
   data () {
@@ -206,8 +206,6 @@ export default {
     setTimeout(() => {
       if(this.type) { this.typeselected = this.type }
       if(this.facturenum) { this.facturenumero = this.facturenum }
-      console.log(this.type)
-      console.log(this.typeselected)
     }, 3000)
   },
   methods: {
@@ -242,9 +240,6 @@ export default {
       this.printStatus = true;
       this.$refs.html2Pdf.generatePdf();
       setTimeout(() => {this.printStatus = false;}, 1000)
-    },
-    mail () {
-      this.$refs.html2Pdf.generatePdf();
     }
   }
 }

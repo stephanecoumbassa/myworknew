@@ -31,23 +31,23 @@
             <q-card-section>
               <q-form  class="" @submit="onSubmit">
                 <br>
-                <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
-                  <div :class="'row '+colorize(product.retour)" >
+                <div v-for="(prod, index) in products" :key="index" class="row q-pa-sm">
+                  <div :class="'row '+colorize(prod.retour)" >
                     <q-select
-                      v-model="product.product_id" class="col-2 no-margin" use-input map-options emit-value readonly disable disabled
+                      v-model="prod.product_id" class="col-2 no-margin" use-input map-options emit-value readonly disable disabled
                       option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
                     <div class="col-1">
-                      {{product.quantite_vendu}} X {{product.prix_unitaire}}<br>
-                      {{product.quantite_vendu * product.prix_unitaire - product.remise_totale}} CFA
+                      {{prod.quantite_vendu}} X {{prod.prix_unitaire}}<br>
+                      {{prod.quantite_vendu * prod.prix_unitaire - prod.remise_totale}} CFA
                     </div>
-                    <q-input v-model="product.retour" class="col-1 offset-1 row q-pl-sm" autocomplete type="number" label="Qté retournée" />
-                    <q-input v-model="product.prix_unitaire" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" />
-                    <q-input class="col-2 row q-pl-sm" autocomplete type="number" :value="product.retour * product.prix_unitaire - product.remise_totale" label="total" />
-                    <q-input v-model="product.motif" class="col-2 row q-pl-sm" autocomplete label="Motif" />
+                    <q-input v-model="prod.retour" class="col-1 offset-1 row q-pl-sm" autocomplete type="number" label="Qté retournée" />
+                    <q-input v-model="prod.prix_unitaire" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" />
+                    <q-input class="col-2 row q-pl-sm" autocomplete type="number" :value="prod.retour * prod.prix_unitaire - prod.remise_totale" label="total" />
+                    <q-input v-model="prod.motif" class="col-2 row q-pl-sm" autocomplete label="Motif" />
                     <div class="col-1 row q-pl-xs print-hide">
                       <br>
-                      <q-btn flat size="sm" color="secondary" icon="edit" @click="retour_update(product)" />
-                      <!--                    <q-btn flat size="sm" color="negative" v-on:click="retour_delete(product.id, 'Erreur Saisie', product.code_ap)" icon="remove" />-->
+                      <q-btn flat size="sm" color="secondary" icon="edit" @click="retour_update(prod)" />
+                      <q-btn flat size="sm" color="negative" icon="remove" @click="retour_delete(prod.id, 'Erreur Saisie', prod.code_ap)" />
                     </div>
                   </div>
                 </div>
@@ -126,50 +126,22 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      items: data,
-      facture: { type: 'vente' },
-      value: 'Facebook',
-      name: '',
       fullWidth: false,
-      medium: false,
-      medium2: false,
       status_download: true,
       agent: null,
       client: {},
       entreprise: {},
       fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
       search: null,
-      buy: null,
       versements: [],
-      categories: [],
-      users: [],
       factures: [],
       factures_init: [],
       factures_details: [],
       facture_id: null,
       products: [],
-      sales_list: [],
       products_list: [],
       date: '',
-      appro_list: [{ p: { sell_price: 0, id: null, quantity: 1 }, quantity: 1 }],
-      product: { description: '' },
-      columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'p_name', align: 'left', label: 'Nom', field: 'p_name', sortable: true },
-        { name: 'dateposted', align: 'left', label: 'date', field: 'dateposted', sortable: true },
-        { name: 'quantite_vendu', align: 'left', label: 'qte', field: 'quantite_vendu', sortable: true },
-        { name: 'montant_vendu', align: 'left', label: 'qte', field: 'montant_vendu', sortable: true },
-        { name: 'prix_unitaire', align: 'left', label: 'prix', field: 'prix_unitaire', sortable: true },
-        { name: 'remise_totale', align: 'left', label: 'remise.', field: 'remise_totale', sortable: true },
-        { name: 'benefice_vente', align: 'left', label: 'benefice', field: 'benefice_vente', sortable: true },
-        { name: 'a_name', align: 'left', label: 'Agent', field: 'a_name', sortable: true },
-        { name: 'actions', label: 'Actions' }
-      ],
-      data: []
     }
   },
   computed: {
@@ -207,9 +179,6 @@ export default {
         .then((response) => {
           this.entreprise = response;
         })
-    },
-    assign (index) {
-      this.products[index].p.quantity = 1;
     },
     sales_post() {
       if (confirm('Voulez vous ajouter')) {
@@ -254,24 +223,6 @@ export default {
           this.versements = response;
         })
     },
-    credit_add(facture) {
-      facture.factureid = this.facture_id;
-      facture.vente = 'vente';
-      $httpService.postWithParams('/my/post/credit', facture)
-        .then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.factures_get_credit();
-        })
-    },
-    credit_update(facture) {
-      facture.factureid = this.facture_id;
-      facture.vente = 'vente';
-      $httpService.postWithParams('/my/put/credit', facture)
-        .then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          this.factures_get_credit();
-        })
-    },
     products_get () {
       $httpService.getWithParams('/my/get/products')
         .then((response) => {
@@ -290,18 +241,8 @@ export default {
       }
     },
     retour_delete(id, motif, codeAp) {
-      // console.log({ id: id, motif: motif, code_ap: codeAp, total: this.total });
       if (confirm('Voulez vous supprimer ?')) {
         $httpService.postWithParams('/my/delete/retour', { id: id, motif: motif, code_ap: codeAp })
-          .then((response) => {
-            this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-            this.factures_get_id();
-          })
-      }
-    },
-    factures_delete() {
-      if (confirm('Voulez vous supprimer la facture?')) {
-        $httpService.postWithParams('/my/delete/sales_all', { factureid: this.facture_number })
           .then((response) => {
             this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
             this.factures_get_id();
@@ -328,26 +269,6 @@ export default {
         return 'bg-grey-1';
       }
     },
-    specialities_add () {
-      this.products.push({ p: { sell_price: 0, id: null, quantity: 1 } });
-    },
-    specialities_delete () {
-      this.products.pop();
-    },
-    filterFn(val, update) {
-      this.value = null;
-      if (val === '') {
-        update(() => {
-          this.items = data
-        });
-        return
-      }
-
-      update(() => {
-        const needle = val.toLowerCase();
-        this.items = data.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
-      })
-    }
   }
 }
 </script>

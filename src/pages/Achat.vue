@@ -61,7 +61,7 @@
         </router-link>
       </div>
 
-      <div class="col-md-12 col-12 col-xs-12 q-pa-lg" style="min-width: 400px">
+      <div class="col-md-12 col-12 col-xs-12 q-pa-md" style="min-width: 400px">
         <q-card class="my-card" flat>
           <q-card-section>
             <areachart type="bar" color="#A66172" :series="series_appro_sum" title="Montants Achetes en FCFA" titletooltip="achat" />
@@ -124,18 +124,11 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      tab: '0',
-      first: null,
-      last: null,
       products: [],
       appro_stats: [],
-      appro_count: [],
       appro_sum: [],
-      credit: 0,
       nbre_achetes: 0,
       montant_achetes: 0,
-      data: [],
-      filter: '',
       pagination: {
         sortBy: 'name',
         descending: false,
@@ -151,35 +144,15 @@ export default {
         // { name: 'sales_price', label: 'Prix Vente Moyen', align: 'left', field: 'sales_price', format: val => `${this.numerique(val)}` },
         { name: 'dateposted', label: 'Date Achat', align: 'left', field: 'dateposted', sortable: true, format: val => `${this.dateformat(val, 3)}` }
       ],
-      products_columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'name', align: 'left', label: 'Nom', field: 'name', sortable: true },
-        { name: 'amount', align: 'left', label: 'Quantité Restante', field: 'amount', sortable: true }
-        // { name: 'actions', label: 'Actions' }
-      ],
-      series: [{ name: 'Nbre de Produit.', data: [] }],
       series_appro_sum: [{ name: 'Montant Achete par mois', data: [] }],
-      slide: 'style'
     }
   },
   created () {
-    // var date = new Date();
-    // this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    // this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    this.first = this.convert(new Date());
-    this.last = this.convert(new Date());
     this.appro_stats_get();
     this.appro_stats_global();
     this.products_get();
   },
   methods: {
-    convert(str) {
-      var date = new Date(str),
-        mnth = ('0' + (date.getMonth() + 1)).slice(-2),
-        day = ('0' + date.getDate()).slice(-2);
-      return [date.getFullYear(), mnth, day].join('-');
-    },
-
     appro_stats_get() {
       let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
       $httpService.getWithParams('/my/get/appro_stats', params)
@@ -213,11 +186,6 @@ export default {
         .then((response) => {
           this.products = response;
         })
-    },
-    alerte(item) {
-      if (item.amount <= item.alert_threshold) {
-        return 'bg-red-2';
-      }
     }
   }
 }

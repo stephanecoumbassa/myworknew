@@ -13,16 +13,16 @@
 
       <div class="col-lg-11 col-12">
         <q-table
-title="Treats" :rows="data" :columns="columns" row-key="name"
-                 :pagination="pagination">
+          title="Treats" :rows="data" :columns="columns" row-key="name"
+          :pagination="pagination">
           <template #top="props">
             <div class="col-4 q-table__title">Marques</div>
             <download-excel name="marques.xls" :json-data="data">
               <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" />
             </download-excel>
             <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   class="q-ml-md" @click="props.toggleFullscreen" />
+              flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              class="q-ml-md" @click="props.toggleFullscreen" />
           </template>
           <template #body="props">
             <q-tr :props="props">
@@ -88,32 +88,9 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      selected: [],
-      marques: [],
-      marques_items: [],
-      options: [],
       marque: { status_client: true },
-      // date: '2020-03-10',
-      date: '2020-03-10',
-      name: null,
-      description: null,
-      tva: null,
-      code_comptable: null,
-      client: null,
-      clients: [],
-      clients2: [],
-      image: 'hhghjj',
-      price: null,
-      email: null,
-      telephone_code: null,
-      telephone: null,
-      model: null,
       status_update: false,
-      filter: '',
       medium: false,
-      loading: false,
-      visibleColumns: ['email', 'phoneNumber', 'type'],
-      data_status: false,
       pagination: {
         sortBy: 'name',
         descending: false,
@@ -146,9 +123,6 @@ export default {
     },
     btn_update(item) {
       this.marque = item;
-      this.status_update = true;
-    },
-    btn_delete() {
       this.status_update = true;
     },
     onSubmit () {
@@ -201,14 +175,6 @@ export default {
             color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
           });
         });
-    },
-    filterFn (val, update) {
-      update(() => {
-        const needle = val.toLocaleLowerCase();
-        this.clients = this.clients2.filter(
-          (v) => { return v.fullname.toLocaleLowerCase().indexOf(needle) > -1 }
-        );
-      })
     }
   }
 

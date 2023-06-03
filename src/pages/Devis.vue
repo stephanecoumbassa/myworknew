@@ -7,8 +7,8 @@
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
             <facture
-name="Facture de devis" type="proforma"
-                     :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
+              name="Facture de devis" type="proforma"
+              :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
 
@@ -22,15 +22,15 @@ name="Facture de devis" type="proforma"
                   <div class="float-right q-mb-sm print-hide" style="width: 50%; position:relative;">
                     <q-input v-model="dateposted" stack-label type="datetime-local" label="Date" :dense="true"></q-input>
                     <q-select
-v-model="projetid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
-                              :dense="true" :options="p_projets" label="Projets" :option-value="'id'" :option-label="'titre'"
-                              input-debounce="0" />
+                      v-model="projetid" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                      :dense="true" :options="p_projets" label="Projets" :option-value="'id'" :option-label="'titre'"
+                      input-debounce="0" />
                     <q-select
-v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
-                              :dense="true" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
-                              input-debounce="0" :option-label="'fullname'"
-                              :rules="[val => !!val || 'Ce champs est requis']"
-                              @update:model-value="assign_client(client)" />
+                      v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-value
+                      :dense="true" :options="clients" label="Clients" :option-value="JSON.stringify(client)"
+                      input-debounce="0" :option-label="'fullname'"
+                      :rules="[val => !!val || 'Ce champs est requis']"
+                      @update:model-value="assign_client(client)" />
                   </div>
                   <div class="row float-right q-mt-sm">
                     <div class="col-12">Proforma #:
@@ -50,9 +50,9 @@ v-model="client" class="print-hide col-md-6 col-sm-12" filled map-options emit-v
                 <div>
                   <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
                     <q-select
-v-model="product.product_id" class="col-4 no-margin" map-options emit-value :dense="true"
-                              option-value="id" option-label="name" stack-label input-debounce="0" label="produits"
-                              :options="products_list" />
+                      v-model="product.product_id" class="col-4 no-margin" map-options emit-value :dense="true"
+                      option-value="id" option-label="name" stack-label input-debounce="0" label="produits"
+                      :options="products_list" />
                     <q-input v-model="product.quantite_vendu" class="col-1 row q-pl-sm" autocomplete type="number" label="Quantité" :dense="true" />
                     <q-input v-model="product.prix_unitaire" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" :dense="true" />
                     <q-input v-model="product.tva" class="col-2 row q-pl-sm" autocomplete type="number" label="TVA" :dense="true" />
@@ -68,9 +68,9 @@ v-model="product.product_id" class="col-4 no-margin" map-options emit-value :den
                 <div>
                   <div v-for="(product, index) in products2" :key="index" class="row q-pa-sm">
                     <q-select
-v-model="product.product_id" class="col-4 q-pa-sm" :options="products_list"
-                              option-label="name" option-value="id" use-input input-debounce="0"
-                              :dense="true" @filter="filterFn" @update:model-value="assign(index)" />
+                      v-model="product.product_id" class="col-4 q-pa-sm" :options="products_list"
+                      option-label="name" option-value="id" use-input input-debounce="0"
+                      :dense="true" @filter="filterFn" @update:model-value="assign(index)" />
                     <q-input v-model="product.quantity" class="col-1 q-pa-sm" :dense="true" type="number" label="Quantité" @focusout="getVal(index, product.quantity)" />
                     <q-input v-model="product.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" label="Prix Unitaire" />
                     <q-input v-model="product.p.tva" class="col-2 q-pa-sm" :dense="true" type="number" label="TVA" />
@@ -90,8 +90,8 @@ v-model="product.product_id" class="col-4 q-pa-sm" :options="products_list"
                   <q-btn class="print-hide" round color="positive" size="xs" icon="add" @click="specialities_add2()" />&nbsp;&nbsp;
                   <q-btn v-if="add_status" class="print-hide" label="Valider" size="xs" icon="save" type="submit" color="secondary" />&nbsp;&nbsp;
                   <q-btn
-v-if="!add_status" class="print-hide" label="Convertir en Vente" size="xs" type="button" color="teal-9"
-                         @click="convertir_post()" />
+                    v-if="!add_status" class="print-hide" label="Convertir en Vente" size="xs" type="button" color="teal-9"
+                    @click="convertir_post()" />
                 </div>
 
               </q-form>
@@ -104,27 +104,25 @@ v-if="!add_status" class="print-hide" label="Convertir en Vente" size="xs" type=
           </q-card>
         </q-dialog>
 
-
         <q-dialog v-model="fileStatus">
           <q-card style="width: 600px" class="q-pa-lg">
             <filescomponent type="devis" :typeid="devisId" folder="devis" />
           </q-card>
         </q-dialog>
 
-
         <q-btn
-class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
-               @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
+          class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
+          @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
 
         <div class="row">
           <div class="col-12 q-pa-lg">
             <q-input
-v-model="search" class="row" autocomplete type="search"
-                     label="Rechercher" @keyup="facture_filter_get(search)" />
+              v-model="search" class="row" autocomplete type="search"
+              label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div
-v-for="(item, index) in sales_list"
-               :key="index" class="col-lg-3 col-md-4 col-sm-6 col-12 q-pa-md">
+            v-for="(item, index) in sales_list"
+            :key="index" class="col-lg-3 col-md-4 col-sm-6 col-12 q-pa-md">
             <q-card class="q-pa-lg">
               <q-card-section>
                 Devis N° {{item.id_vente}}<br>
@@ -134,7 +132,6 @@ v-for="(item, index) in sales_list"
                 </div>
               </q-card-section>
               <q-card-actions>
-                <!--                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>-->
                 <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente;"></q-btn>
                 <q-btn flat icon="edit" @click="fullWidth = true; add_status = false; devis_get_by(item.id_vente)"></q-btn>
                 <q-btn flat icon="receipt" @click="facture_status2 = true; devis_get_by(item.id_vente)"></q-btn>
@@ -168,47 +165,28 @@ export default {
   mixins: [basemixin, apimixin],
   data () {
     return {
-      filter: '',
-      fitst: 1,
-      last: 30,
-      name: null,
       search: null,
-      grid: false,
       fileStatus: false,
       validate_status: true,
       add_status: true,
       fullWidth: false,
-      medium: false,
-      medium2: false,
       credit: false,
-      solde: true,
       facture_status2: false,
       avance: 0,
       agent: null,
-      fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
       projetid: null,
       p_projets: [],
-      categories: [],
       formData: {},
-      fileTitre: '',
-      files: [],
       date: '',
       dateposted: '',
       devisId: 1,
       myclient: {},
       client: 1,
       client2: { id: null },
-      image: '',
       bc: '',
       bl: '',
-      users: [],
       clients: [],
-      // products: [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }],
       products: [],
       products2: [],
       sales_list: [],
@@ -217,8 +195,6 @@ export default {
       products_list2: [],
       appro_list: [{ p: { sell_price: 0 } }],
       appro_list2: [{ p: { sell_price: 0 } }],
-      product: { description: '' },
-      data: [],
       entreprise: {}
     }
   },
@@ -230,10 +206,6 @@ export default {
   created () {
     this.formData = new FormData();
     var date = new Date();
-    this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    this.shop_get();
     this.clients_get();
     this.products_get();
     this.sales_get();
@@ -265,23 +237,11 @@ export default {
       const val1 = this.sales_init.filter((x) => {
         return x.id_vente.toLowerCase().includes(this.search.toLowerCase())
           || x.fullname.toLowerCase().includes(this.search.toLowerCase())
-        // || x.last_name.toLowerCase().toString().includes(this.search.toLowerCase());
       });
       this.sales_list = val1;
     },
 
-    shop_get() {
-      $httpService.getWithParams('/my/get/shop')
-        .then((response) => {
-          this.entreprise = response;
-        })
-    },
-
     assign(index) {
-      // this.products[index].quantite_vendu = 1;
-      // this.products[index].prix_unitaire = this.products[index].p.sales_price;
-      // this.products[index].remise_totale = 0;
-      console.log(this.products2[index])
       this.products2[index].p = this.products2[index].product_id
       this.products2[index].p.sales_price = this.products2[index].product_id.price
       this.products2[index].productid = this.products2[index].product_id.id
@@ -296,10 +256,6 @@ export default {
       this.myclient.telephone_code = client.telephone_code;
       this.products_get();
     },
-    qr_get(dataUrl) {
-      this.image = dataUrl;
-    },
-
     clients_get () {
       $httpService.getWithParams('/my/get/client')
         .then((response) => {
@@ -311,12 +267,6 @@ export default {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
     },
-
-    update_show(item) {
-      this.medium2 = true;
-      this.product = item;
-    },
-
     convertir_post() {
       let params = { agent: this.agent,
         products: this.products,
@@ -388,14 +338,6 @@ export default {
       }
     },
 
-    // products_get () {
-    //   $httpService.getWithParams('/my/get/products')
-    //     .then((response) => {
-    //       this.products_list = response;
-    //       this.products_list2 = response;
-    //     })
-    // },
-
     products_get () {
       this.getApi('/my/get/products').then((res) => {
         var products = res;
@@ -447,26 +389,8 @@ export default {
           }
         })
     },
-
-    sales_stats_get() {
-      let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
-      $httpService.getWithParams('/my/get/sales_stats', params)
-        .then((response) => {
-          this.sales_list = response;
-          this.nbre_vendus = _.sumBy(this.sales_list, 'quantite_vendu');
-          this.montant_vendus = _.sumBy(this.sales_list, 'montant_vendu');
-        })
-    },
-
-
-    specialities_add () {
-      this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
-    },
     specialities_add2 () {
       this.products2.push({ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
-    },
-    specialities_delete () {
-      this.products.pop();
     },
     imprimer() {
       window.print();
@@ -479,38 +403,6 @@ export default {
         this.products[index].quantity = parseInt(val);
         this.products[index].p.quantity = parseInt(val);
       })
-    },
-
-    changePhoto($event) {
-      const file = $event.target.files[0];
-      this.formData.append('doc', file);
-    },
-
-    sendFile() {
-      this.formData.append('devis_id', this.devisId);
-      this.formData.append('titre', this.fileTitre);
-      // postApi('/my/post/devis_file', this.formData).then((response) => {
-      //   console.log(response.data);
-      // })
-      axios.post('https://fmmi.ci/apistock/api/post/devis_file', this.formData)
-        .then((response) => {
-          this.showAlert(response.data)
-          this.files_get(this.devisId);
-          this.fileTitre = '';
-          this.formData = {};
-        })
-    },
-
-    files_get (_devisId) {
-      $httpService.getWithParams('/api/get/devis_file/'+_devisId)
-        .then((response) => {
-          this.files = response;
-        })
-    },
-
-    startDownload() {
-      confirm('Voulez-vous generer');
-      return false;
     },
     delete_product(i) {
       this.products2 = this.products2.filter((x) => {

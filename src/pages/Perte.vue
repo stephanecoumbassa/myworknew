@@ -22,23 +22,21 @@
                   <div class="col-2 q-pa-sm">Prix Uni</div>
                   <div class="col-3 q-pa-sm">Total</div>
                 </div>
-                <div v-for="(product, index) in products" :key="index" class="row q-mt-lg" style="height: 47px">
+                <div v-for="(prod, index) in products" :key="index" class="row q-mt-lg" style="height: 47px">
                   <q-select
-v-model="product.p" class="col-5 q-pa-sm truncate" :options="appro_list" option-value="id" use-input input-debounce="0"
-                            option-label="prodcat" :dense="true" @filter="filterFn" @focusout="assign(index)" @input="assign(index)" />
-                  <q-input v-model="product.quantity" class="col-1 q-pa-sm" :dense="true" type="number" @focusout="getVal(index, product.quantity)" />
-                  <q-input v-model="product.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" readonly />
-                  <q-input class="col-3 q-pa-sm" :dense="true" type="number" :model-value="product.p.sales_price * product.quantity" />
+                    v-model="prod.p" class="col-5 q-pa-sm truncate" :options="appro_list" option-value="id" use-input input-debounce="0"
+                    option-label="prodcat" :dense="true" @filter="filterFn" @focusout="assign(index)" @input="assign(index)" />
+                  <q-input v-model="prod.quantity" class="col-1 q-pa-sm" :dense="true" type="number" @focusout="getVal(index, prod.quantity)" />
+                  <q-input v-model="prod.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" readonly />
+                  <q-input class="col-3 q-pa-sm" :dense="true" type="number" :model-value="prod.p.sales_price * prod.quantity" />
                   <div class="col-1"><br>
                     <q-btn round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
                   </div>
                 </div>
                 <div class="row no-padding q-mt-xs q-mb-lg" style="height: 70px">
                   <div class="col-3  q-pa-lg">
-                    <!--                    <q-checkbox v-model="credit" label="Credit" color="red" />-->
                   </div>
                   <div class="offset-6 col-3 q-pa-sm">
-                    <!--                    <q-input v-if="credit" :dense="true" type="number" v-model="avance" label="Avance"/><br>-->
                     <h6 class="no-margin no-padding q-mb-lg">{{ numerique(Math.round(total)) }} FCFA</h6>
                   </div>
                 </div>
@@ -66,14 +64,14 @@ v-model="product.p" class="col-5 q-pa-sm truncate" :options="appro_list" option-
             <q-card-section>
 
               <q-form  class="q-gutter-md" @submit="onSubmit">
-<!--                <q-select filled map-options emit-value v-model="product.a_id" :options="users"-->
-<!--                          label="Agent" option-value="id" stack-label input-debounce="0" option-label="name" />-->
+                <!--                <q-select filled map-options emit-value v-model="product.a_id" :options="users"-->
+                <!--                          label="Agent" option-value="id" stack-label input-debounce="0" option-label="name" />-->
                 <q-select
-v-model="product.p_id" map-options emit-value class="col-6 q-pa-sm" :options="appro_list" label="Produits"
-                          option-value="id" use-input stack-label input-debounce="0" option-label="name" />
+                  v-model="product.p_id" map-options emit-value class="col-6 q-pa-sm" :options="appro_list" label="Produits"
+                  option-value="id" use-input stack-label input-debounce="0" option-label="name" />
                 <q-input v-model="product.quantite_vendu" padding class="col-2 q-pa-sm" autocomplete type="number" label="Quantité" />
-<!--                <q-input padding class="col-2 q-pa-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix d'achat" />-->
-<!--                <q-input padding class="col-3 q-pa-sm" autocomplete type="number" v-model="product.montant_vendu" label="Prix de vente" />-->
+                <!--                <q-input padding class="col-2 q-pa-sm" autocomplete type="number" v-model="product.prix_unitaire" label="Prix d'achat" />-->
+                <!--                <q-input padding class="col-3 q-pa-sm" autocomplete type="number" v-model="product.montant_vendu" label="Prix de vente" />-->
               </q-form>
 
             </q-card-section>
@@ -95,8 +93,8 @@ v-model="product.p_id" map-options emit-value class="col-6 q-pa-sm" :options="ap
         </div>
 
         <q-table
-title="Listes de pertes" :grid="grid" :rows="sales_list" :columns="columns"
-                 :pagination="pagination" :filter="filter">
+          title="Listes de pertes" :grid="grid" :rows="sales_list" :columns="columns"
+          :pagination="pagination" :filter="filter">
           <template #top="props">
             <div class="col-4 q-table__title">Listes de pertes</div>&nbsp;&nbsp;&nbsp;
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
@@ -169,34 +167,18 @@ export default {
   data () {
     return {
       filter: '',
-      fitst: 1,
-      last: 30,
-      name: null,
       grid: false,
       validate_status: true,
       fullWidth: false,
-      medium: false,
       medium2: false,
       credit: false,
-      solde: true,
       avance: 0,
       agent: null,
-      fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
-      date: '',
-      client: 1,
       client2: { id: null },
-      image: '',
       users: [],
-      clients: [],
       products: [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }],
       sales_list: [],
-      products_list: [],
       appro_list: [{ p: { sell_price: 0 } }],
       appro_list2: [{ p: { sell_price: 0 } }],
       product: { description: '' },
@@ -212,7 +194,6 @@ export default {
         { name: 'a_name', align: 'left', label: 'Agent', field: 'a_name', sortable: true },
         { name: 'actions', label: 'Actions' }
       ],
-      data: [],
       entreprise: {},
       pagination: {
         sortBy: 'name',
@@ -258,29 +239,6 @@ export default {
     },
     assign (index) {
       this.products[index].p.tva = 0;
-      // this.products[index].p.quantity = 1;
-      // this.products[index].quantity = 1;
-    },
-    assign_client (client) {
-      this.client2.id = client.id;
-      this.client2.fullname = client.fullname;
-      this.client2.email = client.email;
-      this.client2.telephone = client.telephone;
-      this.client2.telephone_code = client.telephone_code;
-    },
-    qr_get(dataUrl) {
-      this.image = dataUrl;
-    },
-    clients_get () {
-      $httpService.getWithParams('/my/get/client')
-        .then((response) => {
-          this.clients = response;
-          this.client = this.clients[0];
-          this.client2 = this.clients[0];
-        })
-        .catch(() => {
-          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
-        });
     },
     update_show(item) {
       this.medium2 = true;
@@ -326,12 +284,6 @@ export default {
           this.appro_list2 = response;
         })
     },
-    factures_number_get () {
-      $httpService.getWithParams('/my/get/facture_number')
-        .then((response) => {
-          this.facture_number = response['nb'];
-        })
-    },
     sales_get () {
       $httpService.getWithParams('/my/get/pertes')
         .then((response) => {
@@ -350,19 +302,6 @@ export default {
     specialities_add () {
       this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
     },
-    specialities_delete () {
-      this.products.pop();
-    },
-    // download() {
-    //     htmlToImage.toJpeg(document.getElementById('facture'), { quality: 0.95 })
-    //         .then(function (dataUrl) {
-    //             var link = document.createElement('a');
-    //             link.download = 'factureVente.jpeg';
-    //             link.target = '_blank';
-    //             link.href = dataUrl;
-    //             link.click();
-    //         });
-    // },
     imprimer() {
       window.print();
     },
@@ -374,10 +313,6 @@ export default {
         this.products[index].quantity = parseInt(val);
         this.products[index].p.quantity = parseInt(val);
       })
-    },
-    startDownload() {
-      confirm('Voulez-vous generer');
-      return false;
     },
     delete_product(i) {
       this.products = this.products.filter((x) => {

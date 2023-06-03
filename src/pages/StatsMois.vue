@@ -150,12 +150,9 @@ export default {
     areachart: AreachartComponent
   },
   mixins: [basemixin],
-  // name: 'PageName',
+  name: 'StatsMoisPage',
   data () {
     return {
-      tab: '0',
-      // first: null,
-      // last: null,
       products: [],
       sales_stats: [],
       appro_stats: [],
@@ -175,7 +172,6 @@ export default {
       users_count: 0,
       clients_count: 0,
       fournisseurs_count: 0,
-      data: [],
       jour_stat: {},
       filter: '',
       pagination: {
@@ -191,7 +187,6 @@ export default {
       series_appro_sum: [{ name: 'Montant Achete par mois', data: [] }],
       series_vente_count: [{ name: 'Montant Achete.', data: [] }],
       series_vente_sum: [{ name: 'Montant Vendu par mois', data: [] }],
-      slide: 'style'
     }
   },
   mounted () {
@@ -205,12 +200,7 @@ export default {
     // console.log(store.doubleCount)
   },
   methods: {
-    convert(str) {
-      var date = new Date(str),
-        mnth = ('0' + (date.getMonth() + 1)).slice(-2),
-        day = ('0' + date.getDate()).slice(-2);
-      return [date.getFullYear(), mnth, day].join('-');
-    },
+
     sales_stats_get() {
       let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
       console.log(params)

@@ -55,7 +55,7 @@
           <q-input v-model="prod.p.sales_price" class="col-md-2 col-3 q-pa-sm" :dense="true" type="number" hint="prix" />
           <q-input
             class="col-md-2 col-4 q-pa-sm" :dense="true" type="number"
-            :model-value="(prod.p.sales_price * product.quantity) + (prod.p.sales_price * prod.quantity * tva)/100" />
+            :model-value="(prod.p.sales_price * prod.quantity) + (prod.p.sales_price * prod.quantity * tva)/100" />
           <div class="col-1"><br>
             <q-btn v-if="status_download" round color="negative" size="xs" icon="remove" class="print-hide" @click="delete_product(index)" />
             &nbsp;
@@ -133,50 +133,32 @@ export default {
   emits: ['reload'],
   data () {
     return {
-      last: 30,
       tva: 18,
       facture_status2: false,
       status_download: true,
       validate_status: true,
       fullWidth: false,
-      medium2: false,
       credit: false,
       creditNumber: 0,
-      solde: true,
       avance: 0,
       agent: null,
-      fournisseur: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
       versements: [],
       p_projets: [],
-      date: '',
       dateposted: '',
       bc: '',
       bl: '',
       delai: '',
       condition: '',
-      first: '',
       clientId: null,
       client: null,
       projetid: null,
-      client2: {},
       myclient: {},
       image: '',
-      users: [],
       clients: [],
       products: [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }],
-      sales_list: [],
-      products_list: [],
       appro_list: [{ p: { sell_price: 0, prodcat: '' }, prodcat: '' }],
       appro_list2: [{ p: { sell_price: 0, prodcat: '' }, prodcat: '' }],
-      product: { description: '' },
-      data: [],
-      entreprise: {}
     }
   },
   computed: {
@@ -186,14 +168,9 @@ export default {
   },
   created () {
     let date = new Date();
-    this.date = this.dateformat(date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate(), 4);
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    this.shop_get();
     this.clients_get();
     this.products_get();
     this.p_projet_get();
-    // this.sales_get();
     this.factures_number_get();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     this.dateposted = date.toISOString().slice(0, 16);
@@ -217,12 +194,6 @@ export default {
       for (let i = 0; i < __nb; i++) {
         this.versements.push({})
       }
-    },
-    shop_get() {
-      this.getApi('/my/get/shop')
-        .then((response) => {
-          this.entreprise = response;
-        })
     },
     assign (index) {
       this.products[index].p = this.products[index].product_id
@@ -256,9 +227,6 @@ export default {
           this.p_projets = response
         })
     },
-    qr_get(dataUrl) {
-      this.image = dataUrl;
-    },
     clients_get () {
       this.getApi('/my/get/client')
         .then((response) => {
@@ -267,9 +235,6 @@ export default {
         .catch(() => {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
-    },
-    update_show(item) {
-      this.product = item;
     },
     sales_post() {
       let params = { agent: this.agent,
@@ -310,14 +275,14 @@ export default {
           })
       }
     },
-    sales_put() {
-      if (confirm('Voulez vous modifier')) {
-        this.putApi('/my/put/sales', this.product).then((response) => {
-          this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
-          // this.sales_get();
-        })
-      }
-    },
+    // sales_put() {
+    //   if (confirm('Voulez vous modifier')) {
+    //     this.putApi('/my/put/sales', this.product).then((response) => {
+    //       this.$q.notify({ message: response['msg'], color: 'secondary', position: 'top-right' });
+    //       // this.sales_get();
+    //     })
+    //   }
+    // },
     products_get () {
       this.getApi('/my/get/products').then((res) => {
         var products = res;
@@ -343,19 +308,11 @@ export default {
           this.facture_number = response['nb'];
         })
     },
-    sales_get () {
-      this.getApi('/my/get/sales')
-        .then((response) => {
-          this.sales_list = response;
-        })
-    },
     specialities_add () {
       // this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
       this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
     },
-    specialities_delete () {
-      this.products.pop();
-    },
+
     getVal(index, val) {
       this.products[index].quantity = parseInt(val);
       this.products[index].p.quantity = parseInt(val);
@@ -377,12 +334,6 @@ export default {
           }
         );
       })
-    },
-    factures_get_credit (factureid) {
-      this.getApi('/my/get/sales_by_credit?id_vente=' + factureid, { })
-        .then((response) => {
-          this.versements = response;
-        })
     },
     get_facture_id (_id) {
       this.fullWidth = true;

@@ -63,24 +63,7 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      tab: 'mails',
-      product_id: 1,
-      alert: false,
-      loading1: false,
-      date: '2023',
-      red: '#6d1412',
-      first: null,
-      inventaire: null,
-      inventaires: [],
-      lists: [],
-      lists_products: [],
-      name: null,
-      last: null,
-      entreprise: {},
-      search: '',
-      maximizedToggle: true,
       products: [],
-      product: { description: '', stock: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1 },
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
         // { name: 'photo', align: 'left', label: 'photo' },
@@ -90,25 +73,14 @@ export default {
         // { name: 'difference', label: 'Diff' },
         { name: 'actions', label: 'Actions' }
       ],
-      data: [],
       filter: '',
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
     }
   },
   mounted () {
     this.stock_get();
-    // this.inventaires_get();
-    var date = new Date();
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
   },
   methods: {
-    shop_get() {
-      $httpService.getWithParams('/my/get/shop')
-        .then((response) => {
-          this.entreprise = response;
-        })
-    },
     stock_get () {
       $httpService.getWithParams('/my/get/stock/' + this.date)
         .then((response) => {

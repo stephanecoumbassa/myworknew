@@ -50,7 +50,6 @@ export default {
                 { name: 'date_posted', align: 'left', label: 'Date', field: 'date_posted', sortable: true },
                 { name: 'actions', label: 'Actions' }
             ],
-            data: [],
             filter: '',
             pagination: {
                 sortBy: 'name',

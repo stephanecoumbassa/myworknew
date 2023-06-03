@@ -49,7 +49,7 @@
               </div>
             </div>
             <div class="col-2 q-pa-lg">
-<!--              <span>Tests</span>-->
+              <!--              <span>Tests</span>-->
             </div>
             <div class="col-12">
               <q-separator class="no-margin no-padding" color="grey-2" inset />
@@ -190,7 +190,7 @@
 
           <q-tab-panel name="taches" class="no-padding no-margin">
             <q-card class="q-pa-lg q-mt-lg" flat>
-              <task-list :employes="employes" :tasks="p_tasks" :project_id="$route.params.id" />
+              <task-list :employes="employes" :tasks="p_tasks" :project_id="$route.params.id" @reload="getTaskList()" />
             </q-card>
           </q-tab-panel>
 
@@ -220,8 +220,8 @@
                     <div class="col-3 q-pa-sm">
                       <br>
                       <q-btn
-v-if="!use.id" icon="add" size="sm" outline
-                             color="green" title="ajouter" @click="p_projet_stock_post(use)" />
+                        v-if="!use.id" icon="add" size="sm" outline
+                        color="green" title="ajouter" @click="p_projet_stock_post(use)" />
                       &nbsp;
                       <q-btn v-if="use.id" icon="edit" size="sm" outline title="modifier" />
                       &nbsp;
@@ -257,8 +257,8 @@ v-if="!use.id" icon="add" size="sm" outline
               <div class="row">
                 <div class="col-12 q-pa-sm">
                   <q-table
-id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="name"
-                           :filter="filter" flat>
+                    id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="name"
+                    :filter="filter" flat>
                     <template #top>
                       <div class="print-hide col-4 q-table__title">Depenses</div>
                       <div class="col-3"></div>
@@ -282,8 +282,8 @@ id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="
                         <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
                         <q-td key="date" :props="props"> {{props.row.date}} </q-td>
                         <q-td key="actions" :props="props">
-<!--                          <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>-->
-<!--                          <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>-->
+                          <!--                          <q-btn size="xs" icon="edit" v-on:click="btn_update(props.row); medium = true"></q-btn>-->
+                          <!--                          <q-btn color="red-4" size="xs" icon="delete" v-on:click="btn_delete()"></q-btn>-->
                         </q-td>
                       </q-tr>
                     </template>
@@ -315,22 +315,22 @@ id="printMe" title="Treats" :rows="depenses" :columns="columnsDepense" row-key="
                         <br>
                         &nbsp;<q-btn outline color="grey" size="xs" @click="versements.pop()">-</q-btn>
                         &nbsp;<q-btn outline color="primary" size="xs" icon="add" @click="versements.push({montant: 0})">
-                          <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
-                        </q-btn>
+                        <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">Ajouter un versement</q-tooltip>
+                      </q-btn>
                       </div>
 
                       <div v-for="fac in versements" :key="fac.id" class="row q-mb-md">
 
                         <q-input v-model="fac.echeance" filled class="col-1 q-mr-sm" dense label="Date Echéance" type="date" stack-label  />
                         <q-input
-v-model="fac.pourcentage" filled class="col-1 q-mr-sm" dense label="Pourcentage" type="number" stack-label
-                                 @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
+                          v-model="fac.pourcentage" filled class="col-1 q-mr-sm" dense label="Pourcentage" type="number" stack-label
+                          @update:model-value="fac.montant_echeance=(total * fac.pourcentage)/100" />
                         <q-input v-model="fac.montant_echeance" filled class="col-1 q-mr-sm" dense label="Montant Echéance" stack-label type="number" />
                         &nbsp;
                         &nbsp;
                         <q-select
-v-model="fac.paiement" class="col-1 q-mr-sm" dense label="Type paiement" stack-label
-                                  :options="['virement', 'cheque', 'espece']" />
+                          v-model="fac.paiement" class="col-1 q-mr-sm" dense label="Type paiement" stack-label
+                          :options="['virement', 'cheque', 'espece']" />
                         <q-input v-model="fac.date" class="col-1 q-mr-sm" dense label="Date Vers" type="date" stack-label  />
                         <q-input v-model="fac.montant" class="col-1 q-mr-sm" dense label="Montant Vers" stack-label type="number" />
                         <q-input v-model="fac.numero" class="col-2 q-mr-sm" dense label="N°Chèque/Virement" />
@@ -350,8 +350,8 @@ v-model="fac.paiement" class="col-1 q-mr-sm" dense label="Type paiement" stack-l
 
                 <div class="col-12 q-mt-md q-pa-sm text-center">
                   <facture-component
-v-if="products" name="Facture de devis"
-                                     :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
+                    v-if="products" name="Facture de devis"
+                    :entreprise="entreprise" :client="client" :facturenum="facture_number" :products="products" />
                 </div>
 
               </div>
@@ -428,9 +428,6 @@ export default {
     this.depenseGet()
     this.p_projet_get()
     this.p_projet_stock_get()
-    const date = new Date()
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
     this.getTaskList()
     this.employesGet()
     this.productsGet()

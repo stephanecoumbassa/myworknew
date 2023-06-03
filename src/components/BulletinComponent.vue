@@ -352,7 +352,12 @@ import basemixin from '../pages/basemixin'
 export default {
   name: 'DepenseAdd',
   mixins: [basemixin],
-  props: ['employe', 'salaire', 'bulletin'],
+  // props: ['employe', 'salaire', 'bulletin'],
+  props: {
+    employe: {type: String, default: ()  => {}},
+    salaire: {type: String, default: ()  => {}},
+    bulletin: {type: String, default: ()  => {}},
+  },
   emits: ['reload'],
   data() {
     return {}

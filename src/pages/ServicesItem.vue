@@ -125,8 +125,6 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      selected: [],
-      options: [],
       parents: [],
       parents2: [],
       categories: [],
@@ -135,27 +133,14 @@ export default {
       domains: [],
       domains2: [],
       service: { status_client: true },
-      // date: '2020-03-10',
       date: '2020-03-10',
       name: null,
-      description: null,
-      tva: null,
-      code_comptable: null,
       client: null,
       clients: [],
       clients2: [],
-      image: 'hhghjj',
-      price: null,
-      email: null,
       product_id: null,
-      telephone_code: null,
-      telephone: null,
-      model: null,
       status_update: false,
-      filter: '',
       medium: false,
-      loading: false,
-      visibleColumns: ['email', 'phoneNumber', 'type'],
       data_status: false,
       medium2: false,
       pagination: {
@@ -177,12 +162,11 @@ export default {
   },
   created () {
     this.loadData();
-    var today = new Date();
+    let today = new Date();
     this.service.date = this.formatDate(today);
     this.date = this.formatDate(today);
     this.clients_get();
     this.categories_all();
-    // this.loadData2();
   },
   methods: {
     loadData () {
@@ -278,14 +262,6 @@ export default {
         .catch(() => {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
-    },
-    filterFn (val, update) {
-      update(() => {
-        const needle = val.toLocaleLowerCase();
-        this.clients = this.clients2.filter(
-          (v) => { return v.fullname.toLocaleLowerCase().indexOf(needle) > -1 }
-        );
-      })
     },
     photo_get(props) {
       this.product_id = props.id;

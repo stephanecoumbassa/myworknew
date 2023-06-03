@@ -7,14 +7,14 @@
         <q-btn label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary" @click="medium2 = true" />
         <br><br>
         <q-table
-title="p_tasks" :rows="p_tasks" :columns="columns" :filter="filter"
-                 :pagination="pagination" row-key="name">
+          title="p_tasks" :rows="p_tasks" :columns="columns" :filter="filter"
+          :pagination="pagination" row-key="name">
           <template #top="props">
             <div class="col-7 q-table__title">Liste des p_task</div>
             <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
             <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                   class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
+              flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+              class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
           </template>
           <template #body="props">
             <q-tr :props="props">
@@ -49,14 +49,14 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
               <div class="col-12">
                 <q-input v-model='p_task.libelle' dense label='libelle' />
                 <q-input v-model='p_task.description' dense type='textarea' label='description' />
-<!--                <q-input dense v-model='p_task.status' label='status' />-->
+                <!--                <q-input dense v-model='p_task.status' label='status' />-->
                 <q-select
-v-model='p_task.status'
-                          :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']" outlined class="q-mb-sm" dense label='status' />
+                  v-model='p_task.status'
+                  :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE', 'STOPPE']" outlined class="q-mb-sm" dense label='status' />
                 <q-input v-model='p_task.p_projet_id' dense type='number' label='p_projet_id' />
                 <q-input v-model='p_task.debut' dense type='date' label='debut' />
                 <q-input v-model='p_task.fin' dense type='date' label='fin' />
-<!--                <q-input dense v-model='p_task.tuuid' label='tuuid' />-->
+                <!--                <q-input dense v-model='p_task.tuuid' label='tuuid' />-->
               </div>
             </div>
             <div class="row">
@@ -101,10 +101,7 @@ export default {
     }
   },
   created () {
-    this.p_task_get()
-    const date = new Date()
-    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1))
-    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0))
+    // this.p_task_get()
   },
   methods: {
     update_get (props) {
@@ -118,11 +115,11 @@ export default {
         this.p_task_post()
       }
     },
-    p_task_get () {
-      p_task_get().then((response) => {
-        this.p_tasks = response
-      });
-    },
+    // p_task_get () {
+    //   p_task_get().then((response) => {
+    //     this.p_tasks = response
+    //   });
+    // },
     p_task_post () {
       this.showLoading()
       this.p_task.tuuid = this.generateUuid()

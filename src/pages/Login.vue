@@ -7,15 +7,15 @@
 
           <div class="text-center center">
             <img
-class="animate__animated animate__pulse animate__infinite animate__slower"
-                 src="~assets/fmmi.jpeg" style="height: 150px; width: 150px;">
+              class="animate__animated animate__pulse animate__infinite animate__slower"
+              src="~assets/fmmi.jpeg" style="height: 150px; width: 150px;">
           </div>
           <br>
-<!--          <div class="text-h6">Connexion</div>-->
+          <!--          <div class="text-h6">Connexion</div>-->
           <br>
           <q-input v-model="myemail" aria-autocomplete autocomplete type="text" label="Email" />
           <q-input v-model="mypassword" type="password" label="Mot de passe" /><br><br>
-          <q-btn size="full" block full class="bg-secondary text-white full-width" @click="connexion()">Se Connecter 1</q-btn>
+          <q-btn size="full" block full class="bg-secondary text-white full-width" @click="connexion()">Se Connecter</q-btn>
           <br>
           <br>
           <br>
@@ -38,30 +38,8 @@ export default {
   name: 'LoginPage',
   data () {
     return {
-      name: null,
-      tab: 'connexion',
-      email: null,
       myemail: 'contact@fmmi.ci',
-      indicatif: null,
-      telephone: null,
-      mytelephone: null,
-      lastname: null,
-      shop_id: null,
-      password: '12345',
       mypassword: '12345',
-      user_type: null,
-      fullWidth: false,
-      medium: false,
-      medium2: false,
-      agent: null,
-      fournisseur: null,
-      product_id: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
-      categories: [],
-      users: [],
-      users_types: [],
       products: [{ p: { sell_price: 0, id: null }, quantity: 1, buy: 0, sell: 0 }],
       state: storeGlobal.state
     }
@@ -77,18 +55,6 @@ export default {
     // console.log(this.state);
   },
   methods: {
-    onSubmit () {
-      if (this.accept !== true) {
-        this.command_post();
-      } else {
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'fas fa-check-circle',
-          message: 'Submitted'
-        })
-      }
-    },
     connexion() {
       let params = {
         'username': this.myemail,
@@ -120,32 +86,6 @@ export default {
           }
         })
     },
-    inscription() {
-      let params = {
-        'name': this.name,
-        'lastname': this.lastname,
-        'email': this.email,
-        'telephone_code': this.indicatif,
-        'telephone': this.telephone,
-        'shop_id': this.shop_id,
-        'magasin_id': this.shop_id,
-        'type': this.user_type,
-        'password': this.password
-      };
-      $httpService.postWithParams('/api/inscription', params)
-        .then((response) => {
-          this.products_get();
-          this.$q.notify({
-            color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
-          });
-        })
-    },
-    users_type_get () {
-      $httpService.getWithParams('/api/s_type_users')
-        .then((response) => {
-          this.users_types = response;
-        })
-    }
   }
 }
 </script>

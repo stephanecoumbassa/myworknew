@@ -7,8 +7,8 @@
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
             <facture
-name="Facture de devis"
-                     :entreprise="entreprise" :client="fournisseur" :facturenum="facture_number" :products="products" />
+              name="Facture de devis"
+              :entreprise="entreprise" :client="fournisseur" :facturenum="facture_number" :products="products" />
           </q-card>
         </q-dialog>
 
@@ -26,11 +26,11 @@ name="Facture de devis"
                 <div class="col-6 text-right float-right">
                   <div class="row">
                     <q-input
-v-model="dateposted" stack-label type="datetime-local"
-                             class="col-md-7 col-12 q-pa-sm offset-md-2" label="Date" :dense="true"></q-input>
+                      v-model="dateposted" stack-label type="datetime-local"
+                      class="col-md-7 col-12 q-pa-sm offset-md-2" label="Date" :dense="true"></q-input>
                     <q-btn
-class="col-md-3 col-6" size="sm" color="grey-5" :dense="true" style="height: 40px"
-                           @click="sales_dateposted(products[0])">Modifier la date</q-btn>
+                      class="col-md-3 col-6" size="sm" color="grey-5" :dense="true" style="height: 40px"
+                      @click="sales_dateposted(products[0])">Modifier la date</q-btn>
                   </div>
                   <br>
                   <div>Facture #: {{facture_number}}</div>
@@ -46,19 +46,18 @@ class="col-md-3 col-6" size="sm" color="grey-5" :dense="true" style="height: 40p
             <q-card-section>
               <q-form  class="" @submit="onSubmit">
                 <br>
-                <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
+                <div v-for="(prod, index) in products" :key="index" class="row q-pa-sm">
                   <q-select
-v-model="product.product_id" class="col-3 row q-pl-sm" map-options emit-value
-                            option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
-                  <q-input v-model="product.amount" class="col-2 row q-pl-sm" autocomplete type="number" label="Quantité" />
-                  <q-input v-model="product.buying_price" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix Achat" />
-                  <q-input v-model="product.sell_price" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix Vente" />
-                  <!-- <q-input class="col-2 no-margin" autocomplete type="number" v-model="product.montant_vendu" label="Prix de Vente" />-->
-                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" :value="product.amount * product.buying_price" label="total" />
+                    v-model="prod.product_id" class="col-3 row q-pl-sm" map-options emit-value
+                    option-value="id" option-label="name" stack-label input-debounce="0" :options="products_list" />
+                  <q-input v-model="prod.amount" class="col-2 row q-pl-sm" autocomplete type="number" label="Quantité" />
+                  <q-input v-model="prod.buying_price" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix Achat" />
+                  <q-input v-model="prod.sell_price" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix Vente" />
+                  <q-input class="col-2 row q-pl-sm" autocomplete type="number" :value="prod.amount * prod.buying_price" label="total" />
                   <div class="col-1 row q-pl-xs">
                     <br>
-                    <q-btn flat size="sm" class="print-hide" color="secondary" icon="edit" @click="sales_update(product)" />
-                    <q-btn flat size="sm" class="print-hide" color="negative" icon="remove" @click="sales_delete(product.id, 'Erreur Saisie', product.code_ap)" />
+                    <q-btn flat size="sm" class="print-hide" color="secondary" icon="edit" @click="sales_update(prod)" />
+                    <q-btn flat size="sm" class="print-hide" color="negative" icon="remove" @click="sales_delete(prod.id, 'Erreur Saisie', prod.code_ap)" />
                   </div>
                 </div>
 
@@ -90,13 +89,13 @@ v-model="product.product_id" class="col-3 row q-pl-sm" map-options emit-value
         <div class="row q-mt-lg">
           <div class="col-12 q-pa-lg">
             <q-input
-v-model="search" class="row" autocomplete type="search"
-                     label="Rechercher" @keyup="facture_filter_get(search)" />
+              v-model="search" class="row" autocomplete type="search"
+              label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div class="col-12">
             <q-table
-title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
-                     :pagination="pagination" :filter="filter">
+              title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture"
+              :pagination="pagination" :filter="filter">
               <template #top="props">
                 <div class="col-4 q-table__title">Liste des factures</div>&nbsp;&nbsp;&nbsp;
                 <q-input v-model="filter" dense debounce="300" type="search" icon="search" placeholder="Rechercher" />
@@ -134,7 +133,6 @@ title="Listes de ventes" :grid="grid" :rows="factures" :columns="columns_facture
 import basemixin from './basemixin';
 import FactureComponent from '../components/facture_component.vue';
 
-const data = [{ 'name': 'Facebook' }, { 'name': 'Google' }, { 'name': 'Twitter' }];
 import $httpService from '../boot/httpService';
 export default {
   components: {
@@ -143,13 +141,8 @@ export default {
   mixins: [basemixin],
   data () {
     return {
-      items: data,
-      value: 'Facebook',
-      name: null,
       facture_status2: false,
       fullWidth: false,
-      medium: false,
-      medium2: false,
       agent: null,
       date: '',
       grid: false,
@@ -157,37 +150,15 @@ export default {
       dateposted: '',
       fournisseur: {},
       entreprise: {},
-      facture: { type: 'achat' },
-      position: {},
       search: null,
-      product_id: null,
       facture_number: null,
-      quantity_id: null,
-      sell: null,
-      buy: null,
       versements: [],
-      categories: [],
-      users: [],
       factures: [],
       factures_init: [],
       factures_details: [],
       facture_id: null,
       products: [],
-      sales_list: [],
       products_list: [],
-      appro_list: [{ p: { sell_price: 0, id: null, quantity: 1 }, quantity: 1 }],
-      product: { description: '' },
-      columns: [
-        { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
-        { name: 'p_name', align: 'left', label: 'Nom', field: 'p_name', sortable: true },
-        { name: 'dateposted', align: 'left', label: 'date', field: 'dateposted', sortable: true },
-        { name: 'amount', align: 'left', label: 'Qte', field: 'amount', sortable: true },
-        { name: 'buying_price', align: 'left', label: 'Prix Achat', field: 'buying_price', sortable: true },
-        { name: 'sell_price', align: 'left', label: 'Prix Vente.', field: 'sell_price', sortable: true },
-        { name: 'fournisseur_user', align: 'left', label: 'Fournisseur', field: 'fournisseur_user', sortable: true },
-        { name: 'code_ap_name', align: 'left', label: 'Code Appruo', field: 'code_ap_name', sortable: true },
-        { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
-      ],
       columns_facture: [
         { name: 'facture', align: 'left', label: 'Facture', field: 'facture', sortable: true },
         { name: 'dateposted', align: 'left', label: 'Date', field: 'dateposted', sortable: true },
@@ -198,7 +169,6 @@ export default {
         { name: 'actions', align: 'left', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
       ],
       pagination: { sortBy: 'name', descending: false, page: 1, rowsPerPage: 50 },
-      data: []
     }
   },
   computed: {
@@ -229,9 +199,6 @@ export default {
           message: 'Submitted'
         })
       }
-    },
-    assign (index) {
-      this.products[index].p.quantity = 1;
     },
     shop_get() {
       $httpService.getWithParams('/my/get/shop')
@@ -356,27 +323,6 @@ export default {
             this.factures_get();
           })
       }
-    },
-    imprimer() {
-      window.print();
-    },
-    colorize (value) {
-      if (value > 0) {
-        return 'bg-red-1';
-      }
-    },
-    filterFn(val, update) {
-      this.value = null;
-      if (val === '') {
-        update(() => {
-          this.items = data
-        });
-        return
-      }
-      update(() => {
-        const needle = val.toLowerCase();
-        this.items = data.filter(v => v.name.toLowerCase().indexOf(needle) > -1)
-      })
     }
   }
 }
