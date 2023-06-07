@@ -51,8 +51,8 @@
                 </q-input>
                 <!--        {{entreprise.city}}-->
                 <q-select
-v-model="entreprise.city" :options="cities" label="Ville" map-options emit-value use-input
-                          option-value="id" stack-label input-debounce="0" option-label="name" @filter="filterFn">
+                  v-model="entreprise.city" :options="cities" label="Ville" map-options emit-value use-input
+                  option-value="id" stack-label input-debounce="0" option-label="name" @filter="filterFn">
                   <template #prepend> <q-icon name="location_on" /> </template>
                 </q-select>
                 <q-input v-model="entreprise.quartier" icon="event" padding type="text" label="Quartier">
@@ -60,10 +60,10 @@ v-model="entreprise.city" :options="cities" label="Ville" map-options emit-value
                 </q-input>
                 <br>
                 <!-- option-value="id" stack-label input-debounce="0" option-label="name" @filter="filterFn" />-->
-                <div style="height: 400px">
-                  {{entreprise.latlong}}
-                  <my-map-component v-model="entreprise.latlong" @blur="setLatLong" />
-                </div>
+                <!--                <div style="height: 400px">-->
+                <!--                  {{entreprise.latlong}}-->
+                <!--                  <my-map-component v-model="entreprise.latlong" @blur="setLatLong" />-->
+                <!--                </div>-->
                 <!-- <q-input padding type="text" v-model="entreprise.latitude" label="Latitude" />-->
                 <!-- <q-input padding type="text" v-model="entreprise.longitude" label="Longitude" />-->
                 <q-input v-model="entreprise.tva" padding type="number" label="TVA" class="q-mt-md" />
@@ -97,29 +97,29 @@ v-model="entreprise.city" :options="cities" label="Ville" map-options emit-value
               <div class="col-md-8 col-sm-12 col-xs-12 q-pa-sm">
                 <label>Logo</label><br>
                 <image-component
-v-model="entreprise.logo" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.logo" :type_id="2" image_extension="jpg"
-                                 images :width="150" :height="150" :quality="1" o-padding class="no-padding" /><br>
+                  v-model="entreprise.logo" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.logo" :type_id="2" image_extension="jpg"
+                  images :width="150" :height="150" :quality="1" o-padding class="no-padding" /><br>
                 <q-btn color="secondary" class="no-padding" size="sm" label="uploader" @click="upload()" />
               </div>
               <div class="col-md-8 col-sm-12 col-xs-12 q-pa-sm">
                 <label>Slider 1</label><br>
                 <image-component
-v-model="entreprise.slider1" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.slider1"
-                                 :width="300" :height="150" /><br>
+                  v-model="entreprise.slider1" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.slider1"
+                  :width="300" :height="150" /><br>
                 <q-btn color="secondary" label="uploader" size="sm" @click="upload_slider1()" />
               </div>
               <div class="col-md-8 col-sm-12 col-xs-12 q-pa-sm">
                 <label>Slider 2</label><br>
                 <image-component
-v-model="entreprise.slider2" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.slider2"
-                                 :width="300" :height="150" /><br>
+                  v-model="entreprise.slider2" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.slider2"
+                  :width="300" :height="150" /><br>
                 <q-btn color="secondary" label="uploader" size="sm" @click="upload_slider2()" />
               </div>
               <div class="col-md-8 col-sm-12 col-xs-12 q-pa-sm">
                 <label>Slider 3</label><br>
                 <image-component
-v-model="entreprise.slider3" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.slider3"
-                                 :width="300" :height="150" /><br>
+                  v-model="entreprise.slider3" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+entreprise.slider3"
+                  :width="300" :height="150" /><br>
                 <q-btn color="secondary" label="uploader" size="sm" @click="upload_slider3()" />
               </div>
 
@@ -189,13 +189,13 @@ v-model="entreprise.slider3" :src="uploadurl +'/'+ entreprise.id +'/magasin/'+en
 <script>
 import $httpService from '../boot/httpService';
 import ImageComponent from '../components/image-component.vue';
-import MyMapComponent from '../components/mymap.vue';
+// import MyMapComponent from '../components/mymap.vue';
 import basemixin from './basemixin';
 export default {
   name: 'ParametresName',
   components: {
     ImageComponent,
-    MyMapComponent
+    // MyMapComponent
   },
   data () {
     return {

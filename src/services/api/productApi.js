@@ -1,7 +1,7 @@
 
 import {BaseApi} from "src/services/api/BaseApi";
 const TABLE = 's_product';
-class SProductApi extends BaseApi{
+class ProductApi extends BaseApi{
 
   constructor() {
     super();
@@ -10,7 +10,7 @@ class SProductApi extends BaseApi{
   static async get() {
     return await super.get(TABLE)
   }
-  
+
   static async getId(id) {
     return await super.getId(TABLE, id)
   }
@@ -18,7 +18,7 @@ class SProductApi extends BaseApi{
   static async search(params) {
     return await super.search(TABLE, params)
   }
-  
+
   static async post(params) {
     return await super.post(TABLE, params)
   }
@@ -31,8 +31,12 @@ class SProductApi extends BaseApi{
     return await super.delete(TABLE, id)
   }
 
+  static async disabledProduct(id) {
+    return await super.postApi('/my/disabled/products/'+id, {}, true, true)
+  }
+
 }
 
-export {SProductApi};
+export {ProductApi};
 
 
