@@ -38,20 +38,6 @@ class BaseApi {
     })
   }
 
-  static async postApi(url, params, loading=false, notify=false) {
-    if (loading) Loading.show({spinner: QSpinnerBall, spinnerColor: 'primary'})
-    return new Promise( resolve => {
-      postApi(url, params)
-        .then((response) => {
-          Loading.hide()
-          return resolve(response)
-        }).catch((error) => {
-        Loading.hide()
-        return resolve(error)
-      });
-    })
-  }
-
   static async update(table, params) {
     return new Promise( resolve => {
       putApi('/my/put/' + table, params)
@@ -69,6 +55,36 @@ class BaseApi {
         .then((response) => {
           return resolve(response)
         }).catch((error) => {
+        return resolve(error)
+      });
+    })
+  }
+
+
+  static async getApi (url, params, loading=false, notify=false) {
+    if (loading)
+      Loading.show({spinner: QSpinnerBall, spinnerColor: 'primary'})
+    return new Promise((resolve, reject) => {
+      getApi(url, params )
+        .then((response) => {
+          Loading.hide()
+          resolve(response)
+        })
+        .catch((error) => {
+          Loading.hide()
+          reject(error)
+        });
+    });
+  }
+  static async postApi(url, params, loading=false, notify=false) {
+    if (loading) Loading.show({spinner: QSpinnerBall, spinnerColor: 'primary'})
+    return new Promise( resolve => {
+      postApi(url, params)
+        .then((response) => {
+          Loading.hide()
+          return resolve(response)
+        }).catch((error) => {
+        Loading.hide()
         return resolve(error)
       });
     })

@@ -7,46 +7,46 @@
 
         <div class="row text-center">
           <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm">
-              <q-card class="q-pa-sm" square clickable style="cursor: pointer" @click="$router.push('/clients')">
-                <q-card-section>
-                  Clients: <br><br><span class="text-h5">{{clients_count}}</span>
-                </q-card-section>
-              </q-card>
+            <q-card class="q-pa-sm pointer" flat clickableflat @click="$router.push('/clients')">
+              <q-card-section>
+                Clients: <br><br><span class="text-h5">{{clients_count}}</span>
+              </q-card-section>
+            </q-card>
           </div>
           <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm">
-              <q-card
-class="q-pa-sm" square clickable style="cursor: pointer"
-                      @click="$router.push('/users')">
-                <q-card-section>
-                  Utilisateurs: <br><br>
-                  <span class="text-h5">{{users_count}}</span>
-                </q-card-section>
-              </q-card>
+            <q-card
+              class="q-pa-sm pointer" flat clickableflat
+              @click="$router.push('/users')">
+              <q-card-section>
+                Utilisateurs: <br><br>
+                <span class="text-h5">{{users_count}}</span>
+              </q-card-section>
+            </q-card>
           </div>
           <div class="col-md-3 col-sm-6 col-xs-12 q-pa-sm">
-              <q-card
-class="q-pa-sm" square clickable style="cursor: pointer"
-                      @click="$router.push('/fournisseurs')">
-                <q-card-section>Fournisseurs: <br><br>
-                  <span class="text-h5">{{fournisseurs_count}}</span>
-                </q-card-section>
-              </q-card>
+            <q-card
+              class="q-pa-sm pointer" flat clickableflat
+              @click="$router.push('/fournisseurs')">
+              <q-card-section>Fournisseurs: <br><br>
+                <span class="text-h5">{{fournisseurs_count}}</span>
+              </q-card-section>
+            </q-card>
           </div>
           <div
-class="col-md-3 col-sm-6 col-xs-12 q-pa-sm"
-                         @click="$router.push('/ventes/new')">
-              <q-card class="q-pa-sm" square style="cursor: pointer" clickable>
-                <q-card-section>Vente Jour: <br><br>
-                  <span class="text-h5">{{numerique(jour_stat.quantite ?? 0)}}</span>
-                </q-card-section>
-<!--                <q-card-section> <span class="text-h5">{{numerique(jour_stat.somme)}}</span> CFA </q-card-section>-->
-              </q-card>
+            class="col-md-3 col-sm-6 col-xs-12 q-pa-sm"
+            @click="$router.push('/ventes/new')">
+            <q-card class="q-pa-sm pointer" flatflat clickable>
+              <q-card-section>Vente Jour: <br><br>
+                <span class="text-h5">{{numerique(jour_stat.quantite ?? 0)}}</span>
+              </q-card-section>
+              <!--                <q-card-section> <span class="text-h5">{{numerique(jour_stat.somme)}}</span> CFA </q-card-section>-->
+            </q-card>
           </div>
         </div>
 
         <div class="row" style="max-width: 1265px">
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 350px">
-            <q-card class="my-card" square>
+            <q-card class="my-card" flat>
               <q-card-section>
                 <areachart color="#FF9900" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />
               </q-card-section>
@@ -54,30 +54,30 @@ class="col-md-3 col-sm-6 col-xs-12 q-pa-sm"
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 350px">
             <span style="color: #ec8888"></span>
-            <q-card class="my-card" square>
+            <q-card class="my-card" flat>
               <q-card-section>
                 <areachart color="#ec8888" :series="series_appro_sum" title="Montants d'achat de matière première" titletooltip="achat" />
               </q-card-section>
             </q-card>
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 350px">
-            <q-card class="my-card" square>
+            <q-card class="my-card" flat>
               <q-card-section>
-<!--                <areachart type="bar" :horizontal="true" :series="service_sum_data" title="Montants generere par les services" titletooltip="service" />-->
+                <!--                <areachart type="bar" :horizontal="true" :series="service_sum_data" title="Montants generere par les services" titletooltip="service" />-->
                 <areachart type="bar" :horizontal="true" :series="service_sum_data" title="Cumul des sorties(Achats, Dépense, Salaire)" titletooltip="service" />
               </q-card-section>
             </q-card>
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 350px">
-            <q-card class="my-card" square>
+            <q-card class="my-card" flat>
               <q-card-section>
                 <areachart color="red" :series="depense_sum_data" title="Montants des depenses" titletooltip="depense" />
-<!--                <areachart color="primary" type="bar" :horizontal="false" :series="depense_sum_data" title="Montants des depenses" titletooltip="depense" />-->
+                <!--                <areachart color="primary" type="bar" :horizontal="false" :series="depense_sum_data" title="Montants des depenses" titletooltip="depense" />-->
               </q-card-section>
             </q-card>
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm">
-            <q-table :rows="sales_stats" :columns="columns" row-key="id" :pagination="pagination" square>
+            <q-table :rows="sales_stats" :columns="columns" row-key="id" :pagination="pagination" flat>
               <template #top-left>
                 <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
               </template>
@@ -85,13 +85,13 @@ class="col-md-3 col-sm-6 col-xs-12 q-pa-sm"
                 <q-btn size="sm" :label="'Nbre de produits vendus: '+ numerique(nbre_vendus)" /><br>
                 <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_vendus)+' FCFA'" />
                 <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       class="q-ml-md float-right" @click="props.toggleFullscreen" />
+                  flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                  class="q-ml-md float-right" @click="props.toggleFullscreen" />
               </template>
             </q-table>
           </div>
           <div class="col-md-6 col-sm-12 col-xs-12 q-pa-sm">
-            <q-table :rows="appro_stats" :columns="appro_columns" row-key="id" :pagination="pagination" square>
+            <q-table :rows="appro_stats" :columns="appro_columns" row-key="id" :pagination="pagination" flat>
               <template #top-left>
                 <span>{{'Appro du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
               </template>
@@ -99,24 +99,24 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
                 <q-btn size="sm" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
                 <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
                 <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       class="q-ml-md float-right" @click="props.toggleFullscreen" />
+                  flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                  class="q-ml-md float-right" @click="props.toggleFullscreen" />
               </template>
             </q-table>
           </div>
           <div class="col-md-12 col-sm-12 col-xs-12  q-pa-sm">
             <q-table
-title="Produits" :rows="products" :columns="products_columns" square
-                     :pagination="pagination" :filter="filter" row-key="name">
+              title="Produits" :rows="products" :columns="products_columns" flat
+              :pagination="pagination" :filter="filter" row-key="name">
               <template #top="props">
                 <div class="col-7 q-table__title">Liste des produits</div>
                 <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
                 <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                       class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
+                  flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                  class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
               </template>
               <template #body="props">
-<!--                <q-tr :props="props" :class="alerte(props.row)">-->
+                <!--                <q-tr :props="props" :class="alerte(props.row)">-->
                 <q-tr :props="props">
                   <q-td key="id" :props="props"> {{props.row.id}} </q-td>
                   <q-td key="name" :props="props"> {{props.row.name}} </q-td>
@@ -262,9 +262,9 @@ export default {
         })
     },
     // alerte(item) {
-      // if (item.amount <= item.alert_threshold) {
-      //   return 'bg-red-2';
-      // }
+    // if (item.amount <= item.alert_threshold) {
+    //   return 'bg-red-2';
+    // }
     // }
   }
 }

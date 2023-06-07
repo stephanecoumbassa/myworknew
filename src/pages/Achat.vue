@@ -4,7 +4,7 @@
     <div class="row justify-center text-center">
 
       <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
-        <q-card class="my-card text-center justify-center content-center" flat>
+        <q-card class="pointer text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
               <h5 class="text-center">Rubrique: Achats</h5>
@@ -14,55 +14,47 @@
       </div>
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
-        <router-link class="item item-link" to="/achats/commandes">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Achats</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+        <q-card class="pointer" clickable flat @click="$router.push('/achats/commandes')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Achats</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
-        <router-link class="item item-link" to="/achats/factures">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Factures</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+        <q-card class="pointer" clickable flat @click="$router.push('/achats/factures')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Factures</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
-        <router-link class="item item-link" to="/achats/credit">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Impayés</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+        <q-card class="pointer" clickable flat @click="$router.push('/achats/credit')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Impayés</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
       <div class="col-md-3 col-sm-6 col-xs-12 q-pa-md">
-        <router-link class="item item-link" to="/achats/avoir">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Avoir</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+        <q-card class="pointer" clickable flat @click="$router.push('/achats/avoir')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Avoir</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
       <div class="col-md-12 col-12 col-xs-12 q-pa-md" style="min-width: 400px">
-        <q-card class="my-card" flat>
+        <q-card class="pointer" flat>
           <q-card-section>
             <areachart type="bar" color="#A66172" :series="series_appro_sum" title="Montants Achetes en FCFA" titletooltip="achat" />
           </q-card-section>
@@ -85,8 +77,8 @@
               <q-btn size="md" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
               <q-btn size="md" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
               <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                     class="q-ml-md float-right" @click="props.toggleFullscreen" />
+                flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                class="q-ml-md float-right" @click="props.toggleFullscreen" />
             </template>
           </q-table>
         </div>

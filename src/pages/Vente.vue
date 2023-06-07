@@ -3,7 +3,7 @@
 
     <div class="row justify-center text-center">
 
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm text-center">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
         <q-card class="my-card text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
@@ -13,55 +13,47 @@
         </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-lg">
-        <router-link class="item item-link" to="/ventes/new">
-          <q-card clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Ventes</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/ventes/new')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Ventes</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-lg">
-        <router-link class="item item-link" to="/ventes/factures">
-          <q-card clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Factures</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/ventes/factures')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Factures</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-lg">
-        <router-link class="item item-link" to="/ventes/credit">
-          <q-card clickable  flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Credits</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/ventes/credit')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Credits</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-6 q-pa-lg">
-        <router-link class="item item-link" to="/ventes/retour">
-          <q-card clickable  flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h5">Retour</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-6 q-pa-md">
+        <q-card clickable flat class="pointer" @click="$router.push('/ventes/retour')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h5">Retour</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm" style="min-width: 400px">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-md" style="min-width: 400px">
         <q-card flat class="no-margin">
           <q-card-section>
             <!--            <areachart type="bar" :series="series_vente_sum" title="Montants Vendus en FCFA" titletooltip="vente" />-->
@@ -78,7 +70,7 @@
       <!--        </q-card>-->
       <!--      </div>-->
 
-      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-sm">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-md">
         <div class="row q-pa-sm print-hide">
           <div class="col-4 q-pa-sm"><q-input v-model="first" type="date" hint="date ddebut" /></div>
           <div class="col-4 q-pa-sm"><q-input v-model="last" type="date" hint="date fin" /></div>
@@ -111,6 +103,7 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 // import Columnchart from "components/columnchart.vue";
 import Mixedchart from "components/mixedchart.vue";
+import {SalesApi} from "src/services/api/salesApi";
 
 export default {
   name: 'VenteName',
@@ -160,23 +153,18 @@ export default {
   },
   mounted () {
     this.sales_stats_get();
-    this.appro_stats_global();
+    this.shop_stats();
     this.products_get();
   },
   methods: {
-    sales_stats_get() {
-      let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
-      $httpService.getWithParams('/my/get/sales_stats', params)
-        .then((response) => {
-          this.sales_stats = response;
-          this.nbre_vendus = _.sumBy(this.sales_stats, 'quantite_vendu');
-          this.montant_vendus = _.sumBy(this.sales_stats, 'montant_vendu');
-        })
+    async sales_stats_get() {
+      this.sales_stats = await SalesApi.salesStates(this.first, this.last, 1);
+      this.nbre_vendus = _.sumBy(this.sales_stats, 'quantite_vendu');
+      this.montant_vendus = _.sumBy(this.sales_stats, 'montant_vendu');
     },
-    appro_stats_global() {
+    shop_stats() {
       $httpService.getWithParams('/my/get/shop_stats')
         .then((response) => {
-          // this.vente_sum = JSON.parse(response.vente_sum.replace(/null/g, '0'));
           let vente_sum = response.vente_credit_sum.vente;
           let credit_sum = response.vente_credit_sum.credit;
           const val3 = Object.values(vente_sum);
@@ -186,7 +174,6 @@ export default {
           this.series_vente_sum = [
             { name: 'Vendu', type: 'column', data: val3 },
             { name: 'Encaissé', type: 'column', data: valcredit },
-            // {name: 'Budget', type: 'line', data: [1200000, 1300000, 1400000, 1500000, 44, 45, 50, 58] }
             {name: 'Budget', type: 'line', data: budgetrevenu }
           ];
         });

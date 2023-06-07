@@ -60,10 +60,10 @@
                 </q-input>
                 <br>
                 <!-- option-value="id" stack-label input-debounce="0" option-label="name" @filter="filterFn" />-->
-                <!--                <div style="height: 400px">-->
-                <!--                  {{entreprise.latlong}}-->
-                <!--                  <my-map-component v-model="entreprise.latlong" @blur="setLatLong" />-->
-                <!--                </div>-->
+                <div style="height: 400px">
+                  {{entreprise.latlong}}
+                  <my-map-component v-model="entreprise.latlong" @blur="setLatLong" />
+                </div>
                 <!-- <q-input padding type="text" v-model="entreprise.latitude" label="Latitude" />-->
                 <!-- <q-input padding type="text" v-model="entreprise.longitude" label="Longitude" />-->
                 <q-input v-model="entreprise.tva" padding type="number" label="TVA" class="q-mt-md" />
@@ -189,13 +189,13 @@
 <script>
 import $httpService from '../boot/httpService';
 import ImageComponent from '../components/image-component.vue';
-// import MyMapComponent from '../components/mymap.vue';
+import MyMapComponent from '../components/mymap.vue';
 import basemixin from './basemixin';
 export default {
   name: 'ParametresName',
   components: {
     ImageComponent,
-    // MyMapComponent
+    MyMapComponent
   },
   data () {
     return {
