@@ -122,6 +122,7 @@ import basemixin from "pages/basemixin";
 import apimixin from "src/services/apimixin";
 import * as _ from "lodash";
 import $httpService from "boot/httpService";
+import {ClientApi} from "src/services/api/ClientApi";
 
 export default {
   name: 'VenteNewComponent',
@@ -227,14 +228,8 @@ export default {
           this.p_projets = response
         })
     },
-    clients_get () {
-      this.getApi('/my/get/client')
-        .then((response) => {
-          this.clients = response;
-        })
-        .catch(() => {
-          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
-        });
+    async clients_get () {
+      this.clients = await ClientApi.get()
     },
     sales_post() {
       let params = { agent: this.agent,

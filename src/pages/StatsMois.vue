@@ -35,7 +35,7 @@
           <div
             class="col-md-3 col-sm-6 col-xs-12 q-pa-sm"
             @click="$router.push('/ventes/new')">
-            <q-card class="q-pa-sm pointer" flatflat clickable>
+            <q-card class="q-pa-sm pointer" flat clickable>
               <q-card-section>Vente Jour: <br><br>
                 <span class="text-h5">{{numerique(jour_stat.quantite ?? 0)}}</span>
               </q-card-section>

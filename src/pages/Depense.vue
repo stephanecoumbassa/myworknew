@@ -1,26 +1,24 @@
 <template>
 
-  <q-page>
+  <q-page padding>
 
-    <div class="row q-pa-xs q-ma-xs">
+    <div class="row justify-center">
+
       <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
-        <q-btn label="Ajouter une depense" class="offset-lg-1 offset-md-1" size="sm" icon="add" color="secondary" @click="medium = true" />
-        <br>
-      </div>
-    </div>
-
-    <div class="row justify-center text-center q-pa-xs q-ma-xs">
-
-      <div class="col-md-12 col-sm-12 col-xs-12">
 
         <q-table
-id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name" class="q-pa-md q-ma-md"
-                 :pagination="pagination" :filter="filter" :grid="grid" dense flat>
+          id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
+          :pagination="pagination" :filter="filter" :grid="grid" flat>
           <template #top>
-            <div class="print-hide col-4 q-table__title">Depenses</div>
-            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
-            <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md print-hide" @click="json2csv(data, 'vente')"/>
-            <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md print-hide" />
+            <div class="col-4 q-table__title">Liste des dépenses</div>
+            <div class="col-4">
+              <q-input v-model="filter" dense debounce="300" placeholder="Rechercher" />
+            </div>
+            <div class="col-4 text-right">
+              <q-btn @click="json2csv(data, 'depenses')" round icon="far fa-file-excel" size="sm" title="excel" class="q-ma-sm" color="secondary"  />
+              <q-btn v-print="'#printMe'" round icon="print" size="sm" class="q-ma-sm" color="secondary" />
+              <q-btn @click="medium = true" id="add" round class="q-ma-sm" size="sm" icon="add" color="secondary" />
+            </div>
             <br>
           </template>
           <template #body="props">
@@ -33,7 +31,8 @@ id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name" class
               <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
               <q-td key="date" :props="props"> {{props.row.date}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn size="xs" icon="edit" @click="btn_update(props.row); medium = true"></q-btn>
+                <q-btn color="grey-9" size="xs" icon="edit" @click="btn_update(props.row); medium = true"></q-btn>
+                &nbsp;
                 <q-btn color="red-4" size="xs" icon="delete" @click="btn_delete()"></q-btn>
               </q-td>
             </q-tr>
@@ -54,7 +53,6 @@ id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name" class
 
 <script>
 import $httpService from '../boot/httpService';
-// import vue3JsonExcel from 'vue3-json-excel';
 import basemixin from './basemixin'
 import DepenseAdd from "components/DepenseAdd.vue";
 export default {

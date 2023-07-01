@@ -2,19 +2,10 @@
 <template>
   <q-page padding>
 
-    <div class="row">
-      <div class="col-9 q-pa-lg">
-        <span class="text-h6">Projets</span>
-      </div>
-      <!--      <div class="col q-pa-lg float-right text-right">-->
-      <!--        <q-btn color="primary" size="sm">Créer</q-btn>-->
-      <!--      </div>-->
-    </div>
-
     <div v-if="p_projet.id" class="row">
-      <div class="col-12 q-pa-lg">
+      <div class="col-12 q-pa-md">
 
-        <q-card class="q-pa-lg q-mb-xs" flat>
+        <q-card class="q-pa-md q-mb-xs" flat>
           <div class="row">
             <div class="col-3">
               <q-card class="q-pa-lg bg-grey-3 text-center" flat>
@@ -44,7 +35,7 @@
                 </div>
                 <div class="col-3 q-pa-sm q-ml-sm" style="border: 1px #e3e3e3 dashed">
                   <span class="text-weight-bold">{{numerique(p_projet.cout)}}</span><br>
-                  <span>Budget</span>
+                  <span>Livraison</span>
                 </div>
               </div>
             </div>
@@ -88,7 +79,7 @@
             <div class="row">
 
               <div class="col-6 q-mt-md">
-                <q-card class="q-mr-md q-pa-lg">
+                <q-card class="q-mr-md q-pa-lg" flat>
                   <span class="text-h5">
                     Dernières tâches
                   </span>
@@ -114,7 +105,7 @@
               </div>
 
               <div class="col-6 q-mt-md">
-                <q-card class="q-ml-md q-pa-lg">
+                <q-card class="q-ml-md q-pa-lg" flat>
                   <span class="text-h5">
                     Utilisateurs
                   </span>
@@ -140,7 +131,7 @@
               </div>
 
               <div class="col-6 q-mt-md">
-                <q-card class="q-mr-md q-pa-lg">
+                <q-card class="q-mr-md q-pa-lg" flat>
                   <span class="text-h5">
                     Résumé des tâches
                   </span>
@@ -189,7 +180,7 @@
           </q-tab-panel>
 
           <q-tab-panel name="taches" class="no-padding no-margin">
-            <q-card class="q-pa-lg q-mt-lg" flat>
+            <q-card class="q-pa-lg q-mt-md" flat>
               <task-list :employes="employes" :tasks="p_tasks" :project_id="$route.params.id" @reload="getTaskList()" />
             </q-card>
           </q-tab-panel>
@@ -211,11 +202,11 @@
                         option-value="id"
                         map-options emit-value :options="products" label="produits" />
                     </div>
-                    <!--                    <div class="col-2 q-pa-sm">-->
-                    <!--                      <q-input :model-value="100" type="number" label="quantité restante" />-->
-                    <!--                    </div>-->
+                    <div class="col-1 q-pa-sm">
+                      <q-input v-model="use.quantite" type="number" label="quantité utilisé" />
+                    </div>
                     <div class="col-2 q-pa-sm">
-                      <q-input  v-model="use.quantite" type="number" label="quantité utilisé" />
+                      <q-input v-model="use.montant" type="number" label="Montant" />
                     </div>
                     <div class="col-3 q-pa-sm">
                       <br>
@@ -379,7 +370,7 @@ import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import apimixin from "src/services/apimixin";
 import TaskList from "components/taskList.vue";
-import {employeGetService, p_task_projet_get} from "src/services/api/rh.api";
+import {employeGetService, p_task_projet_get} from "src/services/api/RhApi";
 import Filescomponent from "components/filescomponent.vue";
 import DepenseAdd from "components/DepenseAdd.vue";
 import FactureComponent from "components/facture_component.vue";

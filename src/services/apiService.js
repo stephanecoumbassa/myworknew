@@ -21,7 +21,7 @@ export function postApi (url, params) {
   let token = LocalStorage.getItem('token')
   const http = axios.create({
     baseURL: baseurl,
-    headers: { 'Authorization': 'Bearer ' + token }
+    headers: { 'Authorization': 'Bearer ' + token , 'Shopid': 1}
   })
   const formData = new FormData()
   Object.keys(params).forEach(key => {

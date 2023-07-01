@@ -1,23 +1,26 @@
 <template>
 
-  <q-page>
+  <q-page padding>
 
-    <div class="row justify-center text-center">
+    <div class="row justify-center">
 
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md justify-left text-left">
-        <q-btn label="Ajouter" class="q-ma-sm" size="sm" icon="add" color="secondary" @click="medium = true; client = {contacts: []}" />
-      </div>
-
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
 
         <q-table
-id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
-                 class="q-pa-md q-ma-md" :pagination="pagination" :filter="filter" flat>
+          id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
+          :pagination="pagination" :filter="filter" flat>
           <template #top="props">
-            <div class="col-4 q-table__title">Clients</div>
-            <q-btn flat round dense icon="far fa-file-excel" class="q-ml-md" @click="json2csv(data, 'vente')"/>
-            <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
-            <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  class="q-ml-md" @click="props.toggleFullscreen" />
+            <div class="col-4 q-table__title">Liste des clients</div>
+            <div class="col-4">
+              <q-input v-model="filter" dense debounce="300" placeholder="Rechercher" />
+            </div>
+            <div class="col-4 text-right">
+              <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"  class="q-mr-md" @click="props.toggleFullscreen" />
+              <q-btn @click="json2csv(data, 'clients')" round icon="far fa-file-excel" size="sm" title="excel" class="q-ma-sm" color="secondary"  />
+              <q-btn v-print="'#printMe'" round icon="print" size="sm" class="q-ma-sm" color="secondary" />
+              <q-btn @click="medium = true; client = {contacts: []}" id="add" round class="q-ma-sm" size="sm" icon="add" color="secondary" />
+            </div>
+            <br>
           </template>
           <template #body="props">
             <q-tr :props="props">
@@ -32,12 +35,6 @@ id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
                   <q-item v-close-popup clickable>
                     <q-item-label @click="btn_update(props.row)"> Modifier</q-item-label>
                   </q-item>
-                  <!--                  <q-item clickable @click="medium2 = true">-->
-                  <!--                    <q-item-label>Enoyer un email</q-item-label>-->
-                  <!--                  </q-item>-->
-                  <!--                  <q-item clickable v-close-popup @click="medium3 = true">-->
-                  <!--                    <q-item-label>Envoyer une proforma</q-item-label>-->
-                  <!--                  </q-item>-->
                   <q-item v-close-popup clickable @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
                     <q-item-label>Liste des achats</q-item-label>
                   </q-item>
@@ -57,7 +54,7 @@ id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
               <q-input v-model="post.subject" label="Sujet"></q-input>
             </div>
             <div class="col-12 q-ma-md">
-              <q-editor v-model="post.body" :dense="$q.screen.lt.md" :definitions="definitions" :toolbar="toolbar" />
+              <q-editor v-model="post.body" :dense="$q.screen.lt.md" :toolbar="toolbar" />
             </div>
             <div class="col-12 q-ma-md">
               <q-btn size="md" @click="send_email()">Envoyer l'email</q-btn>
@@ -75,13 +72,13 @@ id="printMe" title="Treats" :rows="data" :columns="columns" row-key="name"
                 <div v-if="status_update" class="text-h6">Modifier un client</div>
                 <div class="col-12 q-pa-lg">
 
-                  <q-form  class="q-gutter-md" @submit="onSubmit" @reset="onReset"  >
+                  <q-form  class="q-gutter-md" @submit="onSubmit">
                     <q-select
-v-model="client.type" dense outlined filled :options="options" label="Type de client"
-                              map-options emit-value option-value="id" option-label="name" />
+                      v-model="client.type" dense outlined filled :options="options" label="Type de client"
+                      map-options emit-value option-value="id" option-label="name" />
                     <q-input
-v-model="client.name" dense outlined autocomplete label="Nom *"
-                             lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
+                      v-model="client.name" dense outlined autocomplete label="Nom *"
+                      lazy-rules :rules="[ val => val && val.length > 0 || 'Please type something']" />
                     <q-input v-model="client.last_name" dense outlined  autocomplete label="Prenom *" />
                     <q-input v-model="client.telephone_code" dense outlined type="number"  label="indicatif *" />
                     <q-input v-model="client.telephone" dense outlined type="text" label="telephone *" />
@@ -135,8 +132,8 @@ v-model="client.name" dense outlined autocomplete label="Nom *"
         <q-dialog v-model="vente_status" transition-show="slide-up" transition-hide="slide-down">
 
           <q-table
-:rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
-                   row-key="id" :pagination="pagination">
+            :rows="sales_stats" :columns="sales_columns" style="width: 800px; max-width: 100%"
+            row-key="id" :pagination="pagination">
             <template #top>
               <span>{{'Ventes du '+ dateformat(first)+ ' au '+ dateformat(last)}}</span>
             </template>
@@ -144,15 +141,15 @@ v-model="client.name" dense outlined autocomplete label="Nom *"
               <div class="row">
                 <div class="col-5 "><q-input v-model="first"  type="date" label="debut" /></div>
                 <div class="col-5"><q-input v-model="last"  type="date" label="fin" /></div>
-                <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="sales_stats_get(product_id)"/></div>
+                <div class="col-2"><br><q-btn size="sm" type="submit" label="filtrer" @click="sales_stats_get()"/></div>
               </div>
             </template>
             <template #top-right="props">
               <q-btn size="sm" :label="'Nb Produits vendus: '+ numerique(nbre_vendus)" /><br>
               <q-btn size="sm" class="q-ml-sm" :label="'total: '+numerique(montant_vendus)+' FCFA'" />
               <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-                     class="q-ml-md float-right" @click="props.toggleFullscreen" />
+                flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+                class="q-ml-md float-right" @click="props.toggleFullscreen" />
             </template>
           </q-table>
 
@@ -167,13 +164,8 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
 
       </div>
 
-    </div>
 
-
-    <div class="row justify-center text-center q-pa-md">
-
-
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md text-center">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
         <q-card class="text-center justify-center content-center q-pa-lg" flat square>
           <div class="text-center text-h6">Stats par interval</div>
           <br>
@@ -194,30 +186,32 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
       </div>
 
 
-      <div class="col-md-11 col-sm-12 col-xs-12 q-mt-md" style="min-width: 350px">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md" style="min-width: 350px">
         <q-card class="my-card" square flat>
           <q-card-section>
-            <!--            {{namedata}}-->
             <areachart-component
-color="primary" type="bar" :horizontal="false" :percent="5"
-                                 :categories="namedata" :series="sumdata" title="Montant généré" titletooltip="depense" />
+              color="primary" type="bar" :horizontal="false" :percent="5"
+              :categories="namedata" :series="sumdata" title="Montant généré" titletooltip="depense" />
           </q-card-section>
         </q-card>
       </div>
 
     </div>
 
+
+
+
   </q-page>
 
 </template>
 
-<script lang="ts">
-import $httpService from '../boot/httpService';
+<script>
 import CountryComponent from '../components/country.vue';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
 import AreachartComponent from "components/areachart.vue";
 import Filescomponent from "components/filescomponent.vue";
+import {ClientApi, SalesApi} from "src/services/Repository";
 export default {
   name: 'ClientPage',
   components: {
@@ -243,7 +237,6 @@ export default {
       clientId: 0,
       nbre_vendus: 0,
       montant_vendus: 0,
-      data_status: false,
       pagination: {
         sortBy: 'name',
         descending: false,
@@ -268,12 +261,7 @@ export default {
         { name: 'montant_vendu', label: 'Montant Vendu', field: 'montant_vendu', format: val => `${this.numerique(val)}`, sortable: true },
         { name: 'dateposted', label: 'Date Vente', field: 'dateposted', sortable: true, format: val => `${this.dateformat(val, 3)}` }
       ],
-      data: [],
-      definitions: {
-        insert_img: {
-          tip: 'Inserer une image', icon: 'photo', handler: this.insertImg
-        }
-      }
+      data: []
     }
   },
   computed: {
@@ -285,123 +273,42 @@ export default {
     this.loadData();
   },
   methods: {
-    client_stat (datemin, datemax) {
-      $httpService.postWithParams('/my/get/client_stats', {datemin, datemax})
-        .then((response) => {
-          console.log(response);
-          this.sumdata = [{ name: 'Tarif Généré', data: response['sumvente'] }];
-          this.namedata = response['fullname'];
-        })
-        .catch(() => {
-          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
-        });
+    async client_stat (datemin, datemax) {
+      const response = await ClientApi.stats(datemin, datemax);
+      this.sumdata = [{ name: 'Tarif Généré', data: response['sumvente'] }];
+      this.namedata = response['fullname'];
     },
-    loadData () {
-      $httpService.getWithParams('/my/get/client')
-        .then((response) => {
-          this.data = response;
-          this.data_status = true;
-        })
-        .catch(() => {
-          this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
-        });
+    async loadData () {
+      this.data = await ClientApi.get();
+      this.store.setClients(this.data);
     },
     onSubmit () {
       if (this.accept !== true) {
         this.user_register();
-      } else {
-        this.$q.notify({
-          color: 'green-4', textColor: 'white', icon: 'fas fa-check-circle', message: 'Submitted', splitterModel: 20, model: null
-        });
       }
-    },
-    onReset () {
-      this.name = null;
-      this.age = null;
-      this.accept = false;
     },
     btn_update(item) {
       this.medium = true
       this.client = item;
       this.status_update = true;
     },
-    user_register () {
-      // console.log(this.client);
-      // console.log(this.model);
-      $httpService.postWithParams('/my/post/client', this.client)
-        .then((response) => {
-          // this.options = response.data;
-          this.$q.notify({
-            color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
-          });
-          this.loadData();
-        })
-        .catch(() => {
-          this.$q.notify({
-            color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
-          });
-        });
+    async user_register () {
+      await ClientApi.create(this.client)
+      await this.loadData();
     },
-    client_update () {
-      $httpService.postWithParams('/my/put/client', this.client)
-        .then((response) => {
-          this.$q.notify({
-            color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
-          });
-          this.loadData();
-        })
-        .catch(() => {
-          this.$q.notify({
-            color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
-          });
-        });
+    async client_update () {
+      await ClientApi.update(this.client)
+      await this.loadData();
     },
-    insertImg() { // insertImg method
-      const post = this.post
-      // create an input file element to open file dialog
-      // input.onchange = _ => {
-
-      const input = document.createElement('input')
-      input.type = 'file'
-      input.accept = '.png, .jpg'
-      let file
-      input.onchange = () => {
-        const files = Array.from(input.files)
-        file = files[0]
-        // lets load the file as dataUrl
-        const reader = new FileReader()
-        let dataUrl = ''
-        reader.onloadend = function() {
-          dataUrl = reader.result
-          // append result to the body of your post
-          post.body += '<div><img src="' + dataUrl + '" /></div>'
-        }
-        reader.readAsDataURL(file)
-      }
-      input.click()
+    async sales_stats_get(clientid) {
+      let params = { 'first': this.first, 'last': this.last, 'clientid': clientid };
+      this.sales_stats = await SalesApi.clientSalesStats(params);
+      this.nbre_vendus = _.sumBy(this.sales_stats, 'quantite_vendu');
+      this.montant_vendus = _.sumBy(this.sales_stats, 'montant_vendu');
     },
     send_email () {
-      $httpService.postWithParams('/my/send/email', { id: this.client.id, email: this.client.email, subject: this.post.subject, message: this.post.body })
-        .then((response) => {
-          this.$q.notify({
-            color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
-          });
-        })
-        .catch(() => {
-          this.$q.notify({
-            color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
-          });
-        });
+      this.sendMail({ id: this.client.id, email: this.client.email, subject: this.post.subject, message: this.post.body })
     },
-    sales_stats_get(clientid) {
-      let params = { 'first': '2023-02-31', 'last': '2023-02-28', 'clientid': clientid };
-      $httpService.getWithParams('/my/get/sales_client_stats', params)
-        .then((response) => {
-          this.sales_stats = response;
-          this.nbre_vendus = _.sumBy(this.sales_stats, 'quantite_vendu');
-          this.montant_vendus = _.sumBy(this.sales_stats, 'montant_vendu');
-        })
-    }
   }
 
 }

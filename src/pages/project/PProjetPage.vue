@@ -81,12 +81,6 @@
       </div>
     </div>
 
-    <!--    <div class="row">-->
-    <!--      <div class="col-12 q-pa-lg">-->
-    <!--        <span class="text-h6">Projets</span>-->
-    <!--      </div>-->
-    <!--    </div>-->
-
     <div class="row justify-center">
       <div class="col-12 q-pa-lg">
         <q-table
@@ -138,7 +132,7 @@
 
 
     <q-dialog v-model="projectModal">
-      <q-card style="width: 700px; max-width: 80vw;">
+      <q-card style="width: 700px; max-width: 80vw;" flat>
         <q-card-section>
           <div class="text-h6">Ajouter un projet</div>
         </q-card-section>
@@ -201,9 +195,10 @@
 import $httpService from '../../boot/httpService';
 import basemixin from '../basemixin';
 import apimixin from "src/services/apimixin";
-import {ClientApi} from "src/services/api/client.api";
+import {ClientApi} from "src/services/api/ClientApi";
 import {PProjetApi} from "src/services/api/PProjetApi";
 export default {
+  name: "PProjetPage",
   mixins: [basemixin, apimixin],
   data () {
     return {

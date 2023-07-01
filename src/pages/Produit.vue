@@ -1,40 +1,36 @@
 <template>
-  <q-page>
+  <q-page padding>
 
-    <div class="row text-center q-pa-sm">
+    <div class="row text-center">
 
-      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-sm text-center">
-        <q-card class="my-card text-center justify-center content-center" flat>
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
+        <q-card class="text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
-              <div class="text-h5 text-center">Rubrique: Produits</div>
+              <h5 class="text-center">Rubrique: Produits</h5>
             </q-card-section>
           </q-item>
         </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
-        <router-link class="item item-link" to="/produits/stock">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h6">Stock Initial</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/produits/stock')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h6">Stock Initial</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
-        <router-link class="item item-link" to="/produits/pertes">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h6">Pertes</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/produits/pertes')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h6">Pertes</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
       <!--      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">-->
@@ -49,46 +45,46 @@
       <!--        </router-link>-->
       <!--      </div>-->
 
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
-        <router-link class="item item-link" to="/produits/inventaire">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h6">Inventaires</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/produits/inventaire')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h6">Inventaires</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
-      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-sm">
-        <router-link to="/produits/resume">
-          <q-card class="my-card" clickable flat>
-            <q-item clickable>
-              <q-card-section>
-                <div class="text-h6">Mouvements</div>
-              </q-card-section>
-            </q-item>
-          </q-card>
-        </router-link>
+      <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 q-pa-md">
+        <q-card class="pointer" clickable flat @click="$router.push('/produits/resume')">
+          <q-item clickable>
+            <q-card-section>
+              <div class="text-h6">Mouvements</div>
+            </q-card-section>
+          </q-item>
+        </q-card>
       </div>
 
     </div>
 
 
-    <div class="row justify-center q-pa-sm">
-      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md q-pa-sm">
-        <q-btn
-          id="add" label="Ajouter" class="q-mb-lg" size="sm" icon="add" color="secondary"
-          @click="product = { description: '', stock: 0, buy_price: 0, price: 0, webstatus: 1, domainid: 1, parent_categorie_id: 1, alert_threshold: 0 }; medium2 = true" />&nbsp;&nbsp;
-        <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />
-        <br><br>
+    <div class="row justify-center">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
+<!--        <q-btn label="Liste des produits désactivés" class="q-mb-lg" size="sm" color="grey-8" />-->
+<!--        <br><br>-->
 
-        <q-table id="printMe" dense title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" flat>
+        <q-table id="printMe" title="Produits" :rows="products" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" flat>
           <template #top>
-            <div class="col-7 q-table__title">Liste des produits</div>
-            <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
-            <q-btn v-print="'#printMe'" flat round dense icon="print" class="q-ml-md" />
+            <div class="col-4 q-table__title">Liste des produits</div>
+            <div class="col-4">
+              <q-input v-model="filter" dense debounce="300" placeholder="Rechercher" />
+            </div>
+            <div class="col-4 text-right">
+              <q-btn @click="json2csv(products)" round icon="fa fa-file-excel" size="sm" title="excel" class="q-ma-sm" color="secondary"  />
+              <q-btn v-print="'#printMe'" round icon="print" size="sm" class="q-ma-sm" color="secondary" />
+              <q-btn @click="product = { description: '' }; medium2 = true" id="add" round class="q-ma-sm" size="sm" icon="add" color="secondary" />
+            </div>
+            <br>
           </template>
           <template #body="props">
             <!--            <q-tr :props="props" :class="alerte(props.row)" :key="props.row.id">-->
@@ -107,11 +103,11 @@
               <q-td key="marque" :props="props"> {{props.row.marque}} </q-td>
               <q-td key="amount" :props="props"> {{numerique(props.row.reste)}} </q-td>
               <q-td key="actions" :props="props">
-                <q-btn class="q-mr-xs" size="xs" color="grey-9" label="gest. prix" @click="prix_status = true; product_id = props.row.id; s_product_prix_get(props.row.id)" />
+                <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="gest. prix" @click="prix_status = true; product_id = props.row.id; s_product_prix_get(props.row.id)" />
                 <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="stat" @click="stat_status = true; product_id = props.row.id; appro_stats_global(props.row.id); " />
                 <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="vente" @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id); " />
                 <q-btn outline class="q-mr-xs" size="xs" color="grey-9" label="achat" @click="appro_status = true; product_id = props.row.id; appro_stats_get(props.row.id);" />
-                <q-btn class="q-mr-xs" size="xs" color="teal" icon="edit" @click="update_get(props.row)" />
+                <q-btn class="q-mr-xs" size="xs" color="grey-9" icon="edit" @click="update_get(props.row)" />
                 <!--                <q-btn class="q-mr-xs" size="xs" color="blue-grey-7" v-on:click="photo_get(props.row)" icon="photo" />-->
                 <q-btn size="xs" color="red-9" title="Désactivé" icon="toggle_off" @click="product_disable(props.row)" />
                 <!--<q-btn v-if="role == 1" class="q-mr-xs" size="xs" color="red" icon="delete"></q-btn>-->
@@ -330,11 +326,11 @@ import * as _ from 'lodash';
 import HelloComponent from '../components/hello.vue';
 import basemixin from './basemixin';
 import AreachartComponent from '../components/areachart.vue';
-import {ClientApi} from "src/services/api/client.api";
+import {ClientApi} from "src/services/api/ClientApi";
 import {SProductPrixApi} from "src/services/api/SProductPrixApi";
 import {LocalStorage} from "quasar";
 import Filescomponent from "components/filescomponent.vue";
-import {ProductApi} from "src/services/api/productApi";
+import {ProductApi} from "src/services/api/ProductApi";
 export default {
   name: 'ProduitName',
   components: {

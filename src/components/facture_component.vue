@@ -152,6 +152,7 @@
 
 <script>
 import basemixin from '../pages/basemixin';
+import html2pdf from 'html2pdf.js';
 import Vue3Html2pdf from 'vue3-html2pdf';
 export default {
   name: 'FactureComponent',

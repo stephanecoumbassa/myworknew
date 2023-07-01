@@ -21,12 +21,12 @@
               <q-input v-model='p_task.description' outlined dense type='textarea' label='description' />
               <br>
               <q-select
-v-model='p_task.status'
-                        :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE']" dense outlined label='status' />
+                v-model='p_task.status'
+                :options="['ENATTENTE', 'ENCOURS', 'TERMINE','STOPPE']" dense outlined label='status' />
               <br>
               <q-select
-v-model="p_task.p_employe_id" dense outlined :options="employes" label="Executant"
-                        map-options emit-value option-value="id" option-label="nom" />
+                v-model="p_task.p_employe_id" dense outlined :options="employes" label="Executant"
+                map-options emit-value option-value="id" option-label="nom" />
               <br>
               <q-input v-model='p_task.debut' stack-label outlined dense type='date' label='Date de debut' />
               <br>
@@ -55,14 +55,14 @@ v-model="p_task.p_employe_id" dense outlined :options="employes" label="Executan
   <br>
 
   <q-table
-title="p_tasks" :rows="tasks" :columns="columns" :filter="filter"
-           :pagination="pagination" row-key="name">
+    title="p_tasks" :rows="tasks" :columns="columns" :filter="filter"
+    :pagination="pagination" row-key="name">
     <template #top="props">
       <div class="col-7 q-table__title">Liste des tâches</div>
       <q-input v-model="filter" borderless dense debounce="300" placeholder="Rechercher" />
       <q-btn
-flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-             class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
+        flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+        class="q-ml-md" @click="props.toggleFullscreen"></q-btn>
     </template>
     <template #body="props">
       <q-tr :props="props">
@@ -89,10 +89,10 @@ flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"
         <q-td key='fin' :props='props'> {{props.row.fin}} </q-td>
         <q-td key="actions" :props="props">
           <q-btn
-class="q-mr-xs" size="xs" outline color="secondary"
-                 icon="people"
-                 title="assignation"
-                 @click="assignationModal(props.row)"
+            class="q-mr-xs" size="xs" outline color="secondary"
+            icon="people"
+            title="assignation"
+            @click="assignationModal(props.row)"
           />
           <q-btn class="q-mr-xs" size="xs" color="secondary" icon="edit" @click="p_task = props.row; openModal = true;"></q-btn>
           <q-btn class="q-mr-xs" size="xs" color="red" icon="delete" @click="p_task_delete(props.row.id)"></q-btn>

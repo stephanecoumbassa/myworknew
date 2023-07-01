@@ -156,7 +156,6 @@ export default {
   },
   created () {
     let date = new Date();
-    this.products_get();
     this.sales_get();
     date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
     this.dateposted = date.toISOString().slice(0, 16);

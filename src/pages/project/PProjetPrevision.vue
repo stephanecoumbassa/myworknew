@@ -1,10 +1,10 @@
 <template>
-  <q-page>
+  <q-page padding>
 
-    <div class="row justify-center text-center q-pa-sm">
+    <div class="row justify-center text-center">
 
-      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md text-center">
-        <q-card class="text-center justify-center content-center">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
+        <q-card class="text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
               <div class="text-center text-h6">Prévision par mois ou sur une période donnée</div>
@@ -22,10 +22,10 @@
     </div>
 
 
-    <div class="row justify-center q-pa-sm">
-      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md">
+    <div class="row justify-center">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md">
 
-        <q-table id="printMe" title="Produits" :rows="p_projections" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" dense>
+        <q-table id="printMe" title="Produits" :rows="p_projections" :columns="columns" :pagination="pagination" :filter="filter" row-key="name" dense flat>
           <template #top="props">
             <div class="col-7 q-table__title">Liste des projets
             </div>
@@ -46,16 +46,14 @@
                 Fin: {{props.row.datefin}} <br>
               </q-td>
               <q-td key="retard" :props="props">
-                <q-btn
-v-if="props.row.date_prevision < props.row.date_effective" outline size="sm"
-                       style="color: #bd3156" label="Mauvais" />
-                <q-btn v-if="props.row.date_prevision >= props.row.date_effective" outline size="sm" style="color: #31bd8c" label="Bon" />
+                <q-btn v-if="props.row.status === 'mauvais'" outline size="sm" style="color: #bd3156" :label="props.row.status" />
+                <q-btn v-if="props.row.status === 'bon'" outline size="sm" style="color: #31bd8c" :label="props.row.status" />
               </q-td>
               <q-td key="prix_unitaire" :props="props"> {{props.row.prix_unitaire}} </q-td>
               <q-td key="montant_ht" :props="props"> {{props.row.montant_ht}} </q-td>
               <q-td key="qte" :props="props"> {{props.row.qte}} </q-td>
               <q-td key="dejalivre" :props="props"> {{props.row.livree}} </q-td>
-              <q-td key="reste" :props="props"> {{props.row.qte - props.row.livree}} </q-td>
+              <q-td key="reste" :props="props"> {{props.row.reste}} </q-td>
               <q-td key="qte_prevision" :props="props"> <q-input v-model="props.row.qte_prevision" dense type="number" style="width: 70px" /> </q-td>
               <q-td key="date_prevision" :props="props">
                 <q-input v-model="props.row.date_prevision" dense type="date" style="width:100px" />
@@ -66,8 +64,8 @@ v-if="props.row.date_prevision < props.row.date_effective" outline size="sm"
               </q-td>
               <q-td key="actions" :props="props">
                 <q-btn
-class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
-                       @click="p_projet_previson_remove(props.row.id)"  />
+                  class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
+                  @click="p_projet_previson_remove(props.row.id)"  />
               </q-td>
             </q-tr>
           </template>
@@ -77,10 +75,10 @@ class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
     </div>
 
 
-    <div class="row justify-center text-center q-pa-sm">
+    <div class="row justify-center text-center">
 
-      <div class="col-md-12 col-sm-12 col-xs-12 q-mt-md text-center">
-        <q-card class="q-pa-lg text-right">
+      <div class="col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
+        <q-card class="q-pa-lg text-right" flat>
 
           <!--          <div class="text-right text-h6">Actions</div>-->
           <!--          <br>-->
@@ -89,6 +87,8 @@ class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
             <div class="col-4 q-pa-sm"></div>
             <div class="col-4 q-pa-sm">
               <q-btn size="md" icon="done_all" color="primary" type="button" label="Valider" @click="previson_post(p_projections)" />
+              &nbsp;&nbsp;
+              <q-btn size="md" icon="print" color="secondary" type="button" label="Imprimer" @click="showPrevison=true" />
               <!--              <q-input type="year" v-model="date" placeholder="Year" :dense="true" @change="stock_get()" hint="Année" />-->
             </div>
           </div>
@@ -97,6 +97,13 @@ class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
       </div>
 
     </div>
+
+
+    <q-dialog v-model="showPrevison" position="top" style="max-width: 1000px;">
+      <q-card style="max-width: 1100px;width: 100%" :flat="true">
+        <prevision-component :previsions="p_projections" :date="date" />
+      </q-card>
+    </q-dialog>
 
 
     <br>
@@ -108,11 +115,14 @@ class="q-mr-xs" size="sm" color="danger" icon="delete_forever" outline
 import $httpService from 'boot/httpService';
 import basemixin from '../basemixin';
 import { v4 as uuidv4 } from 'uuid';
+import PrevisionComponent from "components/previsionComponent.vue";
 export default {
   name: 'PProjetPrevisionPage',
+  components: {PrevisionComponent},
   mixins: [basemixin],
   data () {
     return {
+      showPrevison: false,
       products: [],
       columns: [
         { name: 'id', align: 'left', label: 'ID', field: 'id', sortable: true },
@@ -158,7 +168,22 @@ export default {
       this.month = date.split('-')[1];
       $httpService.getApi('/my/get/p_projet_previson?mois='+this.month+'&annee='+this.year)
         .then((response) => {
-          this.p_projections = response['data'];
+          let res = response['data'];
+          // <q-btn
+          //   v-if="(props.row.date_prevision < props.row.date_effective)
+          //         || (props.row.qte_prevision > props.row.qte_effective)" outline size="sm"
+          //   style="color: #bd3156" label="Mauvais" />
+          // <q-btn v-if="(props.row.date_prevision >= props.row.date_effective)
+          //                   && (props.row.qte_prevision <= props.row.qte_effective)"
+          //        outline size="sm" style="color: #31bd8c" label="Bon" />
+          this.p_projections = res.map((pjt) => {
+            pjt.reste = pjt.qte - pjt.livree;
+            (pjt.date_prevision < pjt.date_effective
+              || pjt.qte_prevision > pjt.qte_effective) ? pjt.status = 'mauvais' : pjt.status = 'bon';
+            return pjt
+          });
+          console.log(this.p_projections);
+          // this.p_projections = response['data'];
           this.$q.notify(response['msg']);
         })
     },

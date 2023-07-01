@@ -18,15 +18,15 @@
                   </div>
                   <div class="col-4">
                     <q-select
-v-model="fournisseur" filled map-options emit-value  :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)" stack-label input-debounce="0"
-                              option-label="name" :dense="true" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_fournisseur(fournisseur)" />
+                      v-model="fournisseur" filled map-options emit-value  :options="users" label="Fournisseur" :option-value="JSON.stringify(fournisseur)" stack-label input-debounce="0"
+                      option-label="name" :dense="true" :rules="[val => !!val || 'Ce champs est requis']" @input="assign_fournisseur(fournisseur)" />
                   </div>
                 </div>
                 <div class="row" >
                   <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 alignleft">
                     <img
-:src="'https://www.affairez.com/apistock/public/assets/uploads/magasin/'+entreprise.logo"
-                         style="width: 100px; height: 100px; object-fit: cover"/>
+                      :src="'https://www.affairez.com/apistock/public/assets/uploads/magasin/'+entreprise.logo"
+                      style="width: 100px; height: 100px; object-fit: cover"/>
                     <div>{{entreprise.name}}</div>
                     <div>{{entreprise.telephone}}</div>
                     <div>{{entreprise.email}}</div>
@@ -45,9 +45,9 @@ v-model="fournisseur" filled map-options emit-value  :options="users" label="Fou
 
                 <div v-for="(product, index) in products" :key="index" class="row">
                   <q-select
-v-model="product.product_id" class="col-4 q-pa-sm"  :options="products_list" label="Produits" :dense="true"
-                            option-value="id" input-debounce="0" use-input map-options option-label="prodcat" :rules="[val => !!val || 'Field is required']"
-                            @input="assign(index, product.p)" @filter="filterFn" />
+                    v-model="product.product_id" class="col-4 q-pa-sm"  :options="products_list" label="Produits" :dense="true"
+                    option-value="id" input-debounce="0" use-input map-options option-label="prodcat" :rules="[val => !!val || 'Field is required']"
+                    @input="assign(index, product.p)" @filter="filterFn" />
                   <q-input v-model="product.amount" padding :dense="true" class="col-2 q-pa-sm" type="number" label="Quantité" :rules="[val => !!val || 'Field is required']"/>
                   <q-input v-model="product.buying_price" padding :dense="true" class="col-2 q-pa-sm" type="number" label="Prix d'achat"  :rules="[val => !!val || 'Field is required']"/>
                   <q-input padding :dense="true" class="col-3 q-pa-sm" type="number" :value="(product.buying_price * product.amount)+((product.buying_price * product.amount) * product.tva/100)" label="total"  :rules="[val => !!val || 'Field is required']"/>
@@ -115,12 +115,12 @@ v-model="product.product_id" class="col-4 q-pa-sm"  :options="products_list" lab
         <div class="row">
           <div class="col-12 q-pa-lg">
             <q-input
-v-model="search" class="row" autocomplete type="search"
-                     label="Rechercher" @keyup="facture_filter_get(search)" />
+              v-model="search" class="row" autocomplete type="search"
+              label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div
-v-for="item in bons"
-               :key="item.id_vente" class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md" @click="fullWidth = true; add_status = false; bon_get_by(item.id_ap)">
+            v-for="item in bons"
+            :key="item.id_vente" class="col-lg-3 col-md-6 col-sm-6 col-12 q-pa-md" @click="fullWidth = true; add_status = false; bon_get_by(item.id_ap)">
             <q-card class="q-pa-lg">
               Devis N°
               {{item.id_ap}}<br><br>

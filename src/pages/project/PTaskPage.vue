@@ -77,7 +77,7 @@
 
 <script>
 import $httpService from '../../boot/httpService';
-import {p_task_get} from 'src/services/api/rh.api';
+import {p_task_get} from 'src/services/api/RhApi';
 import basemixin from '../basemixin';
 export default {
   mixins: [basemixin],

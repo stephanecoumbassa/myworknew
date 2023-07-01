@@ -1,7 +1,8 @@
 <template>
   <q-layout view="lHh lpR fFf" class="bg-grey-3">
+<!--    <q-header elevated class="text-grey-8 print-hide" height-hint="64">-->
     <q-header class="text-grey-8 print-hide" height-hint="64">
-      <q-toolbar class="GNL__toolbar bg-grey-3 text-white print-hide">
+      <q-toolbar class="GNL__toolbar bg-white text-white print-hide">
         <q-btn
           flat dense round color="secondary" aria-label="Menu"
           icon="menu" class="q-mr-sm" @click="leftDrawerOpen = !leftDrawerOpen" />
@@ -35,15 +36,14 @@
     </q-header>
 
     <q-drawer
-      v-model="leftDrawerOpen" show-if-above side="left" bordered style="background-color: white"
-      content-class="bg-dark-separator text-dark" :width="225" class="print-hide">
+      v-model="leftDrawerOpen" show-if-above side="left" style="background-color: white"
+      content-class="text-dark" :width="225" class="print-hide">
       <q-scroll-area class="fit print-hide">
         <q-list padding class="text-grey-10 print-hide" bordered separator>
-          <div class="text-center center">
+          <div class="text-center">
             <img
               class="animate__animated animate__pulse animate__infinite animate__slower"
-              src="~assets/fmmi.jpeg" style="height: 120px; width: 120px;">
-            <!--                 src="~assets/affairez.png" style="height: 60px; width: 120px;">-->
+              src="~assets/fmmi.jpeg" style="height: 120px; width: 120px;" />
           </div>
           <br>
           <br>

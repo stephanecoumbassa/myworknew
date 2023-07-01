@@ -4,7 +4,7 @@
     <div class="row justify-center text-center">
 
       <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 q-pa-md text-center">
-        <q-card class="my-card text-center justify-center content-center" flat>
+        <q-card class="text-center justify-center content-center" flat>
           <q-item>
             <q-card-section>
               <h5 class="text-center">Rubrique: Ventes</h5>
@@ -103,7 +103,7 @@ import basemixin from './basemixin';
 import * as _ from 'lodash';
 // import Columnchart from "components/columnchart.vue";
 import Mixedchart from "components/mixedchart.vue";
-import {SalesApi} from "src/services/api/salesApi";
+import {SalesApi} from "src/services/api/SalesApi";
 
 export default {
   name: 'VenteName',

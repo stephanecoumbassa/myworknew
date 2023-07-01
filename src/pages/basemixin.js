@@ -1,13 +1,12 @@
-// définir un objet mixin
 import {Loading, LocalStorage} from 'quasar';
 import storeGlobal from '../stores/storeController'
 import $httpService from '../boot/httpService';
-import {useCounterStore} from "stores/baseState";
+import {baseStore} from "stores/baseStore";
 import {v4 as uuidv4} from 'uuid';
 import print from 'vue3-print-nb'
 
 
-var basemixin = {
+const basemixin = {
   data () {
     return {
       red: '#6d1412',
@@ -74,14 +73,11 @@ var basemixin = {
   directives: {
     print
   },
-  mounted() {
-    // var date = new Date();
-    // this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
-    // this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
-    this.store = useCounterStore();
+  mounted: function () {
+    this.store = baseStore();
   },
   created: function () {
-    var date = new Date();
+    let date = new Date();
     this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
     this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
     this.today = date.toISOString().slice(0, 10);
@@ -94,7 +90,7 @@ var basemixin = {
       this.state.token = LocalStorage.getItem('token');
       this.state.token2 = LocalStorage.getItem('token2');
     }
-    if (LocalStorage.getItem('shop') == 'undefined' || LocalStorage.getItem('shop') == null) {
+    if (LocalStorage.getItem('shop') === undefined || LocalStorage.getItem('shop') == null) {
       this.shop_get();
     } else {
       this.state.entreprise = this.$q.localStorage.getItem('shop');
@@ -112,7 +108,7 @@ var basemixin = {
       this.$router.push(url)
     },
     convert(str) {
-      var date = new Date(str),
+      let date = new Date(str),
         mnth = ('0' + (date.getMonth() + 1)).slice(-2),
         day = ('0' + date.getDate()).slice(-2);
       return [date.getFullYear(), mnth, day].join('-');
@@ -131,18 +127,8 @@ var basemixin = {
           this.$q.localStorage.set('shop', response);
         })
     },
-    capitalize(value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toUpperCase() + value.slice(1)
-    },
-    lower(value) {
-      if (!value) return ''
-      value = value.toString()
-      return value.charAt(0).toLowerCase() + value.slice(1)
-    },
     formatDate(date) {
-      var d = new Date(date),
+      let d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
         year = d.getFullYear();
@@ -158,7 +144,7 @@ var basemixin = {
       date = new Date(date);
       const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
       const options2 = { year: 'numeric', month: 'long', day: 'numeric' };
-      // const options3 = { weekday: 'numeric', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minutes: 'numeric' };
+      const options3 = { weekday: 'numeric', year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minutes: 'numeric' };
       let year = date.getFullYear();
       let month = (1 + date.getMonth()).toString().padStart(2, '0');
       let day = date.getDate().toString().padStart(2, '0');
@@ -168,6 +154,7 @@ var basemixin = {
       if (type === 2) { return date.toLocaleDateString('fr-FR', options); }
       if (type === 3) { return day + '-' + month + '-' + year + ' ' + heures + ':' + minutes; }
       if (type === 4) { return date.toLocaleDateString('fr-FR', options2); }
+      if (type === 5) { return date.toLocaleDateString('fr-FR', options3); }
     },
     get_dateposted() {
       let date = new Date();
@@ -175,9 +162,9 @@ var basemixin = {
       return date.toISOString().slice(0, 16);
     },
     array_somme(array, key) {
-      var somme = 0;
-      for (let i = 0; i < array.length; i++) {
-        somme = somme + parseInt(array[i][key]);
+      let somme = 0;
+      for (const element of array) {
+        somme = somme + parseInt(element[key]);
       }
       return parseInt(somme);
     },
@@ -185,23 +172,21 @@ var basemixin = {
       if (text !== null) {
         return text.toString().toLowerCase()
           .replace(/\s+/g, '-')
-          // eslint-disable-next-line no-useless-escape
-          .replace(/[^\w\-]+/g, '')
-          // eslint-disable-next-line no-useless-escape
-          .replace(/\-\-+/g, '-')
+          .replace(/[^\w-]+/g, '')
+          .replace(/--+/g, '-')
           .replace(/^-+/, '')
           .replace(/-+$/, '');
       }
       return '';
     },
     notifyresponse(response) {
-      if (response.status == !0) {
+      if (response.status === 1) {
         this.$q.notify({
-          color: 'green', position: 'top', message: response.msg, icon: 'report_problem'
+          color: 'green', position: 'top', message: response['msg'], icon: 'report_problem'
         });
       } else {
         this.$q.notify({
-          color: 'warning', position: 'top', message: response.msg, icon: 'report_problem'
+          color: 'warning', position: 'top', message: response['msg'], icon: 'report_problem'
         });
       }
     },
@@ -245,12 +230,11 @@ var basemixin = {
       this.$q.notify(msg);
     },
     json2csv(json, __name = "file") {
-      // var json = [{id: 1, name: 'test'}, {id: 2, name: 'test2'}]
-      var fields = Object.keys(json[0]);
-      var replacer = function (key, value) {
+      let fields = Object.keys(json[0]);
+      let replacer = function (key, value) {
         return value === null ? "" : value;
       };
-      var csv = json.map(function (row) {
+      let csv = json.map(function (row) {
         return fields
           .map(function (fieldName) {
             return JSON.stringify(row[fieldName], replacer);
@@ -260,7 +244,7 @@ var basemixin = {
       csv.unshift(fields.join(","));
       csv = csv.join("\r\n");
       const download = (filename, text) => {
-        var element = document.createElement("a");
+        let element = document.createElement("a");
         element.setAttribute(
           "href",
           "data:text/plain;charset=utf-8," + encodeURIComponent(text)
@@ -285,6 +269,19 @@ var basemixin = {
           .then(function(res){return res.arrayBuffer();})
           .then(function(buf){return new File([buf], filename,{type:mimeType});})
       );
+    },
+    sendMail(params) {
+      $httpService.postWithParams('/my/send/email', { id: params?.id, email: params?.email, subject: params?.subject, message: params?.body })
+        .then((response) => {
+          this.$q.notify({
+            color: 'positive', position: 'top', message: response['msg'], icon: 'report_problem'
+          });
+        })
+        .catch(() => {
+          this.$q.notify({
+            color: 'negative', position: 'top', message: 'Loading failed', icon: 'report_problem'
+          });
+        });
     }
   },
 };
