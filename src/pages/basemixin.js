@@ -190,6 +190,11 @@ const basemixin = {
         });
       }
     },
+    notify(message, color="dark") {
+        this.$q.notify({
+          color: color, position: 'top', message: message, icon: 'info'
+        });
+    },
     role_vendor() {
       if(LocalStorage.getItem('current_user')) {
         let role = parseInt(LocalStorage.getItem('current_user')['roles'][0]);

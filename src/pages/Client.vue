@@ -25,7 +25,7 @@
           <template #body="props">
             <q-tr :props="props">
               <q-td key="id" :props="props"> {{props.row.id}} </q-td>
-              <q-td key="name" :props="props"> {{props.row.name}} </q-td>
+              <q-td key="name" :props="props"> {{props.row.name}} {{props.row.last_name}}</q-td>
               <q-td key="last_name" :props="props"> {{props.row.last_name}} </q-td>
               <q-td key="email" :props="props"> {{props.row.email}} </q-td>
               <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
@@ -246,7 +246,7 @@ export default {
       columns: [
         { name: 'id', required: true, label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
         { name: 'name', align: 'center', label: 'Nom', field: 'name', sortable: true },
-        { name: 'last_name', required: true, label: 'Prenom', field: row => row.last_name, format: val => `${val}`, sortable: true },
+        // { name: 'last_name', required: true, label: 'Prenom', field: row => row.last_name, format: val => `${val}`, sortable: true },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
         { name: 'telephone', label: 'Telephone', field: 'telephone', sortable: true },
         { name: 'actions', label: 'Actions', classes: 'print-hide', headerClasses: 'print-hide' }
@@ -293,11 +293,12 @@ export default {
       this.status_update = true;
     },
     async user_register () {
-      await ClientApi.create(this.client)
+      let res = await ClientApi.create(this.client)
       await this.loadData();
+      this.notify()
     },
     async client_update () {
-      await ClientApi.update(this.client)
+      await ClientApi.modify(this.client)
       await this.loadData();
     },
     async sales_stats_get(clientid) {

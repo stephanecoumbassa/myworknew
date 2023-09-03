@@ -62,7 +62,7 @@
             <div class="facture">
               <div class="logo"></div>
 
-              <div class="fact-header" contenteditable="true">
+              <div class="fact-header">
                 <div class="col">
                   <div class="card">
                     <!--                    <div class="card-header"> {{myentreprise.name}} </div>-->
@@ -78,12 +78,13 @@
                   </div>
                 </div>
 
-                <div class="info-right" contenteditable="true">
+                <div class="info-right">
                   <div class="title h4">Facture #: <input v-model="facturenumero" class="no-border" /></div>
                   <div class="title h4">{{client?.fullname}}</div>
                   <div class="title h4">{{client?.telephone_code}} {{client?.telephone}}</div>
                   <div class="title h4">{{client?.email}}</div>
-                  <p>Date de creation <span>{{date}}</span></p>
+                  <p>Creation <span>{{date}}</span></p>
+                  {{client}}
                   <!--                  <div class="resum-total">-->
                   <!--                    <p>A payer (CFA) <span> {{numerique(total)}}</span></p>-->
                   <!--                  </div>-->
@@ -104,7 +105,7 @@
                   </thead>
                   <tbody>
                   <tr v-for="(product, index) in products" :key="index">
-                    <th align="left"> {{product.name}}</th>
+                    <th align="left" style="width: 300px"> {{product.name}}</th>
                     <td align="left">{{numerique(product.quantity)}}</td>
                     <td align="left">{{numerique(product.price)}}</td>
                     <td align="left">{{numerique(product.tva)}}%</td>
@@ -119,7 +120,7 @@
                 <br>
                 <div class="total-Ht">
                   <div class="total-ht">Total HT</div> <div class="montant"> {{numerique(totalHt)}} </div>
-                  <div class="reduc">TVA</div> <div class="montant"> 18%</div>
+                  <div class="reduc">TVA</div> <div class="montant"> {{client.exonere}}%</div>
                   <!--              <div class="tva">Tva</div> <div class="montant">0</div>-->
                   <div v-if="remise" class="reduc">Remise</div> <div v-if="remise" class="montant"> {{numerique(remise)}}</div>
                   <div v-if="acompte" class="avance"> Acompte</div> <div v-if="acompte" class="montant">0</div>
@@ -134,11 +135,6 @@
           <img
             v-if="showCachet" class="float-right" src="~assets/cachet.png"
             style="height: 120px; object-fit: cover; position: absolute; bottom: 200px; right: 50px"/>
-
-          <!--          <footer contenteditable="true" class="text-center">-->
-          <!--            SARL au capital de 5 000 000 Fcfa- Yopougon quartier maroc- 10 bp 1022 abj 10 <br>-->
-          <!--            RCCM : CI-ABJ-2019-B-19674 Tél : 07360841/02626152/05051912-->
-          <!--          </footer>-->
 
         </div>
       </template>

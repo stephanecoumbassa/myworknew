@@ -39,7 +39,7 @@ export function postApi (url, params) {
 }
 
 export function postSimple (url, params) {
-  const headers = { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } }
+  const headers = { headers: { Authorization: 'Bearer ' +  LocalStorage.getItem('token') } }
   const token = localStorage.getItem('token')
   const http = axios.create({
     baseURL: baseurl,
@@ -68,7 +68,7 @@ export function postGlobal (url, params) {
 }
 
 export function putApi (url, params) {
-  const headers = { headers: { Authorization: 'Bearer ' + localStorage.getItem('token') } }
+  const headers = { headers: { Authorization: 'Bearer ' +  LocalStorage.getItem('token') } }
   const token = localStorage.getItem('token')
   const http = axios.create({
     baseURL: baseurl,

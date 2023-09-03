@@ -1,5 +1,5 @@
-import {deleteApi, getApi, postApi} from "src/services/apiService";
-import {Loading, QSpinnerBall} from 'quasar'
+import {deleteApi, getApi, postApi, putApi} from "src/services/apiService";
+import {Loading, Notify, QSpinnerBall} from 'quasar'
 
 class BaseApi {
 
@@ -30,17 +30,6 @@ class BaseApi {
   static async post(table, params) {
     return new Promise( resolve => {
       postApi('/my/post/' +table, params)
-        .then((response) => {
-          return resolve(response)
-        }).catch((error) => {
-        return resolve(error)
-      });
-    })
-  }
-
-  static async update(table, params) {
-    return new Promise( resolve => {
-      putApi('/my/put/' + table, params)
         .then((response) => {
           return resolve(response)
         }).catch((error) => {
@@ -82,6 +71,23 @@ class BaseApi {
       postApi(url, params)
         .then((response) => {
           Loading.hide()
+          Notify.create({color: 'green', position: 'top', message: response['msg'], icon: 'info'});
+          return resolve(response)
+        }).catch((error) => {
+        Loading.hide()
+        return resolve(error)
+      });
+    })
+  }
+
+  static async update(url, params, loading=false, notify=false) {
+    if (loading) Loading.show({spinner: QSpinnerBall, spinnerColor: 'primary'})
+    return new Promise( resolve => {
+      putApi(url, params)
+        .then((response) => {
+          console.log(response)
+          Loading.hide()
+          Notify.create({color: 'green', position: 'top', message: response['msg'], icon: 'info'});
           return resolve(response)
         }).catch((error) => {
         Loading.hide()

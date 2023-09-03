@@ -1,8 +1,8 @@
 <template>
   <q-page>
     <br>
-    <div class="row justify-center">
-      <div class="col-lg-12 col-12 q-pa-md">
+    <div class="row justify-center q-ma-md">
+      <div class="col-lg-10 col-12">
 
         <q-dialog v-model="facture_status2" position="top" style="max-width: 1000px;">
           <q-card style="max-width: 100%;" :flat="true">
@@ -14,7 +14,7 @@
 
         <q-dialog v-model="fullWidth" position="top">
           <q-card id="facture" style="width: 1000px; max-width: 100%;" :flat="true">
-            <q-card-section contenteditable="true">
+            <q-card-section>
               <div class="row">
                 <div class="col-6">
                 </div>
@@ -68,7 +68,6 @@
                 <div>
                   <div v-for="(product, index) in products2" :key="index" class="row q-pa-sm">
                     <q-select
-                      {{product.product_id}}
                       v-model="product.product_id" class="col-4 q-pa-sm" :options="products_list"
                       option-label="name" option-value="id" use-input input-debounce="0"
                       :dense="true" @filter="filterFn" @update:model-value="assign(index)" />
@@ -105,6 +104,7 @@
           </q-card>
         </q-dialog>
 
+
         <q-dialog v-model="fileStatus">
           <q-card style="width: 600px" class="q-pa-lg">
             <filescomponent type="devis" :typeid="devisId" folder="devis" />
@@ -112,20 +112,20 @@
         </q-dialog>
 
 
-        <div class="row">
+        <q-btn
+          class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
+          @click="fullWidth = true; validate_status = true; add_status = true; sales_list = []" /><br>
 
+        <div class="row">
           <div class="col-12 q-pa-lg">
-            <q-btn
-              class="q-mb-sm" size="sm" label="Ajouter" icon="add" color="secondary"
-              @click="fullWidth = true; validate_status = true; add_status = true" /><br>
             <q-input
               v-model="search" class="row" autocomplete type="search"
               label="Rechercher" @keyup="facture_filter_get(search)" />
           </div>
           <div
             v-for="(item, index) in sales_list"
-            :key="index" class="col-lg-4 col-md-4 col-sm-6 col-12 q-pa-md">
-            <q-card class="q-pa-sm" flat>
+            :key="index" class="col-lg-3 col-md-4 col-sm-6 col-12 q-pa-md">
+            <q-card class="q-pa-lg">
               <q-card-section>
                 Devis N° {{item.id_vente}}<br>
                 <div v-if="item.name">
@@ -134,6 +134,7 @@
                 </div>
               </q-card-section>
               <q-card-actions>
+                <!--                <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente; files_get(item.id_vente)"></q-btn>-->
                 <q-btn flat icon="image" @click="fileStatus=true; devisId=item.id_vente;"></q-btn>
                 <q-btn flat icon="edit" @click="fullWidth = true; add_status = false; devis_get_by(item.id_vente)"></q-btn>
                 <q-btn flat icon="receipt" @click="facture_status2 = true; devis_get_by(item.id_vente)"></q-btn>
@@ -155,7 +156,7 @@ import $httpService from '../boot/httpService';
 import basemixin from './basemixin';
 import * as _ from 'lodash';
 import FactureComponent from '../components/facture_component.vue';
-// import axios from "axios";
+import axios from "axios";
 import Filescomponent from "components/filescomponent.vue";
 import apimixin from "src/services/apimixin";
 export default {
@@ -167,28 +168,47 @@ export default {
   mixins: [basemixin, apimixin],
   data () {
     return {
+      filter: '',
+      fitst: 1,
+      last: 30,
+      name: null,
       search: null,
+      grid: false,
       fileStatus: false,
       validate_status: true,
       add_status: true,
       fullWidth: false,
+      medium: false,
+      medium2: false,
       credit: false,
+      solde: true,
       facture_status2: false,
       avance: 0,
       agent: null,
+      fournisseur: null,
+      product_id: null,
       facture_number: null,
+      quantity_id: null,
+      sell: null,
+      buy: null,
       projetid: null,
       p_projets: [],
+      categories: [],
       formData: {},
+      fileTitre: '',
+      files: [],
       date: '',
       dateposted: '',
       devisId: 1,
       myclient: {},
       client: 1,
       client2: { id: null },
+      image: '',
       bc: '',
       bl: '',
+      users: [],
       clients: [],
+      // products: [{ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 }],
       products: [],
       products2: [],
       sales_list: [],
@@ -197,6 +217,8 @@ export default {
       products_list2: [],
       appro_list: [{ p: { sell_price: 0 } }],
       appro_list2: [{ p: { sell_price: 0 } }],
+      product: { description: '' },
+      data: [],
       entreprise: {}
     }
   },
@@ -208,6 +230,10 @@ export default {
   created () {
     this.formData = new FormData();
     var date = new Date();
+    this.date = this.dateformat(new Date(date.getFullYear(), date.getMonth()), 4);
+    this.first = this.convert(new Date(date.getFullYear(), date.getMonth(), 1));
+    this.last = this.convert(new Date(date.getFullYear(), date.getMonth() + 1, 0));
+    this.shop_get();
     this.clients_get();
     this.products_get();
     this.sales_get();
@@ -239,14 +265,26 @@ export default {
       const val1 = this.sales_init.filter((x) => {
         return x.id_vente.toLowerCase().includes(this.search.toLowerCase())
           || x.fullname.toLowerCase().includes(this.search.toLowerCase())
+        // || x.last_name.toLowerCase().toString().includes(this.search.toLowerCase());
       });
       this.sales_list = val1;
     },
 
+    shop_get() {
+      $httpService.getWithParams('/my/get/shop')
+        .then((response) => {
+          this.entreprise = response;
+        })
+    },
+
     assign(index) {
-      // this.products2[index].p = this.products2[index].product_id
-      // this.products2[index].p.sales_price = this.products2[index].product_id.price
-      // this.products2[index].productid = this.products2[index].product_id.id
+      // this.products[index].quantite_vendu = 1;
+      // this.products[index].prix_unitaire = this.products[index].p.sales_price;
+      // this.products[index].remise_totale = 0;
+      console.log(this.products2[index])
+      this.products2[index].p = this.products2[index].product_id
+      this.products2[index].p.sales_price = this.products2[index].product_id.price
+      this.products2[index].productid = this.products2[index].product_id.id
     },
 
     assign_client (client) {
@@ -258,6 +296,10 @@ export default {
       this.myclient.telephone_code = client.telephone_code;
       this.products_get();
     },
+    qr_get(dataUrl) {
+      this.image = dataUrl;
+    },
+
     clients_get () {
       $httpService.getWithParams('/my/get/client')
         .then((response) => {
@@ -269,6 +311,12 @@ export default {
           this.$q.notify({ color: 'negative', position: 'top', message: 'Connection impossible' });
         });
     },
+
+    update_show(item) {
+      this.medium2 = true;
+      this.product = item;
+    },
+
     convertir_post() {
       let params = { agent: this.agent,
         products: this.products,
@@ -340,6 +388,14 @@ export default {
       }
     },
 
+    // products_get () {
+    //   $httpService.getWithParams('/my/get/products')
+    //     .then((response) => {
+    //       this.products_list = response;
+    //       this.products_list2 = response;
+    //     })
+    // },
+
     products_get () {
       this.getApi('/my/get/products').then((res) => {
         var products = res;
@@ -391,8 +447,26 @@ export default {
           }
         })
     },
+
+    sales_stats_get() {
+      let params = { 'first': this.first, 'last': this.last, 'magasin_id': 1 };
+      $httpService.getWithParams('/my/get/sales_stats', params)
+        .then((response) => {
+          this.sales_list = response;
+          this.nbre_vendus = _.sumBy(this.sales_list, 'quantite_vendu');
+          this.montant_vendus = _.sumBy(this.sales_list, 'montant_vendu');
+        })
+    },
+
+
+    specialities_add () {
+      this.products.push({ p: { id: 0, name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
+    },
     specialities_add2 () {
       this.products2.push({ p: { id: 1, prodcat: 'Select. un produit', name: 'Selectionner un produit', tva: 0, sell_price: 0 }, quantity: 1 });
+    },
+    specialities_delete () {
+      this.products.pop();
     },
     imprimer() {
       window.print();
@@ -405,6 +479,38 @@ export default {
         this.products[index].quantity = parseInt(val);
         this.products[index].p.quantity = parseInt(val);
       })
+    },
+
+    changePhoto($event) {
+      const file = $event.target.files[0];
+      this.formData.append('doc', file);
+    },
+
+    sendFile() {
+      this.formData.append('devis_id', this.devisId);
+      this.formData.append('titre', this.fileTitre);
+      // postApi('/my/post/devis_file', this.formData).then((response) => {
+      //   console.log(response.data);
+      // })
+      axios.post('https://fmmi.ci/apistock/api/post/devis_file', this.formData)
+        .then((response) => {
+          this.showAlert(response.data)
+          this.files_get(this.devisId);
+          this.fileTitre = '';
+          this.formData = {};
+        })
+    },
+
+    files_get (_devisId) {
+      $httpService.getWithParams('/api/get/devis_file/'+_devisId)
+        .then((response) => {
+          this.files = response;
+        })
+    },
+
+    startDownload() {
+      confirm('Voulez-vous generer');
+      return false;
     },
     delete_product(i) {
       this.products2 = this.products2.filter((x) => {

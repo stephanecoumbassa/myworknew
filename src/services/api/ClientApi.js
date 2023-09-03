@@ -14,8 +14,8 @@ class ClientApi extends BaseApi{
     return await super.post(params, TABLE)
   }
 
-  static async update(params) {
-    return await super.update(params, TABLE)
+  static async modify(params) {
+    return await super.update('/my/put/client', params, true, true)
   }
 
   static async delete(params) {

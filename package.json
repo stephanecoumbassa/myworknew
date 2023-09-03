@@ -1,8 +1,8 @@
 {
-  "name": "qstock",
+  "name": "fmmi",
   "version": "0.0.1",
-  "description": "qstock",
-  "productName": "qstock",
+  "description": "fmmi",
+  "productName": "fmmi",
   "author": "stephanecoumbassa <36853946+stephanecoumbassa@users.noreply.github.com>",
   "private": true,
   "scripts": {
@@ -30,7 +30,6 @@
     "pinia": "^2.0.11",
     "pinia-plugin-persist": "^1.0.0",
     "pinia-plugin-persistedstate": "^2.4.0",
-    "playwright": "^1.32.1",
     "quasar": "^2.6.0",
     "uuid": "^9.0.0",
     "vue": "^3.0.0",
@@ -44,7 +43,6 @@
     "vue-qr": "^4.0.9",
     "vue-quill-editor": "^3.0.6",
     "vue-router": "^4.0.0",
-    "vue2-leaflet": "^2.7.1",
     "vue3-apexcharts": "^1.4.1",
     "vue3-html2pdf": "^1.1.2",
     "vue3-json-excel": "^1.0.10-alpha",
@@ -55,7 +53,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@intlify/vite-plugin-vue-i18n": "^3.3.1",
-    "@playwright/test": "^1.27.1",
+    "@playwright/test": "^1.37.1",
     "@quasar/app-vite": "^1.0.0",
     "autoprefixer": "^10.4.2",
     "eslint": "^8.10.0",

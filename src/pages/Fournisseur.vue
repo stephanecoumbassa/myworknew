@@ -239,8 +239,6 @@ export default {
       this.status_update = true;
     },
     user_register () {
-      // console.log(this.fournisseur);
-      // console.log(this.model);
       $httpService.postWithParams('/my/post/fournisseur', this.fournisseur)
         .then((response) => {
           // this.options = response.data;
