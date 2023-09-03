@@ -6,7 +6,9 @@ const { faker } = require('@faker-js/faker');
 
 (async () => {
   const browser = await chromium.launch();
-  const context = await browser.newContext();
+  const context = await browser.newContext({
+    storageState: '../authentication.json',
+  });
   const page = await context.newPage();
 
   await page.goto('http://localhost:9000/admin/#/produits');

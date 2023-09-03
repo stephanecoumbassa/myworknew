@@ -59,6 +59,7 @@
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-vue": "^9.0.0",
+    "playwright-elements": "^1.8.3",
     "postcss": "^8.4.14",
     "prettier": "^2.5.1",
     "workbox-build": "^6.5.4",

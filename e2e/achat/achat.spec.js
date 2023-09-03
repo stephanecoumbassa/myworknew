@@ -6,6 +6,7 @@ test.use({
 
 test('test', async ({ page }) => {
 
+
   await page.goto('http://localhost:9000/');
 
   await page.goto('http://localhost:9000/#/');

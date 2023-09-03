@@ -1,24 +1,15 @@
 import { test, chromium, expect } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-import { baseUrl } from '../constante';
+import {baseUrl, mypage} from '../constante';
 
 
 test('test', async () => {
-  const browser = await chromium.launch({
-    args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-web-security",
-      "--load-extension=/Users/$USER/Library/Application\\ Support/Google/Chrome/Profile 1/Extensions/ghbmnnjooekpmoecnnnilnnbdlolhkhi"],
-    headless: false,
 
-    executablePath: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", // Replace with the actual path
-  });
-  const context = await browser.newContext({
-    storageState: '../authentication.json',
-  });
-  const page = await context.newPage();
-
+  const page = await mypage();
 
   await page.goto(baseUrl+'/#/clients');
-  await page.locator('#add').click();
+  await page.locator('#actions8').click();
+  await page.locator('#update8').click();
 
   // Fill in data using Faker
   await page.getByText('Type de clientarrow_drop_down').click();
@@ -46,9 +37,9 @@ test('test', async () => {
   await page.getByLabel('Adresse').fill(faker.address.streetAddress());
 
   await page.getByLabel('Exonere', { exact: true }).click();
-  await page.getByRole('button', { name: 'Valider' }).click();
+  await page.getByRole('button', { name: 'modifier' }).click();
 
-  await page.waitForTimeout(55000);
+  await page.waitForTimeout(5000);
   await expect(page).toBeTruthy();
   // await browser.close();
 });

@@ -50,9 +50,10 @@
                 <div>
                   <div v-for="(product, index) in products" :key="index" class="row q-pa-sm">
                     <q-select
+                      :label="'Product'+(index+1)"
                       v-model="product.product_id" class="col-4 no-margin" map-options emit-value :dense="true"
-                      option-value="id" option-label="name" stack-label input-debounce="0" label="produits"
-                      :options="products_list" />
+                      option-value="id" option-label="name" stack-label input-debounce="0"
+                      :options="products_list" :id="'select1'+index" />
                     <q-input v-model="product.quantite_vendu" class="col-1 row q-pl-sm" autocomplete type="number" label="Quantité" :dense="true" />
                     <q-input v-model="product.prix_unitaire" class="col-2 row q-pl-sm" autocomplete type="number" label="Prix" :dense="true" />
                     <q-input v-model="product.tva" class="col-2 row q-pl-sm" autocomplete type="number" label="TVA" :dense="true" />
@@ -68,9 +69,11 @@
                 <div>
                   <div v-for="(product, index) in products2" :key="index" class="row q-pa-sm">
                     <q-select
+                      :label="'Product'+(index+1)"
                       v-model="product.product_id" class="col-4 q-pa-sm" :options="products_list"
                       option-label="name" option-value="id" use-input input-debounce="0"
-                      :dense="true" @filter="filterFn" @update:model-value="assign(index)" />
+                      :dense="true" @filter="filterFn" @update:model-value="assign(index)"
+                      :id="'select2'+index" />
                     <q-input v-model="product.quantity" class="col-1 q-pa-sm" :dense="true" type="number" label="Quantité" @focusout="getVal(index, product.quantity)" />
                     <q-input v-model="product.p.sales_price" class="col-2 q-pa-sm" :dense="true" type="number" label="Prix Unitaire" />
                     <q-input v-model="product.p.tva" class="col-2 q-pa-sm" :dense="true" type="number" label="TVA" />

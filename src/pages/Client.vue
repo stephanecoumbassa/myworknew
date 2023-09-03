@@ -31,8 +31,8 @@
               <q-td key="telephone" :props="props"> {{props.row.telephone}} </q-td>
               <q-td key="actions" :props="props">
 
-                <q-btn-dropdown size="xs" color="dark">
-                  <q-item v-close-popup clickable>
+                <q-btn-dropdown size="xs" color="dark" :id="'actions'+props.row.index" >
+                  <q-item v-close-popup clickable :id="'update'+props.row.index">
                     <q-item-label @click="btn_update(props.row)"> Modifier</q-item-label>
                   </q-item>
                   <q-item v-close-popup clickable @click="vente_status = true; product_id = props.row.id; sales_stats_get(props.row.id);">
@@ -238,13 +238,14 @@ export default {
       nbre_vendus: 0,
       montant_vendus: 0,
       pagination: {
-        sortBy: 'name',
+        sortBy: 'id',
         descending: false,
         page: 1,
         rowsPerPage: 10
       },
       columns: [
-        { name: 'id', required: true, label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
+        // { name: 'id', required: true, label: 'ID', align: 'left', field: row => row.id, format: val => `${val}`, sortable: true },
+        { name: 'id', required: true, label: 'ID', align: 'left', field: 'id', sortable: true },
         { name: 'name', align: 'center', label: 'Nom', field: 'name', sortable: true },
         // { name: 'last_name', required: true, label: 'Prenom', field: row => row.last_name, format: val => `${val}`, sortable: true },
         { name: 'email', label: 'Email', field: 'email', sortable: true },
@@ -280,7 +281,11 @@ export default {
     },
     async loadData () {
       this.data = await ClientApi.get();
+      this.data.forEach((element, index) => {
+        element['index'] = index;
+      })
       this.store.setClients(this.data);
+      console.log(this.data)
     },
     onSubmit () {
       if (this.accept !== true) {

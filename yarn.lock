@@ -5842,6 +5842,13 @@ playwright-core@1.37.1:
   resolved "https://registry.yarnpkg.com/playwright-core/-/playwright-core-1.37.1.tgz#cb517d52e2e8cb4fa71957639f1cd105d1683126"
   integrity sha512-17EuQxlSIYCmEMwzMqusJ2ztDgJePjrbttaefgdsiqeLWidjYz9BxXaTaZWxH1J95SHGk6tjE+dwgWILJoUZfA==
 
+playwright-elements@^1.8.3:
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/playwright-elements/-/playwright-elements-1.8.3.tgz#306095116b1b21e5c1eedc458acce621b0923705"
+  integrity sha512-VO1U5k9Koq4Vz0b5mMbxqE4+loDvxLE3tfnkyePCfUy0DKDuZGTAJFoub48BA71V0ZXLLAcUkWJQo8A0fVZhbA==
+  dependencies:
+    lodash "^4.17.21"
+
 png-js@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/png-js/-/png-js-1.0.0.tgz#e5484f1e8156996e383aceebb3789fd75df1874d"

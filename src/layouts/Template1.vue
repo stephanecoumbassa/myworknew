@@ -50,7 +50,7 @@
           <div v-for="link in links1" :key="link.text">
             <q-item
               v-if="link.role" :key="link.text" v-ripple class="GNL__drawer-item"
-              active-class="text-secondary" clickable :to="link.link">
+              active-class="text-secondary" clickable :to="link.link" :id="'menu'+link.text">
               <q-item-section avatar> <q-icon :name="link.icon" :style="link.style" /> </q-item-section>
               <q-item-section> <q-item-label>{{ link.text }}</q-item-label> </q-item-section>
             </q-item>

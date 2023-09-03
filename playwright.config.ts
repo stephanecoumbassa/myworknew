@@ -34,17 +34,35 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { ...devices['Desktop Chrome'],
+        launchOptions: {
+          // Put your chromium-specific args here
+          args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-web-security"],
+          headless: false,
+        },
+      },
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: { ...devices['Desktop Firefox'],
+        launchOptions: {
+          // Put your chromium-specific args here
+          args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-web-security"],
+          headless: false,
+        },
+      },
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: { ...devices['Desktop Safari'],
+        launchOptions: {
+          // Put your chromium-specific args here
+          args: ["--no-sandbox", "--disable-setuid-sandbox", "--disable-web-security"],
+          headless: false,
+        },
+      },
     },
 
     /* Test against mobile viewports. */
