@@ -161,55 +161,43 @@
             <div class="row">
               <div class="col-md-7 col-sm-12">
                 <q-input
-                  id="name" v-model="product.name" autocomplete label="Nom du produit *" :dense="true" outlined
+                  for="name" v-model="product.name" autocomplete label="Nom du produit *" :dense="true" outlined
                   lazy-rules :rules="[ val => val && val.length > 0 || 'champs obligattoire']" />
 
                 <q-select
-                  id="type" v-model="product.type" :options="['matiere', 'produit', 'outil']" label="type" map-options emit-value :dense="true"
+                  for="type" v-model="product.type" :options="['matiere', 'produit', 'outil']" label="type" map-options emit-value :dense="true"
                   stack-label input-debounce="0" outlined />
                 <br>
                 <q-select
-                  id="domainid" v-model="product.domainid" :options="domains" label="Categorie" map-options emit-value :dense="true"
+                  for="domainid" v-model="product.domainid" :options="domains" label="Categorie" map-options emit-value :dense="true"
                   option-value="id" stack-label input-debounce="0" option-label="name" outlined
                   :rules="[ val => val || 'champs obligattoire']" @input="parent_get(product.domainid)" />
 
                 <q-select
-                  id="parent_categorie_id" v-model="product.parent_categorie_id" :options="parents" label="Sous-Categorie" map-options emit-value :dense="true"
+                  for="parent_categorie_id" v-model="product.parent_categorie_id" :options="parents" label="Sous-Categorie" map-options emit-value :dense="true"
                   option-value="id" stack-label input-debounce="0" option-label="name" outlined
                   :rules="[ val => val || 'champs obligattoire']" @input="categorie_get(product.parent_categorie_id)" />
 
-                <q-input v-model="product.price" autocomplete type="number" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
+                <q-input for="price" v-model="product.price" autocomplete type="number" label="Prix de vente par défaut*" outlined :dense="true" hint="" />
 
-                <q-input v-model="product.alert_threshold"  type="number" label="Alert" outlined dense hint="" />
-                <q-input v-model="product.reference"  type="text" label="Reference Produit" outlined dense hint="" />
+                <q-input for="alert_threshold" v-model="product.alert_threshold"  type="number" label="Alert" outlined dense hint="" />
+                <q-input for="reference" v-model="product.reference"  type="text" label="Reference Produit" outlined dense hint="" />
 
                 <q-input v-model="product.youtube" type="text" label="Url Video Youtube *" outlined dense hint="" />
 
                 <div class="row">
-                  <q-input v-model="product.largeur" class="col-6 q-pa-xs" type="number" label="Largeur en mm" :dense="true" outlined />
-                  <q-input v-model="product.longueur" class="col-6 q-pa-xs" type="number" label="Longueur en mm" :dense="true" outlined />
-                  <q-input v-model="product.hauteur" class="col-6 q-pa-xs" type="number" label="Hauteur en mm" :dense="true" outlined />
-                  <q-input v-model="product.epaisseur" class="col-6 q-pa-xs" type="number" label="Epaisseur en mm" :dense="true" outlined />
-                  <q-input v-model="product.poids" class="col-6 q-pa-xs" type="number" label="Poids en KG" :dense="true" outlined />
-                  <q-input v-model="product.diametre" class="col-6 q-pa-xs" type="number" label="Diamètre" :dense="true" outlined />
+                  <q-input for="largeur" v-model="product.largeur" class="col-6 q-pa-xs" type="number" label="Largeur en mm" :dense="true" outlined />
+                  <q-input for="longueur" v-model="product.longueur" class="col-6 q-pa-xs" type="number" label="Longueur en mm" :dense="true" outlined />
+                  <q-input for="hauteur" v-model="product.hauteur" class="col-6 q-pa-xs" type="number" label="Hauteur en mm" :dense="true" outlined />
+                  <q-input for="epaisseur" v-model="product.epaisseur" class="col-6 q-pa-xs" type="number" label="Epaisseur en mm" :dense="true" outlined />
+                  <q-input for="poids" v-model="product.poids" class="col-6 q-pa-xs" type="number" label="Poids en KG" :dense="true" outlined />
+                  <q-input for="diametre" v-model="product.diametre" class="col-6 q-pa-xs" type="number" label="Diamètre" :dense="true" outlined />
                 </div>
 
               </div>
               <div class="col-md-5 col-sm-12 content-center text-center">
                 <vue-qr :size="200" :text="JSON.stringify(product.id)" :callback="test" qid="testid" />
-                <!--                <br>-->
-                <!--                <q-uploader-->
-                <!--                  v-model="product.photo"-->
-                <!--                  class="text-center"-->
-                <!--                  :url="apiurl+'/my/photo/products/'+product.id"-->
-                <!--                  color="grey"-->
-                <!--                  :headers="[{name: 'Authorization', value: 'Bearer '+token}]"-->
-                <!--                  :form-fields="[{name: 'id', value: product.id}]"-->
-                <!--                  flat-->
-                <!--                  bordered-->
-                <!--                  style="max-width: 200px; margin: 0 auto"-->
-                <!--                />-->
-                <!--                <br>-->
+
                 <div class="row q-pa-lg">
                   <div class="col-12">
                     <filescomponent type="product" folder="product" :typeid="product.id" />
@@ -268,8 +256,6 @@
         <template #top-right>
           <q-btn size="sm" :label="'Nb Produits vendus: '+ numerique(nbre_vendus)" /><br>
           <q-btn size="sm" class="q-ml-sm" :label="'total: '+numerique(montant_vendus)+' FCFA'" />
-          <!--          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"-->
-          <!--                 @click="props.toggleFullscreen" class="q-ml-md float-right" />-->
         </template>
       </q-table>
 
@@ -289,8 +275,6 @@
         <template #top-right>
           <q-btn size="sm" :label="'Nbre de produits achetes: '+ numerique(nbre_achetes)" /><br>
           <q-btn size="sm" class="q-ml-sm" :label="'Montant total: '+numerique(montant_achetes)+' FCFA'" />
-          <!--          <q-btn flat round dense :icon="props.inFullscreen ? 'fullscreen_exit' : 'fullscreen'"-->
-          <!--                 @click="props.toggleFullscreen" class="q-ml-md float-right" />-->
         </template>
       </q-table>
     </q-dialog>
